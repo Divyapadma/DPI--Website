@@ -1,4 +1,7 @@
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { Pencil, Plus } from "lucide-react";
+import DeleteButton from "@/components/admin/DeleteButton";
+import type { MutationResult } from "@/lib/mutations";
 
 interface Column<T> {
   header: string;
@@ -10,11 +13,23 @@ export default function AdminListPage<T extends { id: string }>({
   description,
   items,
   columns,
+  addHref,
+  editHref,
+  deleteAction,
+  deleteLabel,
 }: {
   title: string;
   description: string;
   items: T[];
   columns: Column<T>[];
+  /** Where "Add New" links to, e.g. "/admin/projects/new". */
+  addHref: string;
+  /** Per-row edit link, e.g. (item) => `/admin/projects/${item.id}/edit`. */
+  editHref: (item: T) => string;
+  /** Server action to delete a row by id — see lib/mutations.ts. */
+  deleteAction: (id: string) => Promise<MutationResult>;
+  /** Shown in the delete confirm prompt. */
+  deleteLabel: (item: T) => string;
 }) {
   return (
     <div>
@@ -23,11 +38,13 @@ export default function AdminListPage<T extends { id: string }>({
           <h1 className="font-display text-xl text-charcoal sm:text-2xl">{title}</h1>
           <p className="mt-1 text-sm text-taupe">{description}</p>
         </div>
-        {/* TODO: wire up create/edit/delete once the Supabase schema + Storage buckets are in place. */}
-        <button className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm uppercase tracking-[0.15em] text-cream transition-colors hover:bg-terracotta-soft active:bg-terracotta-soft sm:w-auto">
+        <Link
+          href={addHref}
+          className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm uppercase tracking-[0.15em] text-cream transition-colors hover:bg-terracotta-soft active:bg-terracotta-soft sm:w-auto"
+        >
           <Plus size={16} />
           Add New
-        </button>
+        </Link>
       </div>
 
       {/* overflow-x-auto lets a wide table scroll horizontally on narrow
@@ -55,18 +72,14 @@ export default function AdminListPage<T extends { id: string }>({
                 ))}
                 <td className="px-4 py-4 sm:px-6">
                   <div className="flex gap-1 text-taupe">
-                    <button
+                    <Link
+                      href={editHref(item)}
                       aria-label="Edit"
                       className="rounded-lg p-2.5 transition-colors hover:bg-paper hover:text-terracotta active:bg-paper active:text-terracotta"
                     >
                       <Pencil size={16} />
-                    </button>
-                    <button
-                      aria-label="Delete"
-                      className="rounded-lg p-2.5 transition-colors hover:bg-paper hover:text-red-400 active:bg-paper active:text-red-400"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    </Link>
+                    <DeleteButton id={item.id} label={deleteLabel(item)} action={deleteAction} />
                   </div>
                 </td>
               </tr>
@@ -74,7 +87,15 @@ export default function AdminListPage<T extends { id: string }>({
           </tbody>
         </table>
 
-        {items.length === 0 && <p className="px-6 py-10 text-center text-sm text-taupe">No records yet.</p>}
+        {items.length === 0 && (
+          <p className="px-6 py-10 text-center text-sm text-taupe">
+            No records yet —{" "}
+            <Link href={addHref} className="text-terracotta hover:underline">
+              add the first one
+            </Link>
+            .
+          </p>
+        )}
       </div>
     </div>
   );

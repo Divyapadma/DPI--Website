@@ -1,12 +1,19 @@
 import AdminListPage from "@/components/admin/AdminListPage";
-import { blogPosts } from "@/lib/mock-data";
+import { getBlogPosts } from "@/lib/queries";
+import { deleteBlogPost } from "@/lib/mutations";
 
-export default function AdminBlogPage() {
+export default async function AdminBlogPage() {
+  const blogPosts = await getBlogPosts();
+
   return (
     <AdminListPage
       title="Blog Posts"
       description="Manage articles published to the DPI Journal."
       items={blogPosts}
+      addHref="/admin/blog/new"
+      editHref={(p) => `/admin/blog/${p.id}/edit`}
+      deleteAction={deleteBlogPost}
+      deleteLabel={(p) => p.title}
       columns={[
         { header: "Title", render: (p) => p.title },
         { header: "Author", render: (p) => p.author },

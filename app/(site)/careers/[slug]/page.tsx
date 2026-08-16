@@ -1,25 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Briefcase, MapPin } from "lucide-react";
-import { careerListings } from "@/lib/mock-data";
+import { getCareerListingBySlug } from "@/lib/queries";
 import LeadForm from "@/components/forms/LeadForm";
 import FadeIn from "@/components/ui/FadeIn";
 import SplitHeading from "@/components/ui/SplitHeading";
 
-export async function generateStaticParams() {
-  return careerListings.map((c) => ({ slug: c.slug }));
-}
+// No generateStaticParams — listings are managed live via /admin.
 
 export async function generateMetadata({ params }: PageProps<"/careers/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const job = careerListings.find((c) => c.slug === slug);
+  const job = await getCareerListingBySlug(slug);
   if (!job) return {};
   return { title: job.title, description: job.description };
 }
 
 export default async function CareerDetailPage({ params }: PageProps<"/careers/[slug]">) {
   const { slug } = await params;
-  const job = careerListings.find((c) => c.slug === slug);
+  const job = await getCareerListingBySlug(slug);
   if (!job) notFound();
 
   return (

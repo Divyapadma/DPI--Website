@@ -1,13 +1,20 @@
 import AdminListPage from "@/components/admin/AdminListPage";
-import { projects } from "@/lib/mock-data";
+import { getProjects } from "@/lib/queries";
+import { deleteProject } from "@/lib/mutations";
 import { formatINR } from "@/lib/utils";
 
-export default function AdminProjectsPage() {
+export default async function AdminProjectsPage() {
+  const projects = await getProjects();
+
   return (
     <AdminListPage
       title="Projects"
       description="Manage residential projects across all locations."
       items={projects}
+      addHref="/admin/projects/new"
+      editHref={(p) => `/admin/projects/${p.id}/edit`}
+      deleteAction={deleteProject}
+      deleteLabel={(p) => p.title}
       columns={[
         { header: "Title", render: (p) => p.title },
         { header: "Location", render: (p) => `${p.location.area}, ${p.location.city}` },

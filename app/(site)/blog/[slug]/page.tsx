@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { blogPosts } from "@/lib/mock-data";
+import { getBlogPostBySlug } from "@/lib/queries";
 import RevealImage from "@/components/ui/RevealImage";
 import SplitHeading from "@/components/ui/SplitHeading";
 
-export async function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
-}
+// No generateStaticParams — posts are managed live via /admin.
 
 export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = await getBlogPostBySlug(slug);
   if (!post) return {};
   return { title: post.title, description: post.excerpt };
 }
 
 export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">) {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = await getBlogPostBySlug(slug);
   if (!post) notFound();
 
   const date = new Date(post.publishedAt).toLocaleDateString("en-IN", {

@@ -1,12 +1,19 @@
 import AdminListPage from "@/components/admin/AdminListPage";
-import { careerListings } from "@/lib/mock-data";
+import { getCareerListings } from "@/lib/queries";
+import { deleteCareerListing } from "@/lib/mutations";
 
-export default function AdminCareersPage() {
+export default async function AdminCareersPage() {
+  const careerListings = await getCareerListings();
+
   return (
     <AdminListPage
       title="Career Listings"
       description="Manage open positions shown on the Careers page."
       items={careerListings}
+      addHref="/admin/careers/new"
+      editHref={(c) => `/admin/careers/${c.id}/edit`}
+      deleteAction={deleteCareerListing}
+      deleteLabel={(c) => c.title}
       columns={[
         { header: "Title", render: (c) => c.title },
         { header: "Department", render: (c) => c.department },

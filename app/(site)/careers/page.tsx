@@ -5,7 +5,7 @@ import PageHero from "@/components/ui/PageHero";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import TiltCard from "@/components/ui/TiltCard";
 import { BentoGrid, BentoItem } from "@/components/ui/BentoGrid";
-import { careerListings } from "@/lib/mock-data";
+import { getCareerListings } from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "Careers",
@@ -14,7 +14,9 @@ export const metadata: Metadata = {
 
 const SPAN = (i: number) => (i === 0 ? "lg:col-span-2 lg:row-span-2" : "lg:col-span-1 lg:row-span-1");
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const careerListings = await getCareerListings();
+
   return (
     <>
       <PageHero

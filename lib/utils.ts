@@ -12,3 +12,14 @@ export function formatINR(amountInLakhs: number) {
   }
   return `₹${amountInLakhs.toFixed(0)} L`;
 }
+
+/** "DPI Crown Heights" -> "dpi-crown-heights". Used to auto-fill admin form slug fields. */
+export function slugify(input: string) {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}

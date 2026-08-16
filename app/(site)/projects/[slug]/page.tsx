@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CheckCircle2, MapPin, PlayCircle } from "lucide-react";
-import { projects } from "@/lib/mock-data";
+import { getProjectBySlug } from "@/lib/queries";
 import { formatINR } from "@/lib/utils";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import FadeIn from "@/components/ui/FadeIn";
@@ -10,13 +10,13 @@ import SplitHeading from "@/components/ui/SplitHeading";
 import SwipeGallery from "@/components/projects/SwipeGallery";
 import LeadForm from "@/components/forms/LeadForm";
 
-export async function generateStaticParams() {
-  return projects.map((p) => ({ slug: p.slug }));
-}
+// No generateStaticParams — projects are managed live via /admin, so this
+// route renders dynamically per request instead of being pre-built from a
+// fixed list at build time.
 
 export async function generateMetadata({ params }: PageProps<"/projects/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = await getProjectBySlug(slug);
   if (!project) return {};
   return {
     title: project.title,
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps<"/projects/[slug]">
 
 export default async function ProjectDetailPage({ params }: PageProps<"/projects/[slug]">) {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = await getProjectBySlug(slug);
   if (!project) notFound();
 
   return (
@@ -71,22 +71,26 @@ export default async function ProjectDetailPage({ params }: PageProps<"/projects
             </ScrollReveal>
           )}
 
-          <ScrollReveal>
-            <h2 className="font-display text-2xl text-charcoal">Gallery</h2>
-            <SwipeGallery images={project.gallery} alt={project.title} />
-          </ScrollReveal>
+          {project.gallery.length > 0 && (
+            <ScrollReveal>
+              <h2 className="font-display text-2xl text-charcoal">Gallery</h2>
+              <SwipeGallery images={project.gallery} alt={project.title} />
+            </ScrollReveal>
+          )}
 
-          <ScrollReveal>
-            <h2 className="font-display text-2xl text-charcoal">Amenities</h2>
-            <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {project.amenities.map((a) => (
-                <li key={a} className="flex items-center gap-2 text-sm text-charcoal/90">
-                  <CheckCircle2 size={16} className="shrink-0 text-terracotta" />
-                  {a}
-                </li>
-              ))}
-            </ul>
-          </ScrollReveal>
+          {project.amenities.length > 0 && (
+            <ScrollReveal>
+              <h2 className="font-display text-2xl text-charcoal">Amenities</h2>
+              <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {project.amenities.map((a) => (
+                  <li key={a} className="flex items-center gap-2 text-sm text-charcoal/90">
+                    <CheckCircle2 size={16} className="shrink-0 text-terracotta" />
+                    {a}
+                  </li>
+                ))}
+              </ul>
+            </ScrollReveal>
+          )}
 
           <ScrollReveal>
             <h2 className="font-display text-2xl text-charcoal">Location</h2>

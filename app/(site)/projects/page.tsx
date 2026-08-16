@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/ui/PageHero";
 import ProjectsExplorer from "@/components/projects/ProjectsExplorer";
-import { projects } from "@/lib/mock-data";
+import { getProjects } from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "Projects",
   description: "Browse DPI's residential projects by location, price, and construction status.",
 };
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const projects = await getProjects();
+
   return (
     <>
       <PageHero
