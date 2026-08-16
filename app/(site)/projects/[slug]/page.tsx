@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CheckCircle2, MapPin, PlayCircle } from "lucide-react";
+import { CheckCircle2, MapPin } from "lucide-react";
 import { getProjectBySlug } from "@/lib/queries";
 import { formatINR } from "@/lib/utils";
 import ScrollReveal from "@/components/ui/ScrollReveal";
@@ -8,6 +8,7 @@ import FadeIn from "@/components/ui/FadeIn";
 import RevealImage from "@/components/ui/RevealImage";
 import SplitHeading from "@/components/ui/SplitHeading";
 import SwipeGallery from "@/components/projects/SwipeGallery";
+import WalkthroughVideo from "@/components/projects/WalkthroughVideo";
 import LeadForm from "@/components/forms/LeadForm";
 
 // No generateStaticParams — projects are managed live via /admin, so this
@@ -65,9 +66,7 @@ export default async function ProjectDetailPage({ params }: PageProps<"/projects
           {project.videoUrl && (
             <ScrollReveal>
               <h2 className="font-display text-2xl text-charcoal">Walkthrough</h2>
-              <div className="glass-card mt-4 flex aspect-video items-center justify-center rounded-2xl">
-                <PlayCircle className="text-terracotta" size={48} />
-              </div>
+              <WalkthroughVideo videoUrl={project.videoUrl} posterImage={project.heroImage} alt={project.title} />
             </ScrollReveal>
           )}
 

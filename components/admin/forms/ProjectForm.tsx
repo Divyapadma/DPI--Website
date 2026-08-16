@@ -184,21 +184,37 @@ export default function ProjectForm({ project }: { project?: Project }) {
         </p>
         <div>
           <label className={labelClass}>Hero Image URL</label>
+          <p className="mb-1.5 text-xs text-taupe">
+            An image file (.jpg, .png, .webp) — not a video. Use the Walkthrough field below for video.
+          </p>
           <input
             name="heroImage"
             required
-            placeholder="https://ik.imagekit.io/..."
+            placeholder="https://ik.imagekit.io/.../photo.jpg"
             defaultValue={project?.heroImage}
             className={inputClass}
           />
         </div>
         <div>
           <label className={labelClass}>Gallery Image URLs (one per line)</label>
-          <textarea name="gallery" rows={4} defaultValue={project?.gallery.join("\n")} className={inputClass} />
+          <p className="mb-1.5 text-xs text-taupe">Image files too — same rule as above.</p>
+          <textarea
+            name="gallery"
+            rows={4}
+            placeholder={"https://ik.imagekit.io/.../photo-1.jpg\nhttps://ik.imagekit.io/.../photo-2.jpg"}
+            defaultValue={project?.gallery.join("\n")}
+            className={inputClass}
+          />
         </div>
         <div>
           <label className={labelClass}>Walkthrough Video URL (optional)</label>
-          <input name="videoUrl" defaultValue={project?.videoUrl} className={inputClass} />
+          <p className="mb-1.5 text-xs text-taupe">A video file (.mp4) — shown as a click-to-play player.</p>
+          <input
+            name="videoUrl"
+            placeholder="https://ik.imagekit.io/.../walkthrough.mp4"
+            defaultValue={project?.videoUrl}
+            className={inputClass}
+          />
         </div>
         <div>
           <label className={labelClass}>Amenities (one per line)</label>
