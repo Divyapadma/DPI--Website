@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, SlidersHorizontal } from "lucide-react";
 import type { Project, ProjectStatus } from "@/lib/types";
 import ProjectCard from "@/components/projects/ProjectCard";
+import TiltCard from "@/components/ui/TiltCard";
 import { cn } from "@/lib/utils";
 
 const STATUS_OPTIONS: { value: ProjectStatus | "all"; label: string }[] = [
@@ -49,7 +50,7 @@ export default function ProjectsExplorer({ projects }: { projects: Project[] }) 
   // control a touch-friendly tap target.
   // text-base (16px) avoids iOS Safari auto-zooming the page on focus.
   const selectClass =
-    "min-h-[44px] w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-base text-ivory outline-none transition-colors focus:border-gold sm:w-auto sm:rounded-full sm:px-5 sm:text-sm";
+    "focus-glow min-h-[44px] w-full rounded-xl border border-line bg-ivory px-4 py-2.5 text-base text-charcoal outline-none transition-colors sm:w-auto sm:rounded-full sm:px-5 sm:text-sm";
 
   return (
     <div>
@@ -57,21 +58,21 @@ export default function ProjectsExplorer({ projects }: { projects: Project[] }) 
       <div className="sm:hidden">
         <button
           onClick={() => setFiltersOpen((v) => !v)}
-          className="flex min-h-[44px] w-full items-center justify-between rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ivory"
+          className="flex min-h-[44px] w-full items-center justify-between rounded-xl border border-line bg-ivory px-4 py-3 text-sm text-charcoal"
           aria-expanded={filtersOpen}
         >
           <span className="flex items-center gap-2">
-            <SlidersHorizontal size={16} className="text-gold" />
+            <SlidersHorizontal size={16} className="text-terracotta" />
             Filters
             {activeCount > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-gold px-1.5 text-[11px] font-semibold text-ink">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-terracotta px-1.5 text-[11px] font-semibold text-cream">
                 {activeCount}
               </span>
             )}
           </span>
           <ChevronDown
             size={18}
-            className={cn("text-mist transition-transform", filtersOpen && "rotate-180")}
+            className={cn("text-taupe transition-transform", filtersOpen && "rotate-180")}
           />
         </button>
 
@@ -151,20 +152,22 @@ export default function ProjectsExplorer({ projects }: { projects: Project[] }) 
         </select>
       </div>
 
-      <p className="mt-5 text-sm text-mist sm:mt-6">
+      <p className="mt-5 text-sm text-taupe sm:mt-6">
         Showing {filtered.length} of {projects.length} projects
       </p>
 
       <motion.div layout className="mt-6 grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
         {filtered.map((project) => (
           <motion.div key={project.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <ProjectCard project={project} />
+            <TiltCard>
+              <ProjectCard project={project} />
+            </TiltCard>
           </motion.div>
         ))}
       </motion.div>
 
       {filtered.length === 0 && (
-        <p className="mt-16 text-center text-sm text-mist">No projects match the selected filters.</p>
+        <p className="mt-16 text-center text-sm text-taupe">No projects match the selected filters.</p>
       )}
     </div>
   );

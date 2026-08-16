@@ -19,7 +19,7 @@ export default async function AdminDashboardLayout({ children }: LayoutProps<"/a
       <AdminSidebar />
       <div className="min-w-0 flex-1">
         {!isSupabaseConfigured && (
-          <div className="flex items-start gap-2 border-b border-gold/30 bg-gold/10 px-5 py-3 text-sm text-gold sm:items-center sm:px-6">
+          <div className="flex items-start gap-2 border-b border-terracotta/30 bg-terracotta/10 px-5 py-3 text-sm text-terracotta sm:items-center sm:px-6">
             <AlertTriangle size={16} className="mt-0.5 shrink-0 sm:mt-0" />
             Supabase isn&apos;t configured yet — this panel is running unprotected with mock data. Set the env vars
             in .env.local.example to enable real auth and data.

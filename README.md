@@ -1,12 +1,14 @@
 # DPI Real Estate Website
 
-Marketing site + admin CMS for DPI, a multi-city real estate developer. Luxury dark (black & gold) design system, built on Next.js App Router.
+Marketing site + admin CMS for DPI, a multi-city real estate developer. Warm editorial design system (cream / terracotta / sage), built on Next.js App Router with a full premium interaction layer.
 
 ## Tech Stack
 
 - **Next.js 16** (App Router, Turbopack) + TypeScript
 - **Tailwind CSS v4** (CSS-first theme in `app/globals.css`)
-- **Framer Motion** for scroll-reveal/UI motion, **GSAP** for the cinematic hero
+- **Framer Motion** for page transitions, scroll-reveal, tilt cards, and the scroll-progress line
+- **GSAP** (ScrollTrigger + SplitText) for the cinematic hero, split-text headline reveals, image clip-path wipes, and the pinned "Why Choose Us" section
+- **Lenis** for site-wide smooth scroll, synced with GSAP's ticker
 - **Supabase** (`@supabase/supabase-js` + `@supabase/ssr`) for the admin panel, content, and lead storage
 - **Vercel** for hosting
 
@@ -58,23 +60,41 @@ proxy.ts            Next 16's renamed middleware.ts — refreshes the Supabase
                     session and gates /admin/** once credentials are set.
 ```
 
-## Design System (Luxury Dark — Black & Gold)
+## Design System (Warm Editorial — Cream / Terracotta / Sage)
 
 Tokens live in `app/globals.css` under `@theme`:
 
 | Token | Value | Use |
 |---|---|---|
-| `--color-ink` | `#0A0A0A` | Page background |
-| `--color-surface` / `--color-surface-2` | `#121212` / `#1A1A1A` | Cards, panels, nav |
-| `--color-gold` / `--color-gold-soft` / `--color-gold-deep` | `#C9A227` / `#E4C567` / `#8F711A` | Accent, hover, pressed |
-| `--color-ivory` | `#F5F1E8` | Primary text |
-| `--color-mist` | `#A8A29A` | Secondary/muted text |
+| `--color-cream` | `#F7F3EC` | Page background |
+| `--color-ivory` / `--color-paper` | `#FDFBF7` / `#FFFFFF` | Cards, panels, nav-on-scroll |
+| `--color-terracotta` / `-soft` / `-deep` | `#C97C5D` / `#D9967A` / `#A85F42` | Primary accent — CTAs, key highlights |
+| `--color-sage` / `-soft` / `-deep` | `#8A9A7E` / `#A3B098` / `#6F7D64` | Secondary accent — secondary buttons, tags |
+| `--color-charcoal` | `#2E2A26` | Primary text |
+| `--color-taupe` | `#7A7368` | Secondary/muted text |
+| `--color-line` | `#E8E1D5` | Borders/dividers |
 | `--font-display` | Playfair Display | Headings |
 | `--font-body` | Inter | Body copy |
 
-**This is a placeholder palette per the project brief.** Swap the hex values once the logo is supplied — everything downstream (Tailwind classes like `bg-ink`, `text-gold`, `font-display`) updates automatically.
+Reusable utility classes: `.glass-card` (light glassmorphic panel, terracotta glow on hover — scoped to `hover: hover` with a real `:active` fallback for touch), `.text-terracotta-gradient`, `.divider-terracotta`, `.underline-grow` (center-out nav underline), `.focus-glow` (terracotta focus ring for inputs), `.grain-overlay` (barely-visible fixed noise texture).
 
-Reusable utility classes: `.glass-card` (glassmorphic panel + gold hover glow), `.text-gold-gradient`, `.divider-gold`.
+## Premium Interaction Layer
+
+All of the following live under `components/ui/` and `components/providers/`, wired into `app/(site)/layout.tsx` via `SiteChrome` — scoped to the public marketing site only, not `/admin`:
+
+- **`SmoothScroll`** — Lenis smooth scroll synced with GSAP's ticker/ScrollTrigger (`lib/gsap.ts` centralizes plugin registration).
+- **`RevealImage`** — every image wipes into view via `clip-path` on scroll, instead of a plain fade.
+- **`CustomCursor`** + **`useMagnetic`** (in `Button`/`ButtonLink`) — terracotta dot-and-ring cursor and magnetic-pull buttons; both auto-disable on touch (no mousemove events).
+- **`SplitHeading`** — GSAP SplitText word/letter reveal, used by `Hero`, `PageHero`, and `SectionHeading` (so it's picked up broadly without per-page wiring).
+- **`BentoGrid` / `BentoItem`** — asymmetric card grid used by Home's Featured Projects, the Blog listing, and the Careers listing.
+- **`WhyChooseUsPinned`** (`components/about/`) — ScrollTrigger `pin` on About's "Why Choose Us" section, cards stagger-reveal while it's pinned.
+- **`GrainOverlay`** — fixed, `mix-blend-multiply`, ~3.5% opacity noise texture over the whole viewport.
+- **`Preloader`** — logo + terracotta line-draw on first load only (`sessionStorage`-gated).
+- **`PageTransition`** — `AnimatePresence` cross-fade between routes; also resets Lenis's scroll position on navigate (Next resets native scroll, Lenis tracks its own).
+- **`TiltCard`** — mouse-position-based 3D tilt on project/blog/career cards.
+- **`ScrollProgressBar`** — thin terracotta line at the top of the viewport, site-wide.
+- **`SwipeGallery`** (`components/projects/`) — full-bleed, natively swipeable (CSS scroll-snap) project gallery.
+- **`FadeIn`** — opacity-only entrance (deliberately no `transform`) for the sticky enquiry-form sidebars, so it never fights `position: sticky`.
 
 ## Content Status
 

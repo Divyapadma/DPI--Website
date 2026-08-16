@@ -1,34 +1,40 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Award, Building2, Handshake, Target } from "lucide-react";
 import PageHero from "@/components/ui/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
+import SplitHeading from "@/components/ui/SplitHeading";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import RevealImage from "@/components/ui/RevealImage";
 import CTASection from "@/components/home/CTASection";
+import WhyChooseUsPinned from "@/components/about/WhyChooseUsPinned";
 
 export const metadata: Metadata = {
   title: "About Us",
   description: "The story, mission, and people behind DPI's landmark real estate developments.",
 };
 
+// Icons are rendered here (Server Component) into JSX before being passed
+// to <WhyChooseUsPinned>, a Client Component — component *references* like
+// `Building2` can't cross the server/client boundary as props, only
+// already-rendered elements can.
 const WHY_CHOOSE_US = [
   {
-    icon: Building2,
+    icon: <Building2 className="text-terracotta" size={26} />,
     title: "Multi-City Presence",
     description: "Active developments across major growth corridors, backed by deep local market expertise.",
   },
   {
-    icon: Handshake,
+    icon: <Handshake className="text-terracotta" size={26} />,
     title: "Transparent Process",
     description: "Clear pricing, honest timelines, and a dedicated relationship manager from booking to handover.",
   },
   {
-    icon: Award,
+    icon: <Award className="text-terracotta" size={26} />,
     title: "Uncompromising Quality",
     description: "In-house design and execution standards applied consistently across every project.",
   },
   {
-    icon: Target,
+    icon: <Target className="text-terracotta" size={26} />,
     title: "Customer-First Approach",
     description: "Post-handover support and community management that outlasts the sale.",
   },
@@ -51,49 +57,38 @@ export default function AboutPage() {
       />
 
       <section className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 sm:gap-14 sm:px-6 sm:py-20 lg:grid-cols-2 lg:px-10 lg:py-24">
-        <ScrollReveal>
-          <div className="relative h-[260px] overflow-hidden rounded-2xl sm:h-[340px] lg:h-[420px]">
-            <Image src="/images/placeholder-project.svg" alt="DPI story" fill className="object-cover" />
-            <div className="absolute inset-0 border border-gold/20" />
-          </div>
-        </ScrollReveal>
+        <div className="relative h-[260px] overflow-hidden rounded-2xl sm:h-[340px] lg:h-[420px]">
+          <RevealImage
+            src="/images/placeholder-project.svg"
+            alt="DPI story"
+            fill
+            wrapperClassName="h-full w-full"
+            className="object-cover"
+          />
+          <div className="pointer-events-none absolute inset-0 border border-terracotta/20" />
+        </div>
         <ScrollReveal delay={0.15}>
-          <p className="mb-3 text-[11px] uppercase tracking-[0.3em] text-gold sm:text-xs">Our Story</p>
-          <h2 className="font-display text-2xl leading-tight text-ivory sm:text-3xl lg:text-4xl">
-            From a single project to a multi-city portfolio.
-          </h2>
-          <p className="mt-4 text-sm leading-relaxed text-mist sm:mt-5 sm:text-base">
+          <p className="mb-3 text-[11px] uppercase tracking-[0.3em] text-terracotta sm:text-xs">Our Story</p>
+          <SplitHeading
+            as="h2"
+            text="From a single project to a multi-city portfolio."
+            splitType="words"
+            className="font-display text-2xl leading-tight text-charcoal sm:text-3xl lg:text-4xl"
+          />
+          <p className="mt-4 text-sm leading-relaxed text-taupe sm:mt-5 sm:text-base">
             {/* TODO: replace with real company history / founder narrative. */}
             DPI began with a simple conviction: that a home should be delivered exactly as promised. That
             principle has guided every project since — from our first residential tower to today&apos;s portfolio
             spanning multiple cities and thousands of families.
           </p>
-          <p className="mt-4 text-sm leading-relaxed text-mist sm:text-base">
+          <p className="mt-4 text-sm leading-relaxed text-taupe sm:text-base">
             Every development is approached with the same discipline: rigorous site selection, in-house design and
             execution, and a relentless focus on the experience of the people who will eventually call it home.
           </p>
         </ScrollReveal>
       </section>
 
-      <section className="border-y border-line bg-surface/60">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
-          <ScrollReveal>
-            <SectionHeading eyebrow="Why Choose Us" title="What Sets DPI Apart" />
-          </ScrollReveal>
-
-          <div className="mt-10 grid gap-5 sm:mt-14 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-            {WHY_CHOOSE_US.map(({ icon: Icon, title, description }, i) => (
-              <ScrollReveal key={title} delay={i * 0.1}>
-                <div className="glass-card h-full rounded-2xl p-6 sm:p-7">
-                  <Icon className="text-gold" size={26} />
-                  <h3 className="font-display mt-5 text-lg text-ivory">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-mist">{description}</p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WhyChooseUsPinned items={WHY_CHOOSE_US} />
 
       <section className="mx-auto max-w-7xl px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
         <ScrollReveal>
@@ -104,12 +99,12 @@ export default function AboutPage() {
           {TEAM.map((member, i) => (
             <ScrollReveal key={member.name} delay={i * 0.1}>
               <div className="glass-card overflow-hidden rounded-2xl">
-                <div className="relative h-56 w-full bg-surface-2 sm:h-72">
+                <div className="relative h-56 w-full bg-paper sm:h-72">
                   {/* TODO: replace with real headshots */}
                 </div>
                 <div className="p-5 sm:p-6">
-                  <p className="font-display text-lg text-ivory">{member.name}</p>
-                  <p className="mt-1 text-sm text-gold">{member.role}</p>
+                  <p className="font-display text-lg text-charcoal">{member.name}</p>
+                  <p className="mt-1 text-sm text-terracotta">{member.role}</p>
                 </div>
               </div>
             </ScrollReveal>

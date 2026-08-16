@@ -37,17 +37,17 @@ export default function AdminLoginPage() {
   }
 
   const inputClass =
-    "w-full min-h-[44px] rounded-xl border border-line bg-surface px-4 py-3 text-base text-ivory outline-none transition-colors placeholder:text-mist/60 focus:border-gold";
+    "focus-glow w-full min-h-[44px] rounded-xl border border-line bg-ivory px-4 py-3 text-base text-charcoal outline-none transition-colors placeholder:text-taupe/60";
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-5 sm:px-6">
       <div className="glass-card w-full max-w-sm rounded-2xl p-6 sm:p-8">
         <div className="mb-6 flex flex-col items-center text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/40 text-gold">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-terracotta/40 text-terracotta">
             <Lock size={20} />
           </div>
-          <h1 className="font-display mt-4 text-2xl text-ivory">Admin Sign In</h1>
-          <p className="mt-1 text-sm text-mist">DPI content management panel</p>
+          <h1 className="font-display mt-4 text-2xl text-charcoal">Admin Sign In</h1>
+          <p className="mt-1 text-sm text-taupe">DPI content management panel</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -56,7 +56,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-3 text-sm uppercase tracking-[0.15em] text-ink transition-all hover:bg-gold-soft active:bg-gold-soft disabled:opacity-60"
+            className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-terracotta px-7 py-3 text-sm uppercase tracking-[0.15em] text-cream transition-all hover:bg-terracotta-soft active:bg-terracotta-soft disabled:opacity-60"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             Sign In

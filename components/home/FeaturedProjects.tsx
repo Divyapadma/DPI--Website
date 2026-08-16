@@ -2,7 +2,13 @@ import { projects } from "@/lib/mock-data";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import ProjectCard from "@/components/projects/ProjectCard";
+import TiltCard from "@/components/ui/TiltCard";
+import { BentoGrid, BentoItem } from "@/components/ui/BentoGrid";
 import { ButtonLink } from "@/components/ui/Button";
+
+// Bento span pattern for however many featured projects exist: the first
+// item gets a big 2x2 footprint, everything after fills single cells.
+const SPAN = (i: number) => (i === 0 ? "lg:col-span-2 lg:row-span-2" : "lg:col-span-1 lg:row-span-1");
 
 export default function FeaturedProjects() {
   const featured = projects.filter((p) => p.featured);
@@ -17,13 +23,17 @@ export default function FeaturedProjects() {
         />
       </ScrollReveal>
 
-      <div className="mt-10 grid gap-6 sm:mt-14 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <BentoGrid className="mt-10 sm:mt-14">
         {featured.map((project, i) => (
-          <ScrollReveal key={project.id} delay={i * 0.1}>
-            <ProjectCard project={project} />
-          </ScrollReveal>
+          <BentoItem key={project.id} span={SPAN(i)}>
+            <ScrollReveal delay={i * 0.1} className="h-full">
+              <TiltCard className="h-full">
+                <ProjectCard project={project} imageHeight={i === 0 ? "h-72 sm:h-80 lg:h-96" : "h-56"} />
+              </TiltCard>
+            </ScrollReveal>
+          </BentoItem>
         ))}
-      </div>
+      </BentoGrid>
 
       <div className="mt-10 flex justify-center sm:mt-14">
         <ButtonLink href="/projects" variant="outline" className="w-full sm:w-auto">

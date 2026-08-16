@@ -11,19 +11,19 @@ const CARDS = [
 export default function AdminDashboardPage() {
   return (
     <div>
-      <h1 className="font-display text-xl text-ivory sm:text-2xl">Dashboard</h1>
-      <p className="mt-1 text-sm text-mist">Overview of your site content.</p>
+      <h1 className="font-display text-xl text-charcoal sm:text-2xl">Dashboard</h1>
+      <p className="mt-1 text-sm text-taupe">Overview of your site content.</p>
 
       <div className="mt-6 grid gap-5 sm:mt-8 sm:grid-cols-3 sm:gap-6">
         {CARDS.map(({ href, label, count, icon: Icon }) => (
           <Link
             key={href}
             href={href}
-            className="glass-card rounded-2xl p-6 transition-colors hover:border-gold active:border-gold"
+            className="glass-card rounded-2xl p-6 transition-colors hover:border-terracotta active:border-terracotta"
           >
-            <Icon className="text-gold" size={22} />
-            <p className="font-display mt-4 text-3xl text-ivory">{count}</p>
-            <p className="mt-1 text-sm text-mist">{label}</p>
+            <Icon className="text-terracotta" size={22} />
+            <p className="font-display mt-4 text-3xl text-charcoal">{count}</p>
+            <p className="mt-1 text-sm text-taupe">{label}</p>
           </Link>
         ))}
       </div>

@@ -19,14 +19,14 @@ const SOCIALS = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-line bg-surface">
+    <footer className="border-t border-line bg-ivory">
       <div className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16">
         <div className="grid gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <Link href="/" className="font-display text-2xl text-ivory">
-              DPI<span className="text-gold">.</span>
+            <Link href="/" className="font-display text-2xl text-charcoal">
+              DPI<span className="text-terracotta">.</span>
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-mist">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-taupe">
               Building landmarks across cities — delivering homes defined by quality, transparency, and lasting
               trust.
             </p>
@@ -36,7 +36,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-mist transition-colors hover:border-gold hover:text-gold active:border-gold active:text-gold"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-taupe transition-colors hover:border-terracotta hover:text-terracotta active:border-terracotta active:text-terracotta"
                 >
                   <Icon size={16} />
                 </a>
@@ -45,13 +45,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-display text-lg text-gold">Explore</h3>
+            <h3 className="font-display text-lg text-terracotta">Explore</h3>
             <ul className="mt-4 space-y-3">
               {EXPLORE_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="inline-block py-1 text-sm text-mist transition-colors hover:text-gold"
+                    className="inline-block py-1 text-sm text-taupe transition-colors hover:text-terracotta"
                   >
                     {link.label}
                   </Link>
@@ -61,21 +61,21 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-display text-lg text-gold">Head Office</h3>
-            <ul className="mt-4 space-y-4 text-sm text-mist">
+            <h3 className="font-display text-lg text-terracotta">Head Office</h3>
+            <ul className="mt-4 space-y-4 text-sm text-taupe">
               <li className="flex gap-3">
-                <MapPin size={18} className="mt-0.5 shrink-0 text-gold" />
+                <MapPin size={18} className="mt-0.5 shrink-0 text-terracotta" />
                 <span>DPI Business Tower, Baner Road, Pune, Maharashtra 411045</span>
               </li>
               <li className="flex gap-3">
-                <Phone size={18} className="shrink-0 text-gold" />
-                <a href="tel:+910000000000" className="inline-block py-1 hover:text-gold">
+                <Phone size={18} className="shrink-0 text-terracotta" />
+                <a href="tel:+910000000000" className="inline-block py-1 hover:text-terracotta">
                   +91 00000 00000
                 </a>
               </li>
               <li className="flex gap-3">
-                <Mail size={18} className="shrink-0 text-gold" />
-                <a href="mailto:info@dpi.com" className="inline-block break-all py-1 hover:text-gold">
+                <Mail size={18} className="shrink-0 text-terracotta" />
+                <a href="mailto:info@dpi.com" className="inline-block break-all py-1 hover:text-terracotta">
                   info@dpi.com
                 </a>
               </li>
@@ -83,16 +83,16 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-display text-lg text-gold">RERA</h3>
-            <p className="mt-4 text-sm leading-relaxed text-mist">
+            <h3 className="font-display text-lg text-terracotta">RERA</h3>
+            <p className="mt-4 text-sm leading-relaxed text-taupe">
               Registration numbers for each project are available on the respective project pages and on request.
             </p>
           </div>
         </div>
 
-        <div className="divider-gold mt-14 opacity-40" />
+        <div className="divider-terracotta mt-14 opacity-40" />
 
-        <div className="mt-6 flex flex-col items-center justify-between gap-4 text-xs text-mist md:flex-row">
+        <div className="mt-6 flex flex-col items-center justify-between gap-4 text-xs text-taupe md:flex-row">
           <p>&copy; {new Date().getFullYear()} DPI. All rights reserved.</p>
           <p>Crafted with intent, built to last.</p>
         </div>

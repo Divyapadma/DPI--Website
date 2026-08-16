@@ -1,3 +1,5 @@
+import SplitHeading from "@/components/ui/SplitHeading";
+
 export default function PageHero({
   eyebrow,
   title,
@@ -8,15 +10,19 @@ export default function PageHero({
   description?: string;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-line bg-surface">
-      <div className="pointer-events-none absolute -top-32 right-0 h-72 w-72 rounded-full bg-gold/10 blur-[120px]" />
+    <section className="relative overflow-hidden border-b border-line bg-ivory">
+      <div className="pointer-events-none absolute -top-32 right-0 h-72 w-72 rounded-full bg-terracotta/10 blur-[120px]" />
       <div className="relative mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-16 lg:px-10 lg:py-28">
-        <p className="mb-3 text-[11px] uppercase tracking-[0.3em] text-gold sm:text-xs">{eyebrow}</p>
-        <h1 className="font-display max-w-3xl text-[clamp(1.875rem,6vw,3.75rem)] leading-tight text-ivory break-words">
-          {title}
-        </h1>
+        <p className="mb-3 text-[11px] uppercase tracking-[0.3em] text-terracotta sm:text-xs">{eyebrow}</p>
+        <SplitHeading
+          as="h1"
+          text={title}
+          splitType="words"
+          trigger="mount"
+          className="font-display max-w-3xl text-[clamp(1.875rem,6vw,3.75rem)] leading-tight text-charcoal break-words"
+        />
         {description && (
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-mist sm:mt-5 sm:text-base">{description}</p>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-taupe sm:mt-5 sm:text-base">{description}</p>
         )}
       </div>
     </section>

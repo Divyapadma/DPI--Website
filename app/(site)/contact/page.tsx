@@ -20,42 +20,42 @@ export default function ContactPage() {
 
       <section className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:gap-14 sm:px-6 sm:py-16 lg:grid-cols-5 lg:px-10 lg:py-20">
         <ScrollReveal className="lg:col-span-2">
-          <h2 className="font-display text-xl text-ivory sm:text-2xl">Contact Details</h2>
+          <h2 className="font-display text-xl text-charcoal sm:text-2xl">Contact Details</h2>
           <ul className="mt-6 space-y-5 sm:space-y-6">
             <li className="flex gap-4">
-              <MapPin className="mt-1 shrink-0 text-gold" size={20} />
+              <MapPin className="mt-1 shrink-0 text-terracotta" size={20} />
               <div className="min-w-0">
-                <p className="text-sm text-ivory">Head Office</p>
-                <p className="text-sm text-mist">DPI Business Tower, Baner Road, Pune, Maharashtra 411045</p>
+                <p className="text-sm text-charcoal">Head Office</p>
+                <p className="text-sm text-taupe">DPI Business Tower, Baner Road, Pune, Maharashtra 411045</p>
               </div>
             </li>
             <li className="flex gap-4">
-              <Phone className="mt-1 shrink-0 text-gold" size={20} />
+              <Phone className="mt-1 shrink-0 text-terracotta" size={20} />
               <div>
-                <p className="text-sm text-ivory">Call Us</p>
-                <a href="tel:+910000000000" className="inline-block py-1 text-sm text-mist hover:text-gold">
+                <p className="text-sm text-charcoal">Call Us</p>
+                <a href="tel:+910000000000" className="inline-block py-1 text-sm text-taupe hover:text-terracotta">
                   +91 00000 00000
                 </a>
               </div>
             </li>
             <li className="flex gap-4">
-              <Mail className="mt-1 shrink-0 text-gold" size={20} />
+              <Mail className="mt-1 shrink-0 text-terracotta" size={20} />
               <div>
-                <p className="text-sm text-ivory">Email Us</p>
-                <a href="mailto:info@dpi.com" className="inline-block py-1 text-sm text-mist hover:text-gold break-all">
+                <p className="text-sm text-charcoal">Email Us</p>
+                <a href="mailto:info@dpi.com" className="inline-block py-1 text-sm text-taupe hover:text-terracotta break-all">
                   info@dpi.com
                 </a>
               </div>
             </li>
             <li className="flex gap-4">
-              <MessageCircle className="mt-1 shrink-0 text-gold" size={20} />
+              <MessageCircle className="mt-1 shrink-0 text-terracotta" size={20} />
               <div>
-                <p className="text-sm text-ivory">WhatsApp</p>
+                <p className="text-sm text-charcoal">WhatsApp</p>
                 <a
                   href="https://wa.me/910000000000"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block py-1 text-sm text-mist hover:text-gold"
+                  className="inline-block py-1 text-sm text-taupe hover:text-terracotta"
                 >
                   Chat with us
                 </a>
@@ -65,8 +65,8 @@ export default function ContactPage() {
 
           <div className="glass-card mt-8 flex h-52 items-center justify-center rounded-2xl sm:mt-10 sm:h-64">
             {/* TODO: embed real Google Maps iframe for office location(s) */}
-            <p className="flex items-center gap-2 text-sm text-mist">
-              <MapPin size={16} className="text-gold" />
+            <p className="flex items-center gap-2 text-sm text-taupe">
+              <MapPin size={16} className="text-terracotta" />
               Office Location Map
             </p>
           </div>
@@ -74,8 +74,8 @@ export default function ContactPage() {
 
         <ScrollReveal delay={0.15} className="lg:col-span-3">
           <div className="glass-card rounded-2xl p-6 sm:p-8">
-            <h2 className="font-display text-xl text-ivory sm:text-2xl">Send Us a Message</h2>
-            <p className="mt-2 text-sm text-mist">Fill in your details and we&apos;ll get back to you shortly.</p>
+            <h2 className="font-display text-xl text-charcoal sm:text-2xl">Send Us a Message</h2>
+            <p className="mt-2 text-sm text-taupe">Fill in your details and we&apos;ll get back to you shortly.</p>
             <LeadForm formType="contact" className="mt-6 sm:mt-8" submitLabel="Send Message" />
           </div>
         </ScrollReveal>

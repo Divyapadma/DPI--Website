@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export default function AdminRootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} h-full antialiased`}>
-      <body className="min-h-full bg-ink text-ivory">{children}</body>
+      <body className="min-h-full bg-cream text-charcoal">{children}</body>
     </html>
   );
 }

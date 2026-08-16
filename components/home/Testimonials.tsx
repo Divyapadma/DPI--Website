@@ -5,7 +5,7 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function Testimonials() {
   return (
-    <section className="border-y border-line bg-surface/60">
+    <section className="border-y border-line bg-ivory/60">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
         <ScrollReveal>
           <SectionHeading eyebrow="Testimonials" title="What Our Homeowners Say" />
@@ -15,17 +15,17 @@ export default function Testimonials() {
           {testimonials.map((t, i) => (
             <ScrollReveal key={t.id} delay={i * 0.1}>
               <div className="glass-card h-full rounded-2xl p-7">
-                <Quote className="text-gold" size={28} />
-                <p className="mt-4 text-sm leading-relaxed text-ivory/90">&ldquo;{t.quote}&rdquo;</p>
+                <Quote className="text-terracotta" size={28} />
+                <p className="mt-4 text-sm leading-relaxed text-charcoal/90">&ldquo;{t.quote}&rdquo;</p>
                 <div className="mt-6 flex items-center justify-between">
                   <div>
-                    <p className="font-display text-base text-ivory">{t.name}</p>
-                    <p className="text-xs text-mist">{t.role}</p>
+                    <p className="font-display text-base text-charcoal">{t.name}</p>
+                    <p className="text-xs text-taupe">{t.role}</p>
                   </div>
                   {t.rating && (
                     <div className="flex gap-0.5">
                       {Array.from({ length: t.rating }).map((_, idx) => (
-                        <Star key={idx} size={14} className="fill-gold text-gold" />
+                        <Star key={idx} size={14} className="fill-terracotta text-terracotta" />
                       ))}
                     </div>
                   )}

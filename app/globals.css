@@ -1,46 +1,70 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
-/* DPI Luxury Dark Theme — Black & Gold                               */
-/* Placeholder palette per project brief; swap once logo is supplied. */
+/* DPI — Warm Editorial Palette (cream / terracotta / sage)           */
 /* ------------------------------------------------------------------ */
 @theme {
-  --color-ink: #0a0a0a; /* page background */
-  --color-surface: #121212; /* card / panel background */
-  --color-surface-2: #1a1a1a; /* elevated panel / nav */
-  --color-line: #2a2a2a; /* hairline borders */
+  --color-cream: #f7f3ec; /* base page background — warm off-white */
+  --color-ivory: #fdfbf7; /* secondary bg — cards, elevated sections */
+  --color-paper: #ffffff; /* highest elevation — nav-on-scroll, dropdowns */
+  --color-line: #e8e1d5; /* hairline borders / dividers */
 
-  --color-gold: #c9a227; /* primary accent */
-  --color-gold-soft: #e4c567; /* hover / glow state */
-  --color-gold-deep: #8f711a; /* pressed / shadow state */
+  --color-terracotta: #c97c5d; /* primary accent — CTAs, key highlights */
+  --color-terracotta-soft: #d9967a; /* hover state */
+  --color-terracotta-deep: #a85f42; /* active / pressed state */
 
-  --color-ivory: #f5f1e8; /* primary text on dark */
-  --color-mist: #a8a29a; /* secondary / muted text */
+  --color-sage: #8a9a7e; /* secondary accent — secondary buttons, tags */
+  --color-sage-soft: #a3b098; /* hover state */
+  --color-sage-deep: #6f7d64; /* active / pressed state */
+
+  --color-charcoal: #2e2a26; /* primary text — warm, not pure black */
+  --color-taupe: #7a7368; /* secondary / muted text */
 
   --font-display: var(--font-playfair);
   --font-body: var(--font-inter);
 
-  --shadow-gold-glow: 0 0 0 1px rgba(201, 162, 39, 0.3), 0 8px 40px -8px rgba(201, 162, 39, 0.35);
-}
-
-@media (prefers-color-scheme: light) {
-  /* This is a dark-only luxury brand — force the dark palette regardless
-     of system preference so the experience never flips to a light theme. */
+  --shadow-terracotta-glow: 0 0 0 1px rgba(201, 124, 93, 0.28), 0 8px 32px -10px rgba(201, 124, 93, 0.3);
+  --shadow-soft: 0 4px 24px -8px rgba(46, 42, 38, 0.08);
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Lenis owns scroll smoothing — a CSS scroll-behavior here would fight it. */
+  scroll-behavior: auto;
 }
 
 body {
-  background: var(--color-ink);
-  color: var(--color-ivory);
+  background: var(--color-cream);
+  color: var(--color-charcoal);
   font-family: var(--font-body);
-  /* Defensive belt-and-braces against any element (a decorative blur,
-     a wide table, a long unbroken string) pushing past the viewport
-     edge — every component should already clip its own overflow, but
-     this guarantees no page-level horizontal scrollbar ever appears. */
   overflow-x: hidden;
+  position: relative;
+}
+
+/* Applied to <html> by CustomCursor once it detects a fine pointer, so
+   touch devices/SSR keep the native cursor and there's no hydration risk. */
+.has-custom-cursor,
+.has-custom-cursor a,
+.has-custom-cursor button {
+  cursor: none;
+}
+
+::selection {
+  background: var(--color-terracotta);
+  color: var(--color-ivory);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-terracotta-deep);
 }
 
 img,
@@ -49,66 +73,84 @@ video {
   height: auto;
 }
 
-::selection {
-  background: var(--color-gold);
-  color: var(--color-ink);
-}
-
-/* Thin gold-tinted scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-ink);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-line);
-  border-radius: 999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold-deep);
-}
-
 @layer utilities {
   .font-display {
     font-family: var(--font-display);
   }
 
-  /* Glassmorphic card used across the site */
+  /* Light glassmorphism — translucent ivory, soft warm shadow, no dark/gold */
   .glass-card {
-    background: rgba(18, 18, 18, 0.6);
+    background: rgba(253, 251, 247, 0.7);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(201, 162, 39, 0.14);
+    border: 1px solid rgba(46, 42, 38, 0.08);
+    box-shadow: var(--shadow-soft);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
-  /* Scope :hover to pointers that actually hover (mouse/trackpad) — on touch
-     devices a plain :hover rule "sticks" after the first tap instead of
-     giving real feedback, so touch gets its own :active rule below. */
   @media (hover: hover) and (pointer: fine) {
     .glass-card:hover {
-      border-color: rgba(201, 162, 39, 0.4);
-      box-shadow: var(--shadow-gold-glow);
+      border-color: rgba(201, 124, 93, 0.35);
+      box-shadow: var(--shadow-terracotta-glow);
     }
   }
 
   .glass-card:active {
-    border-color: rgba(201, 162, 39, 0.4);
-    box-shadow: var(--shadow-gold-glow);
+    border-color: rgba(201, 124, 93, 0.35);
+    box-shadow: var(--shadow-terracotta-glow);
   }
 
-  /* Gold gradient text, for headline accents */
-  .text-gold-gradient {
-    background: linear-gradient(120deg, var(--color-gold-soft), var(--color-gold) 45%, var(--color-gold-deep));
+  .text-terracotta-gradient {
+    background: linear-gradient(120deg, var(--color-terracotta-soft), var(--color-terracotta) 55%, var(--color-terracotta-deep));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  /* Hairline gold divider */
-  .divider-gold {
+  .divider-terracotta {
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+    background: linear-gradient(90deg, transparent, var(--color-terracotta), transparent);
   }
+
+  /* Nav-style underline that grows from the center on hover/focus */
+  .underline-grow {
+    position: relative;
+  }
+  .underline-grow::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -0.35em;
+    width: 100%;
+    height: 1px;
+    background: var(--color-terracotta);
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .underline-grow:hover::after,
+  .underline-grow:focus-visible::after,
+  .underline-grow[data-active="true"]::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+/* Barely-there paper grain — adds tactile texture to flat cream sections
+   without ever being a visible "pattern". Rendered once as a fixed overlay
+   by <GrainOverlay>, styled here so it stays out of the component tree. */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Terracotta focus glow for form fields, in place of a harsh outline */
+.focus-glow:focus {
+  outline: none;
+  border-color: var(--color-terracotta);
+  box-shadow: 0 0 0 4px rgba(201, 124, 93, 0.14);
 }

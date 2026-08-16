@@ -32,12 +32,12 @@ export default function Navbar() {
     <header
       className={cn(
         "sticky top-0 z-50 transition-colors duration-300",
-        scrolled ? "bg-ink/90 backdrop-blur-md border-b border-line" : "bg-transparent"
+        scrolled ? "bg-cream/90 backdrop-blur-md border-b border-line" : "bg-transparent"
       )}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-6 lg:px-10">
-        <Link href="/" className="font-display text-2xl tracking-wide text-ivory">
-          DPI<span className="text-gold">.</span>
+        <Link href="/" className="font-display text-2xl tracking-wide text-charcoal">
+          DPI<span className="text-terracotta">.</span>
         </Link>
 
         <ul className="hidden items-center gap-5 lg:flex xl:gap-9">
@@ -47,18 +47,13 @@ export default function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
+                  data-active={active}
                   className={cn(
-                    "relative text-sm uppercase tracking-[0.1em] transition-colors hover:text-gold xl:tracking-[0.15em]",
-                    active ? "text-gold" : "text-mist"
+                    "underline-grow text-sm uppercase tracking-[0.1em] transition-colors hover:text-terracotta xl:tracking-[0.15em]",
+                    active ? "text-terracotta" : "text-taupe"
                   )}
                 >
                   {link.label}
-                  {active && (
-                    <motion.span
-                      layoutId="nav-underline"
-                      className="absolute -bottom-1.5 left-0 h-px w-full bg-gold"
-                    />
-                  )}
                 </Link>
               </li>
             );
@@ -68,7 +63,7 @@ export default function Navbar() {
         <div className="hidden items-center gap-2 lg:flex">
           <a
             href="tel:+910000000000"
-            className="flex items-center gap-2 rounded-full border border-gold/40 px-4 py-2 text-sm text-gold transition-colors hover:border-gold hover:bg-gold/10 xl:px-5"
+            className="flex items-center gap-2 rounded-full border border-terracotta/40 px-4 py-2 text-sm text-terracotta transition-colors hover:border-terracotta hover:bg-terracotta/10 xl:px-5"
           >
             <Phone size={15} />
             <span className="hidden xl:inline">Enquire Now</span>
@@ -77,7 +72,7 @@ export default function Navbar() {
 
         <button
           aria-label="Toggle menu"
-          className="-mr-2.5 p-2.5 text-ivory lg:hidden"
+          className="-mr-2.5 p-2.5 text-charcoal lg:hidden"
           onClick={() => setOpen((v) => !v)}
         >
           {open ? <X size={24} /> : <Menu size={24} />}
@@ -91,7 +86,7 @@ export default function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-line bg-ink lg:hidden"
+            className="overflow-hidden border-t border-line bg-cream lg:hidden"
           >
             <ul className="flex flex-col gap-1 px-5 py-4 sm:px-6">
               {NAV_LINKS.map((link) => (
@@ -101,7 +96,7 @@ export default function Navbar() {
                     onClick={() => setOpen(false)}
                     className={cn(
                       "block min-h-[44px] py-3 text-sm uppercase tracking-[0.15em] leading-[20px]",
-                      pathname === link.href ? "text-gold" : "text-mist"
+                      pathname === link.href ? "text-terracotta" : "text-taupe"
                     )}
                   >
                     {link.label}
@@ -112,7 +107,7 @@ export default function Navbar() {
                 <a
                   href="tel:+910000000000"
                   onClick={() => setOpen(false)}
-                  className="flex w-full items-center justify-center gap-2 rounded-full border border-gold/40 px-5 py-3 text-sm text-gold sm:w-fit"
+                  className="flex w-full items-center justify-center gap-2 rounded-full border border-terracotta/40 px-5 py-3 text-sm text-terracotta sm:w-fit"
                 >
                   <Phone size={15} />
                   Enquire Now
