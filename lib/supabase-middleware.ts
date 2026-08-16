@@ -31,9 +31,18 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
-  const isLoginRoute = request.nextUrl.pathname === "/admin/login";
+  // These must stay reachable without a session — the whole point of the
+  // recovery flow is helping someone who *can't* log in. Note in
+  // particular that /admin/reset-password can never have a server-visible
+  // session at request time: Supabase delivers the recovery tokens in the
+  // URL hash fragment, which browsers never send to the server, so
+  // middleware only ever sees `user: null` here regardless of whether the
+  // link is valid — the client-side page is what establishes the session.
+  const isPublicAuthRoute = ["/admin/login", "/admin/forgot-password", "/admin/reset-password"].includes(
+    request.nextUrl.pathname
+  );
 
-  if (isAdminRoute && !isLoginRoute && !user) {
+  if (isAdminRoute && !isPublicAuthRoute && !user) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/admin/login";
     return NextResponse.redirect(redirectUrl);

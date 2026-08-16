@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, Lock } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase-browser";
@@ -63,6 +64,13 @@ export default function AdminLoginPage() {
           </button>
           {error && <p className="text-center text-sm text-red-400">{error}</p>}
         </form>
+
+        <Link
+          href="/admin/forgot-password"
+          className="mt-5 block text-center text-sm text-taupe hover:text-terracotta"
+        >
+          Forgot password?
+        </Link>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Briefcase, LayoutDashboard, Menu, Newspaper, Building2, X } from "lucide-react";
+import { Briefcase, LayoutDashboard, Menu, Newspaper, Building2, Settings, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import LogoutButton from "@/components/admin/LogoutButton";
 
@@ -13,6 +13,7 @@ const NAV = [
   { href: "/admin/projects", label: "Projects", icon: Building2 },
   { href: "/admin/blog", label: "Blog Posts", icon: Newspaper },
   { href: "/admin/careers", label: "Careers", icon: Briefcase },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 // Renders as a fragment of siblings (not wrapped in a div) so the parent
