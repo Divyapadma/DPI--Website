@@ -36,6 +36,17 @@ body {
   background: var(--color-ink);
   color: var(--color-ivory);
   font-family: var(--font-body);
+  /* Defensive belt-and-braces against any element (a decorative blur,
+     a wide table, a long unbroken string) pushing past the viewport
+     edge — every component should already clip its own overflow, but
+     this guarantees no page-level horizontal scrollbar ever appears. */
+  overflow-x: hidden;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
 }
 
 ::selection {
@@ -69,9 +80,20 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(201, 162, 39, 0.14);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .glass-card:hover {
+  /* Scope :hover to pointers that actually hover (mouse/trackpad) — on touch
+     devices a plain :hover rule "sticks" after the first tap instead of
+     giving real feedback, so touch gets its own :active rule below. */
+  @media (hover: hover) and (pointer: fine) {
+    .glass-card:hover {
+      border-color: rgba(201, 162, 39, 0.4);
+      box-shadow: var(--shadow-gold-glow);
+    }
+  }
+
+  .glass-card:active {
     border-color: rgba(201, 162, 39, 0.4);
     box-shadow: var(--shadow-gold-glow);
   }

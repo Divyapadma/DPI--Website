@@ -30,7 +30,7 @@ function Counter({ value }: { value: string }) {
 export default function StatsBar() {
   return (
     <section className="border-y border-line bg-surface">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 py-14 lg:grid-cols-4 lg:px-10">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-4 gap-y-8 px-5 py-12 sm:gap-x-6 sm:px-6 sm:py-14 lg:grid-cols-4 lg:gap-8 lg:px-10">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}
@@ -38,13 +38,15 @@ export default function StatsBar() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="text-center"
+            className="min-w-0 text-center"
           >
-            <p className="font-display text-4xl text-gold sm:text-5xl">
+            <p className="font-display text-[clamp(1.5rem,5vw,3rem)] leading-tight text-gold">
               <Counter value={stat.value} />
               {stat.suffix}
             </p>
-            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-mist">{stat.label}</p>
+            <p className="mt-2 text-[11px] uppercase tracking-[0.15em] text-mist sm:text-xs sm:tracking-[0.2em]">
+              {stat.label}
+            </p>
           </motion.div>
         ))}
       </div>

@@ -11,20 +11,20 @@ const POINTS = [
 
 export default function IntroSection() {
   return (
-    <section className="mx-auto grid max-w-7xl items-center gap-14 px-6 py-24 lg:grid-cols-2 lg:px-10">
+    <section className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 sm:gap-14 sm:px-6 sm:py-20 lg:grid-cols-2 lg:px-10 lg:py-24">
       <ScrollReveal>
-        <div className="relative h-[420px] overflow-hidden rounded-2xl">
+        <div className="relative h-[260px] overflow-hidden rounded-2xl sm:h-[340px] lg:h-[420px]">
           <Image src="/images/placeholder-project.svg" alt="DPI developments" fill className="object-cover" />
           <div className="absolute inset-0 border border-gold/20" />
         </div>
       </ScrollReveal>
 
       <ScrollReveal delay={0.15}>
-        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-gold">Who We Are</p>
-        <h2 className="font-display text-3xl leading-tight text-ivory sm:text-4xl lg:text-5xl">
+        <p className="mb-3 text-[11px] uppercase tracking-[0.3em] text-gold sm:text-xs">Who We Are</p>
+        <h2 className="font-display text-2xl leading-tight text-ivory sm:text-3xl lg:text-5xl">
           Two decades of building homes people are proud of.
         </h2>
-        <p className="mt-5 text-base leading-relaxed text-mist">
+        <p className="mt-4 text-sm leading-relaxed text-mist sm:mt-5 sm:text-base">
           DPI is a multi-city real estate developer known for landmark residential projects built on quality,
           transparency, and lasting trust. From site selection to handover, every project reflects a commitment to
           craftsmanship and the families who call it home.

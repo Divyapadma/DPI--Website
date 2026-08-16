@@ -17,14 +17,14 @@ export default function BlogCard({ post }: { post: BlogPost }) {
           src={post.coverImage}
           alt={post.title}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-cover transition-transform duration-700 group-hover:scale-110 group-active:scale-110"
         />
       </div>
-      <div className="p-6">
+      <div className="p-5 sm:p-6">
         <p className="text-xs uppercase tracking-[0.2em] text-gold">
           {post.tags[0]} &middot; {date}
         </p>
-        <h3 className="font-display mt-3 text-xl text-ivory">{post.title}</h3>
+        <h3 className="font-display mt-3 text-lg text-ivory sm:text-xl">{post.title}</h3>
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-mist">{post.excerpt}</p>
         <span className="mt-4 inline-flex items-center gap-1.5 text-sm text-gold">
           Read More <ArrowUpRight size={14} />

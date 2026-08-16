@@ -11,13 +11,16 @@ interface CommonProps {
 }
 
 const variantStyles: Record<Variant, string> = {
-  primary: "bg-gold text-ink hover:bg-gold-soft",
-  outline: "border border-gold/50 text-gold hover:border-gold hover:bg-gold/10",
-  ghost: "text-ivory hover:text-gold",
+  primary: "bg-gold text-ink hover:bg-gold-soft active:bg-gold-soft",
+  outline:
+    "border border-gold/50 text-gold hover:border-gold hover:bg-gold/10 active:border-gold active:bg-gold/10",
+  ghost: "text-ivory hover:text-gold active:text-gold",
 };
 
+// min-h-[44px] guarantees a touch-friendly tap target regardless of text
+// line-height; active: styles give touch devices (no :hover) visible feedback.
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm uppercase tracking-[0.15em] transition-all duration-300";
+  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-7 py-3 text-sm uppercase tracking-[0.15em] transition-all duration-300 active:scale-[0.98]";
 
 export function Button({
   variant = "primary",

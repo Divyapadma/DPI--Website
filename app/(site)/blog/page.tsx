@@ -17,8 +17,8 @@ export default function BlogPage() {
         title="Insights & Market Updates"
         description="Perspectives on real estate trends, buyer guides, and updates from across our projects."
       />
-      <section className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16">
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
           {blogPosts.map((post, i) => (
             <ScrollReveal key={post.id} delay={i * 0.1}>
               <BlogCard post={post} />

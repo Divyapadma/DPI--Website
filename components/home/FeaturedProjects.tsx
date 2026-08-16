@@ -8,7 +8,7 @@ export default function FeaturedProjects() {
   const featured = projects.filter((p) => p.featured);
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10">
+    <section className="mx-auto max-w-7xl px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
       <ScrollReveal>
         <SectionHeading
           eyebrow="Our Portfolio"
@@ -17,7 +17,7 @@ export default function FeaturedProjects() {
         />
       </ScrollReveal>
 
-      <div className="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid gap-6 sm:mt-14 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
         {featured.map((project, i) => (
           <ScrollReveal key={project.id} delay={i * 0.1}>
             <ProjectCard project={project} />
@@ -25,8 +25,8 @@ export default function FeaturedProjects() {
         ))}
       </div>
 
-      <div className="mt-14 flex justify-center">
-        <ButtonLink href="/projects" variant="outline">
+      <div className="mt-10 flex justify-center sm:mt-14">
+        <ButtonLink href="/projects" variant="outline" className="w-full sm:w-auto">
           View All Projects
         </ButtonLink>
       </div>

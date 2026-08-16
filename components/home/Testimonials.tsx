@@ -6,7 +6,7 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 export default function Testimonials() {
   return (
     <section className="border-y border-line bg-surface/60">
-      <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10">
+      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
         <ScrollReveal>
           <SectionHeading eyebrow="Testimonials" title="What Our Homeowners Say" />
         </ScrollReveal>

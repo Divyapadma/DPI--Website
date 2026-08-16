@@ -19,29 +19,29 @@ export default function CareersPage() {
         description="We're always looking for people who care about craftsmanship, transparency, and getting the details right."
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-16 lg:px-10">
+      <section className="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16">
         <div className="space-y-5">
           {careerListings.map((job, i) => (
             <ScrollReveal key={job.id} delay={i * 0.08}>
               <Link
                 href={`/careers/${job.slug}`}
-                className="glass-card group flex flex-col gap-4 rounded-2xl p-7 sm:flex-row sm:items-center sm:justify-between"
+                className="glass-card group flex min-h-[44px] flex-col gap-4 rounded-2xl p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7"
               >
-                <div>
-                  <h3 className="font-display text-xl text-ivory">{job.title}</h3>
-                  <div className="mt-2 flex flex-wrap gap-4 text-sm text-mist">
+                <div className="min-w-0">
+                  <h3 className="font-display text-lg text-ivory sm:text-xl">{job.title}</h3>
+                  <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-mist">
                     <span className="flex items-center gap-1.5">
-                      <Briefcase size={14} className="text-gold" />
+                      <Briefcase size={14} className="shrink-0 text-gold" />
                       {job.department}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <MapPin size={14} className="text-gold" />
+                      <MapPin size={14} className="shrink-0 text-gold" />
                       {job.location}
                     </span>
                     <span className="capitalize">{job.employmentType.replace("-", " ")}</span>
                   </div>
                 </div>
-                <span className="flex items-center gap-1.5 text-sm text-gold opacity-0 transition-opacity group-hover:opacity-100">
+                <span className="flex shrink-0 items-center gap-1.5 text-sm text-gold sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100">
                   Apply Now <ArrowUpRight size={14} />
                 </span>
               </Link>

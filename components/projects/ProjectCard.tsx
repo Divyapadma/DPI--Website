@@ -22,7 +22,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           src={project.heroImage}
           alt={project.title}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-cover transition-transform duration-700 group-hover:scale-110 group-active:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-transparent" />
         <span className="absolute left-4 top-4 rounded-full border border-gold/40 bg-ink/70 px-3 py-1 text-[11px] uppercase tracking-[0.15em] text-gold">
@@ -30,10 +30,10 @@ export default function ProjectCard({ project }: { project: Project }) {
         </span>
       </div>
 
-      <div className="p-6">
+      <div className="p-5 sm:p-6">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className="font-display text-xl text-ivory">{project.title}</h3>
+          <div className="min-w-0">
+            <h3 className="font-display truncate text-xl text-ivory">{project.title}</h3>
             <p className="mt-1 flex items-center gap-1.5 text-sm text-mist">
               <MapPin size={14} className="text-gold" />
               {project.location.area}, {project.location.city}
@@ -41,13 +41,13 @@ export default function ProjectCard({ project }: { project: Project }) {
           </div>
           <ArrowUpRight
             size={20}
-            className="mt-1 shrink-0 text-gold opacity-0 transition-opacity group-hover:opacity-100"
+            className="mt-1 shrink-0 text-gold opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100"
           />
         </div>
 
         <div className="divider-gold my-4 opacity-30" />
 
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
           <span className="text-mist">{project.configuration}</span>
           <span className="font-display text-gold">
             {formatINR(project.priceFromLakhs)}

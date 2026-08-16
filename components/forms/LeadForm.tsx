@@ -52,8 +52,10 @@ export default function LeadForm({
     if (result.ok) e.currentTarget.reset();
   }
 
+  // text-base (16px) — not text-sm — keeps iOS Safari from auto-zooming the
+  // page when a field is focused; min-h-[44px] guarantees a touch target.
   const inputClass =
-    "w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ivory outline-none transition-colors placeholder:text-mist/60 focus:border-gold";
+    "w-full min-h-[44px] rounded-xl border border-line bg-surface px-4 py-3 text-base text-ivory outline-none transition-colors placeholder:text-mist/60 focus:border-gold";
 
   return (
     <form onSubmit={handleSubmit} className={cn("space-y-4", className)}>
@@ -73,7 +75,7 @@ export default function LeadForm({
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-3 text-sm uppercase tracking-[0.15em] text-ink transition-all hover:bg-gold-soft disabled:opacity-60 sm:w-auto"
+        className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-3 text-sm uppercase tracking-[0.15em] text-ink transition-all hover:bg-gold-soft active:bg-gold-soft active:scale-[0.98] disabled:opacity-60 disabled:active:scale-100 sm:w-auto"
       >
         {status === "submitting" ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
         {submitLabel}

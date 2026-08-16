@@ -20,8 +20,8 @@ const SOCIALS = [
 export default function Footer() {
   return (
     <footer className="border-t border-line bg-surface">
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16">
+        <div className="grid gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="font-display text-2xl text-ivory">
               DPI<span className="text-gold">.</span>
@@ -36,7 +36,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-mist transition-colors hover:border-gold hover:text-gold"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-mist transition-colors hover:border-gold hover:text-gold active:border-gold active:text-gold"
                 >
                   <Icon size={16} />
                 </a>
@@ -49,7 +49,10 @@ export default function Footer() {
             <ul className="mt-4 space-y-3">
               {EXPLORE_LINKS.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-mist transition-colors hover:text-gold">
+                  <Link
+                    href={link.href}
+                    className="inline-block py-1 text-sm text-mist transition-colors hover:text-gold"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -66,13 +69,13 @@ export default function Footer() {
               </li>
               <li className="flex gap-3">
                 <Phone size={18} className="shrink-0 text-gold" />
-                <a href="tel:+910000000000" className="hover:text-gold">
+                <a href="tel:+910000000000" className="inline-block py-1 hover:text-gold">
                   +91 00000 00000
                 </a>
               </li>
               <li className="flex gap-3">
                 <Mail size={18} className="shrink-0 text-gold" />
-                <a href="mailto:info@dpi.com" className="hover:text-gold">
+                <a href="mailto:info@dpi.com" className="inline-block break-all py-1 hover:text-gold">
                   info@dpi.com
                 </a>
               </li>

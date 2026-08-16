@@ -21,17 +21,19 @@ export default async function CareerDetailPage({ params }: PageProps<"/careers/[
   if (!job) notFound();
 
   return (
-    <section className="mx-auto grid max-w-5xl gap-14 px-6 py-20 lg:grid-cols-3 lg:px-10">
+    <section className="mx-auto grid max-w-5xl gap-10 px-5 py-12 sm:gap-14 sm:px-6 sm:py-16 lg:grid-cols-3 lg:px-10 lg:py-20">
       <div className="lg:col-span-2">
-        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-gold">{job.department}</p>
-        <h1 className="font-display text-3xl text-ivory sm:text-4xl">{job.title}</h1>
-        <div className="mt-4 flex flex-wrap gap-4 text-sm text-mist">
+        <p className="mb-3 text-[11px] uppercase tracking-[0.3em] text-gold sm:text-xs">{job.department}</p>
+        <h1 className="font-display text-[clamp(1.5rem,4.5vw,2.5rem)] leading-tight text-ivory break-words">
+          {job.title}
+        </h1>
+        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-mist">
           <span className="flex items-center gap-1.5">
-            <MapPin size={14} className="text-gold" />
+            <MapPin size={14} className="shrink-0 text-gold" />
             {job.location}
           </span>
           <span className="flex items-center gap-1.5">
-            <Briefcase size={14} className="text-gold" />
+            <Briefcase size={14} className="shrink-0 text-gold" />
             <span className="capitalize">{job.employmentType.replace("-", " ")}</span>
           </span>
         </div>
@@ -40,7 +42,7 @@ export default async function CareerDetailPage({ params }: PageProps<"/careers/[
       </div>
 
       <div className="lg:col-span-1">
-        <div className="glass-card sticky top-28 rounded-2xl p-7">
+        <div className="glass-card rounded-2xl p-5 sm:p-7 lg:sticky lg:top-28">
           <p className="font-display mb-4 text-lg text-ivory">Apply for this role</p>
           <LeadForm
             formType="career-application"

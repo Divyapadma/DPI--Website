@@ -16,7 +16,7 @@ export default function ProjectsPage() {
         title="Find Your Next Address"
         description="Filter by location, budget, and construction status to explore our current and upcoming developments."
       />
-      <section className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
+      <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16">
         <ProjectsExplorer projects={projects} />
       </section>
     </>

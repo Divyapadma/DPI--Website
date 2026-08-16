@@ -28,19 +28,21 @@ export default async function ProjectDetailPage({ params }: PageProps<"/projects
 
   return (
     <>
-      <section className="relative h-[70vh] min-h-[480px] w-full overflow-hidden">
+      <section className="relative h-[56vh] min-h-[420px] w-full overflow-hidden sm:h-[64vh] lg:h-[70vh]">
         <Image src={project.heroImage} alt={project.title} fill priority className="object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-ink/10" />
-        <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-6 pb-12 lg:px-10">
-          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-gold">
+        <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-5 pb-8 sm:px-6 sm:pb-12 lg:px-10">
+          <p className="mb-2 text-[11px] uppercase tracking-[0.25em] text-gold sm:mb-3 sm:text-xs sm:tracking-[0.3em]">
             {project.location.area}, {project.location.city}
           </p>
-          <h1 className="font-display max-w-3xl text-4xl text-ivory sm:text-5xl lg:text-6xl">{project.title}</h1>
+          <h1 className="font-display max-w-3xl text-[clamp(1.75rem,6vw,3.75rem)] leading-tight text-ivory break-words">
+            {project.title}
+          </h1>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-14 px-6 py-16 lg:grid-cols-3 lg:px-10">
-        <div className="space-y-14 lg:col-span-2">
+      <section className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:gap-14 sm:px-6 sm:py-16 lg:grid-cols-3 lg:px-10">
+        <div className="space-y-10 sm:space-y-14 lg:col-span-2">
           <ScrollReveal>
             <h2 className="font-display text-2xl text-ivory">Overview</h2>
             <p className="mt-4 text-base leading-relaxed text-mist">{project.description}</p>
@@ -91,7 +93,12 @@ export default async function ProjectDetailPage({ params }: PageProps<"/projects
         </div>
 
         <div className="lg:col-span-1">
-          <div className="glass-card sticky top-28 rounded-2xl p-7">
+          {/* Sticky only from `lg` up, where it's a genuine sidebar with room
+              to breathe. Below that it's a normal in-flow card after the
+              gallery/amenities/location content — a mobile bottom bar
+              (below) gives quick access without pinning a tall form over
+              the content. */}
+          <div id="price-sheet" className="glass-card scroll-mt-24 rounded-2xl p-6 sm:p-7 lg:sticky lg:top-28">
             <p className="text-xs uppercase tracking-[0.25em] text-mist">Starting From</p>
             <p className="font-display mt-1 text-3xl text-gold">
               {formatINR(project.priceFromLakhs)}
@@ -99,18 +106,18 @@ export default async function ProjectDetailPage({ params }: PageProps<"/projects
             </p>
             <div className="divider-gold my-5 opacity-30" />
             <dl className="space-y-3 text-sm">
-              <div className="flex justify-between">
+              <div className="flex justify-between gap-3">
                 <dt className="text-mist">Configuration</dt>
-                <dd className="text-ivory">{project.configuration}</dd>
+                <dd className="text-right text-ivory">{project.configuration}</dd>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between gap-3">
                 <dt className="text-mist">Status</dt>
-                <dd className="text-ivory capitalize">{project.status.replace(/-/g, " ")}</dd>
+                <dd className="text-right text-ivory capitalize">{project.status.replace(/-/g, " ")}</dd>
               </div>
               {project.reraNumber && (
-                <div className="flex justify-between">
+                <div className="flex justify-between gap-3">
                   <dt className="text-mist">RERA No.</dt>
-                  <dd className="text-ivory">{project.reraNumber}</dd>
+                  <dd className="text-right text-ivory">{project.reraNumber}</dd>
                 </div>
               )}
             </dl>
