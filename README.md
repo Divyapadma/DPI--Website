@@ -102,13 +102,24 @@ Every page currently renders on placeholder content and SVG images (`lib/mock-da
 
 ## Supabase Setup (Pending)
 
-1. Copy `.env.local.example` to `.env.local` and fill in:
+This project uses its own standalone Supabase project (free tier is sufficient — no Storage usage, since all media lives on ImageKit; see below).
+
+1. Create a project at [supabase.com](https://supabase.com) and copy `.env.local.example` to `.env.local`, filling in from **Project Settings → API**:
    - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY` (server-only)
-2. Confirm the `leads` table schema against the existing **DPI Dashboard V2** project and adjust the insert in `lib/actions.ts` if column names differ. All website leads are tagged `source: "website"`.
-3. Create a Supabase Auth user for admin login (`/admin/login`) — the admin dashboard layout (`app/(admin)/admin/(dashboard)/layout.tsx`) will start enforcing auth automatically once env vars are present; until then it runs unprotected with a visible warning banner.
-4. Build out `projects`, `blog_posts`, `career_listings` tables + Storage buckets, then replace `lib/mock-data.ts` reads with live Supabase queries and wire the admin CRUD forms (currently UI shells in `components/admin/AdminListPage.tsx`).
-5. Add RLS policies matching the DPI Dashboard V2 pattern.
+   - `SUPABASE_SERVICE_ROLE_KEY` (server-only, never exposed to the client)
+2. Create an admin user under **Authentication → Users → Add User** (email + password) — there's no signup flow, this is the only way in. `/admin/login` and the auth-gated dashboard layout (`app/(admin)/admin/(dashboard)/layout.tsx`) start enforcing this automatically once env vars are present; until then the panel runs unprotected with a visible warning banner.
+3. Run [`supabase/schema.sql`](./supabase/schema.sql) in the Supabase SQL Editor — creates `projects`, `blog_posts`, `career_listings`, `leads` with RLS policies already applied. No Storage buckets needed — image/video columns store full ImageKit URLs (strings), not files.
+4. RLS (already in the schema file): public read access on `projects`/`blog_posts`/`career_listings`; writes only via the service-role key (which the admin panel's server actions use, bypassing RLS by design). `leads` is insert-only for anon, no public read.
+5. Replace the `lib/mock-data.ts` reads with live Supabase queries and wire the admin CRUD forms (currently UI shells in `components/admin/AdminListPage.tsx`) to actually write to these tables — this is the main remaining backend task.
+
+## Images & Video (ImageKit)
+
+Project photos, blog covers, and the hero video are hosted on [ImageKit](https://imagekit.io), not Supabase Storage:
+
+- `next.config.ts` + `lib/imagekit-loader.ts` — a custom `next/image` loader that appends ImageKit's own `?tr=` transformation params instead of routing through Next's built-in image optimizer.
+- Supabase table columns (`hero_image`, `gallery`, `cover_image`, etc.) store the **full ImageKit URL** as plain text — upload happens in the ImageKit dashboard (or later, via ImageKit's Upload API from the admin panel, which needs a separate public/private key pair — not required for the current URL-based setup).
+- The hero video is optional: set `NEXT_PUBLIC_HERO_VIDEO_URL` to a direct ImageKit video URL, or leave it unset to keep the placeholder image (`components/home/Hero.tsx`).
+- Local `public/images/placeholder-*.svg` fallbacks and any `data:` URIs pass straight through the loader untouched.
 
 ## Notes on Next.js 16
 

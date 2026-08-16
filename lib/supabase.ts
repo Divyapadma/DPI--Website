@@ -3,8 +3,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 // -----------------------------------------------------------------------
 // Supabase client setup.
 //
-// TODO(supabase-setup): once the Supabase project + DPI Dashboard V2 leads
-// table are shared, set these in .env.local (see .env.local.example):
+// TODO(supabase-setup): once a Supabase project exists for this site,
+// set these in .env.local (see .env.local.example):
 //   NEXT_PUBLIC_SUPABASE_URL
 //   NEXT_PUBLIC_SUPABASE_ANON_KEY
 //   SUPABASE_SERVICE_ROLE_KEY   (server-only, admin panel writes/RLS bypass)

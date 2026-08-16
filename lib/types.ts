@@ -66,7 +66,7 @@ export interface StatItem {
   suffix?: string;
 }
 
-// Shape written to the shared DPI Dashboard V2 "leads" table.
+// Shape written to this project's own Supabase "leads" table.
 // `source` is always tagged "website" so leads can be filtered by origin.
 export interface LeadPayload {
   name: string;

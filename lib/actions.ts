@@ -9,10 +9,9 @@ export interface SubmitLeadResult {
 }
 
 /**
- * Writes a lead into the shared DPI Dashboard V2 `leads` table.
- * All website submissions are tagged `source: "website"` so the dashboard
- * can distinguish them from other lead channels — this is the single
- * source of truth; no separate storage is created on this site.
+ * Writes a lead into this project's own Supabase `leads` table.
+ * All website submissions are tagged `source: "website"` so leads can be
+ * filtered by origin if more intake channels are added later.
  *
  * Until Supabase credentials are configured (see .env.local.example), this
  * fails soft with a friendly message instead of throwing, so forms remain
@@ -35,8 +34,6 @@ export async function submitLead(payload: LeadPayload): Promise<SubmitLeadResult
     };
   }
 
-  // TODO(schema): confirm exact `leads` table/column names against the live
-  // DPI Dashboard V2 schema and adjust this insert accordingly.
   const { error } = await admin.from("leads").insert({
     name: payload.name,
     email: payload.email,
