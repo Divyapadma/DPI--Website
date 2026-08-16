@@ -6,6 +6,11 @@ import { ChevronDown } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { gsap, SplitText } from "@/lib/gsap";
 
+// Set once real footage is on ImageKit — falls back to the image below
+// until then. Video files aren't run through the ImageKit image loader
+// (that's images-only), so this is just the raw ImageKit video URL.
+const HERO_VIDEO_URL = process.env.NEXT_PUBLIC_HERO_VIDEO_URL;
+
 export default function Hero() {
   const bgRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -62,15 +67,26 @@ export default function Hero() {
   return (
     <section className="relative flex w-full items-center overflow-hidden py-28 sm:py-32 lg:min-h-[90vh] lg:py-40">
       <div ref={bgRef} className="absolute inset-0">
-        {/* Swap for a cinematic video background once footage is supplied:
-            <video autoPlay muted loop playsInline className="h-full w-full object-cover" /> */}
-        <Image
-          src="/images/placeholder-hero.svg"
-          alt="DPI cinematic hero background"
-          fill
-          priority
-          className="object-cover"
-        />
+        {HERO_VIDEO_URL ? (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/images/placeholder-hero.svg"
+            className="h-full w-full object-cover"
+          >
+            <source src={HERO_VIDEO_URL} type="video/mp4" />
+          </video>
+        ) : (
+          <Image
+            src="/images/placeholder-hero.svg"
+            alt="DPI cinematic hero background"
+            fill
+            priority
+            className="object-cover"
+          />
+        )}
       </div>
       {/* Soft warm overlay: cream wash for text legibility, terracotta/sage
           tint at the edges for atmosphere — kept deliberately low-contrast. */}
