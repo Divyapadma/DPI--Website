@@ -73,7 +73,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex w-full items-center overflow-hidden py-24 sm:py-28 lg:min-h-[78vh] lg:py-32">
+    <section className="relative flex w-full items-center overflow-hidden py-24 sm:py-28 lg:min-h-[84vh] lg:py-32">
       <div ref={bgRef} className="absolute inset-0">
         {HERO_VIDEO_URL ? (
           // autoPlay requires muted in every browser that allows it at all.
@@ -120,9 +120,11 @@ export default function Hero() {
           />
         )}
       </div>
-      {/* Soft warm overlay: cream wash for text legibility, terracotta/sage
-          tint at the edges for atmosphere — kept deliberately low-contrast. */}
-      <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/70 to-cream/35" />
+      {/* Cream wash for text legibility over the real video (a moving,
+          fairly bright aerial shot needs meaningfully more contrast than
+          the flat placeholder illustration this was originally tuned
+          against), terracotta/sage tint at the edges for atmosphere. */}
+      <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/88 to-cream/60" />
       <div className="absolute inset-0 bg-gradient-to-br from-terracotta/10 via-transparent to-sage/10" />
 
       <div ref={contentRef} className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-10">
