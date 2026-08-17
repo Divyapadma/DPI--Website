@@ -29,8 +29,9 @@ function Counter({ value }: { value: string }) {
 
 export default function StatsBar() {
   return (
-    <section className="border-y border-line bg-ivory">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-4 gap-y-8 px-5 py-12 sm:gap-x-6 sm:px-6 sm:py-14 lg:grid-cols-4 lg:gap-8 lg:px-10">
+    <section className="relative overflow-hidden border-y border-line bg-gradient-to-r from-terracotta/[0.07] via-ivory to-sage/[0.07]">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-terracotta/5 blur-[140px]" />
+      <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-x-4 gap-y-8 px-5 py-12 sm:gap-x-6 sm:px-6 sm:py-14 lg:grid-cols-4 lg:gap-8 lg:px-10">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}

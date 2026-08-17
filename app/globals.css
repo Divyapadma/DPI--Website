@@ -40,9 +40,9 @@ body {
      decoration — the flat-page complaint was largely "most sections have
      nothing but solid cream behind them". */
   background:
-    radial-gradient(820px circle at 10% -10%, rgba(201, 124, 93, 0.09), transparent 55%),
-    radial-gradient(680px circle at 100% 8%, rgba(138, 154, 126, 0.08), transparent 55%),
-    radial-gradient(900px circle at 50% 105%, rgba(201, 124, 93, 0.06), transparent 60%),
+    radial-gradient(820px circle at 10% -10%, rgba(201, 124, 93, 0.16), transparent 55%),
+    radial-gradient(680px circle at 100% 8%, rgba(138, 154, 126, 0.14), transparent 55%),
+    radial-gradient(900px circle at 50% 105%, rgba(201, 124, 93, 0.12), transparent 60%),
     var(--color-cream);
   background-attachment: fixed;
   color: var(--color-charcoal);
@@ -89,17 +89,40 @@ video {
     font-family: var(--font-display);
   }
 
-  /* Light glassmorphism — soft warm shadow, no dark/gold. A gentle diagonal
-     gradient (not a flat translucent fill) gives cards a touch of surface
-     dimension; blur is intentionally light (10px, down from 16px) so it
-     reads as a soft frosted surface rather than obscuring what's behind it. */
+  /* Light glassmorphism — soft warm shadow, no dark/gold. A deliberately
+     visible diagonal gradient (light corner through a warm terracotta-
+     tinted corner) instead of a near-flat translucent fill, plus a thin
+     terracotta-to-sage accent bar along the top edge — every card gets a
+     clear, deliberate signature rather than reading as one more flat
+     white/ivory box. Blur is intentionally light (8px) so it reads as a
+     soft frosted surface rather than obscuring what's behind it.
+     The accent bar's own top corners inherit the card's border-radius
+     (`border-radius: inherit`) rather than reaching for `overflow: hidden`
+     on the card itself — several usages (the admin table list, e.g.) rely
+     on their own `overflow-x-auto`, and a blanket `overflow: hidden` here
+     would fight that in the same Tailwind cascade layer. */
   .glass-card {
-    background: linear-gradient(165deg, rgba(255, 254, 251, 0.8) 0%, rgba(253, 251, 247, 0.68) 55%, rgba(247, 240, 230, 0.72) 100%);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.88) 0%, rgba(253, 247, 239, 0.75) 42%, rgba(224, 189, 165, 0.42) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(46, 42, 38, 0.08);
     box-shadow: var(--shadow-soft);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    /* Only the top corners - a full border-radius: inherit on a 3px-tall
+       bar would round the bottom edge too, at the same large radius as
+       the card itself, making it look like a detached pill instead of a
+       bar flush against the card's own top edge. */
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    background: linear-gradient(90deg, var(--color-terracotta), var(--color-terracotta-soft), var(--color-sage));
   }
 
   @media (hover: hover) and (pointer: fine) {
