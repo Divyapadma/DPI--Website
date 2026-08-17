@@ -73,7 +73,24 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex w-full items-center overflow-hidden py-24 sm:py-28 lg:min-h-[90vh] lg:py-32">
+    // The real bug: min-h-[90vh] is pure viewport-HEIGHT, with no
+    // relationship to the video's actual 16:9 ratio - it only avoided
+    // crop by coincidence at one specific viewport (1440x900) tested
+    // earlier. Measured across real resolutions: 1920x1080/1366x768/
+    // 1280x720 all still had ~10% vertical crop, and mobile (where a
+    // landscape 16:9 video covers a *portrait* container) had a severe
+    // 59-63% HORIZONTAL crop - the video's width cut to under half,
+    // which is almost certainly what actually read as "too zoomed in".
+    // aspect-video ties this section's height directly to the video's
+    // own ratio, so on desktop widths object-cover needs ~0% crop on
+    // any resolution, not just one lucky one. (First pass here also
+    // added a max-h-[900px] "ultra-wide monitor" cap - measured it and
+    // found it was clipping the extremely common 1920x1080 case back
+    // down to 16.7% crop for no good reason, so removed it. An
+    // uncapped aspect-video hero being tall on a genuinely ultra-wide
+    // monitor is a fine trade-off; breaking the single most common
+    // resolution to guard against that is not.)
+    <section className="relative flex w-full items-center overflow-hidden py-12 sm:py-16 lg:aspect-video lg:min-h-[560px] lg:py-32">
       <div ref={bgRef} className="absolute inset-0">
         {HERO_VIDEO_URL ? (
           // autoPlay requires muted in every browser that allows it at all.
