@@ -67,7 +67,7 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
             animate="visible"
             exit="hidden"
             onClick={onClose}
-            className="fixed inset-0 z-[90] bg-charcoal/45 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-[90] bg-charcoal/35 backdrop-blur-[2px] lg:hidden"
           />
 
           <motion.div
@@ -108,7 +108,7 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
               variants={contentVariants}
               initial="hidden"
               animate="visible"
-              className="relative flex-1 overflow-y-auto px-6 pb-8 pt-7 sm:px-8"
+              className="relative min-h-0 flex-1 overflow-y-auto px-6 pb-8 pt-7 sm:px-8"
             >
               <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-1")}>
                 Menu
@@ -126,13 +126,13 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                       <Link
                         href={link.href}
                         onClick={onClose}
-                        className="group flex items-center justify-between gap-3 py-3.5"
+                        className="group flex items-center justify-between gap-3 py-2.5"
                       >
-                        <span className="flex items-baseline gap-4">
-                          <span className="font-body text-[11px] tabular-nums text-taupe/50">0{i + 1}</span>
+                        <span className="flex items-baseline gap-3.5">
+                          <span className="font-body text-[10px] tabular-nums text-taupe/50">0{i + 1}</span>
                           <span
                             className={cn(
-                              "font-display text-[2.35rem] leading-[0.95] transition-colors sm:text-[2.6rem]",
+                              "font-display text-[1.7rem] leading-[0.95] transition-colors sm:text-[1.9rem]",
                               active ? "text-terracotta" : "text-charcoal group-hover:text-terracotta"
                             )}
                           >
@@ -140,7 +140,7 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                           </span>
                         </span>
                         <ArrowUpRight
-                          size={20}
+                          size={18}
                           className={cn(
                             "shrink-0 text-terracotta transition-all duration-300",
                             active
@@ -154,11 +154,11 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                 })}
               </ul>
 
-              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-4 mt-9")}>
+              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-4 mt-7")}>
                 Get in Touch
               </motion.p>
 
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 <motion.div variants={rowVariants} className="flex items-start gap-3.5">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-terracotta/10">
                     <MapPin size={16} className="text-terracotta" />
@@ -187,7 +187,7 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                 </motion.a>
               </div>
 
-              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-4 mt-9")}>
+              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-4 mt-7")}>
                 Follow Us
               </motion.p>
 

@@ -117,14 +117,28 @@ export default function ProjectsExplorer({ projects }: { projects: Project[] }) 
         setMaxBudget={setMaxBudget}
       />
 
-      {/* Tablet+: full filter bar, staggered in on mount */}
-      <motion.div variants={barVariants} initial="hidden" animate="visible" className="hidden flex-col gap-6 sm:flex">
+      {/* Tablet+: full filter bar, staggered in on mount. Wrapped in one
+          bordered card (rather than loose elements on the page background)
+          so status/location/budget read as a single grouped control panel. */}
+      <motion.div
+        variants={barVariants}
+        initial="hidden"
+        animate="visible"
+        className="hidden flex-col gap-6 rounded-2xl border border-line bg-ivory p-6 sm:flex sm:p-7"
+      >
         <motion.div variants={rowVariants}>
+          <span className="mb-3 block text-xs uppercase tracking-[0.15em] text-taupe">Status</span>
           <StatusPills value={status} onChange={setStatus} layoutId="status-pill-desktop" />
         </motion.div>
-        <motion.div variants={rowVariants} className="flex flex-wrap items-end gap-x-8 gap-y-6">
-          <CityCombobox cities={cities} value={city} onChange={setCity} />
-          <div className="w-full min-w-[240px] max-w-sm flex-1">
+        <motion.div
+          variants={rowVariants}
+          className="flex flex-wrap items-end gap-x-10 gap-y-6 border-t border-line pt-6"
+        >
+          <div>
+            <span className="mb-3 block text-xs uppercase tracking-[0.15em] text-taupe">Location</span>
+            <CityCombobox cities={cities} value={city} onChange={setCity} />
+          </div>
+          <div className="min-w-[240px] max-w-sm flex-1">
             <BudgetSlider min={budgetBounds.min} max={budgetBounds.max} value={maxBudget} onChange={setMaxBudget} />
           </div>
         </motion.div>
