@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap, SplitText } from "@/lib/gsap";
 
 type Tag = "h1" | "h2" | "h3";
@@ -27,7 +27,15 @@ export default function SplitHeading({
 }) {
   const ref = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
+  // useLayoutEffect, not useEffect: SplitText physically replaces el's text
+  // node with wrapper <span> elements — a real DOM mutation React doesn't
+  // know about. On unmount, split.revert() has to put the original text
+  // node back *before* React's own commit-phase DOM removal runs, or React
+  // tries to removeChild a node SplitText already swapped out ("Failed to
+  // execute 'removeChild' on 'Node': The node to be removed is not a child
+  // of this node"). useEffect cleanup fires after that removal already
+  // happened; useLayoutEffect cleanup fires synchronously before it.
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
 
@@ -66,8 +74,10 @@ export default function SplitHeading({
     }, el);
 
     return () => {
-      ctx.revert();
+      // split.revert() first: restore the original text node before ctx.revert()
+      // kills the tween/ScrollTrigger targeting the (about to be removed) spans.
       split?.revert();
+      ctx.revert();
     };
   }, [text, splitType, trigger, delay]);
 

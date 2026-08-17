@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import Image, { type ImageProps } from "next/image";
 import { gsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,11 @@ export default function RevealImage({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // useLayoutEffect for consistency with the other GSAP-context components
+  // in this codebase (SplitHeading, Hero, WhyChooseUsPinned) — doesn't
+  // restructure DOM children itself, but keeps GSAP setup/teardown timing
+  // uniform relative to React's commit phase across the whole animation layer.
+  useLayoutEffect(() => {
     const wrapper = wrapperRef.current;
     const img = imgRef.current;
     if (!wrapper || !img) return;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
@@ -16,7 +16,12 @@ export default function Hero() {
   const contentRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
+  // useLayoutEffect, not useEffect: SplitText restructures headlineRef's
+  // DOM children into wrapper spans, behind React's back. Cleanup has to
+  // undo that before React's own unmount removeChild runs, which only
+  // useLayoutEffect's synchronous-before-commit cleanup guarantees — see
+  // SplitHeading.tsx for the full explanation.
+  useLayoutEffect(() => {
     let split: SplitText | undefined;
 
     const ctx = gsap.context(() => {
@@ -59,8 +64,8 @@ export default function Hero() {
     }, contentRef);
 
     return () => {
-      ctx.revert();
       split?.revert();
+      ctx.revert();
     };
   }, []);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { gsap } from "@/lib/gsap";
 
@@ -19,7 +19,13 @@ export default function WhyChooseUsPinned({ items }: { items: WhyItem[] }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // useLayoutEffect, not useEffect: pin: true makes ScrollTrigger wrap
+  // `section` in a real .pin-spacer <div> it inserts into the DOM, behind
+  // React's back. ctx.revert() has to unwrap that (put `section` back
+  // under its original parent) before React's own unmount removeChild
+  // runs — see SplitHeading.tsx for the full explanation of why this
+  // needs the synchronous-before-commit cleanup timing.
+  useLayoutEffect(() => {
     const section = sectionRef.current;
     const cardsWrap = cardsRef.current;
     if (!section || !cardsWrap) return;
