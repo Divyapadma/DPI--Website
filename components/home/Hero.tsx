@@ -70,7 +70,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex w-full items-center overflow-hidden py-28 sm:py-32 lg:min-h-[90vh] lg:py-40">
+    <section className="relative flex w-full items-center overflow-hidden py-24 sm:py-28 lg:min-h-[78vh] lg:py-32">
       <div ref={bgRef} className="absolute inset-0">
         {HERO_VIDEO_URL ? (
           <video
@@ -102,7 +102,7 @@ export default function Hero() {
         <p className="hero-eyebrow mb-4 text-[11px] uppercase tracking-[0.3em] text-terracotta sm:mb-5 sm:text-xs sm:tracking-[0.35em]">
           DPI Real Estate &mdash; Multi-City Developer
         </p>
-        <h1 className="font-display max-w-full text-[clamp(2.75rem,11vw,8.5rem)] leading-[0.98] text-charcoal break-words">
+        <h1 className="font-display max-w-full text-[clamp(2.25rem,6vw,5.25rem)] leading-[1.05] text-charcoal break-words">
           {/* Split separately from the accent line below: SplitText wraps
               each character in its own span, which breaks background-clip
               gradient text (the gradient has nothing of its own left to
