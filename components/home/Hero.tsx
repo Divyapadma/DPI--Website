@@ -73,7 +73,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex w-full items-center overflow-hidden py-24 sm:py-28 lg:min-h-[84vh] lg:py-32">
+    <section className="relative flex w-full items-center overflow-hidden py-24 sm:py-28 lg:min-h-[90vh] lg:py-32">
       <div ref={bgRef} className="absolute inset-0">
         {HERO_VIDEO_URL ? (
           // autoPlay requires muted in every browser that allows it at all.
@@ -120,18 +120,22 @@ export default function Hero() {
           />
         )}
       </div>
-      {/* Cream wash for text legibility over the real video (a moving,
-          fairly bright aerial shot needs meaningfully more contrast than
-          the flat placeholder illustration this was originally tuned
-          against), terracotta/sage tint at the edges for atmosphere. */}
-      <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/88 to-cream/60" />
-      <div className="absolute inset-0 bg-gradient-to-br from-terracotta/10 via-transparent to-sage/10" />
+      {/* Dark charcoal scrim, not the light cream wash this originally
+          shipped with: a moving aerial video has plenty of bright
+          concrete/sky in it, and a light overlay behind dark text meant
+          the two were fighting for the same tonal range rather than
+          contrasting. Dark-behind-light is the standard, working pattern
+          for text over video/photo heroes — text below switches to
+          cream/light accordingly (this section only; the shared Button
+          component's own colors are untouched). */}
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/55 to-charcoal/25" />
+      <div className="absolute inset-0 bg-gradient-to-br from-terracotta/15 via-transparent to-sage/15" />
 
       <div ref={contentRef} className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-10">
         <p className="hero-eyebrow mb-4 text-[11px] uppercase tracking-[0.3em] text-terracotta sm:mb-5 sm:text-xs sm:tracking-[0.35em]">
           DPI Real Estate &mdash; Multi-City Developer
         </p>
-        <h1 className="font-display max-w-full text-[clamp(2.25rem,6vw,5.25rem)] leading-[1.05] text-charcoal break-words">
+        <h1 className="font-display max-w-full text-[clamp(2.25rem,6vw,5.25rem)] leading-[1.05] text-cream break-words">
           {/* Split separately from the accent line below: SplitText wraps
               each character in its own span, which breaks background-clip
               gradient text (the gradient has nothing of its own left to
@@ -141,7 +145,7 @@ export default function Hero() {
           <span ref={headlineRef}>Building Landmarks,</span>{" "}
           <span className="hero-accent text-terracotta-gradient">Delivering Trust.</span>
         </h1>
-        <p className="hero-sub mt-5 max-w-xl text-sm leading-relaxed text-taupe sm:mt-6 sm:text-base lg:text-lg">
+        <p className="hero-sub mt-5 max-w-xl text-sm leading-relaxed text-cream/85 sm:mt-6 sm:text-base lg:text-lg">
           Landmark residences across India&apos;s fastest-growing cities &mdash; crafted with uncompromising
           quality and delivered on trust.
         </p>
