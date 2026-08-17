@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { FacebookIcon, InstagramIcon, LinkedinIcon, YoutubeIcon } from "@/components/icons/SocialIcons";
+import { CONTACT, SOCIALS } from "./site-info";
 
 const EXPLORE_LINKS = [
   { href: "/about", label: "About Us" },
@@ -8,13 +8,6 @@ const EXPLORE_LINKS = [
   { href: "/blog", label: "Blog" },
   { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" },
-];
-
-const SOCIALS = [
-  { href: "#", label: "Instagram", icon: InstagramIcon },
-  { href: "#", label: "Facebook", icon: FacebookIcon },
-  { href: "#", label: "LinkedIn", icon: LinkedinIcon },
-  { href: "#", label: "YouTube", icon: YoutubeIcon },
 ];
 
 export default function Footer() {
@@ -65,18 +58,18 @@ export default function Footer() {
             <ul className="mt-4 space-y-4 text-sm text-taupe">
               <li className="flex gap-3">
                 <MapPin size={18} className="mt-0.5 shrink-0 text-terracotta" />
-                <span>DPI Business Tower, Baner Road, Pune, Maharashtra 411045</span>
+                <span>{CONTACT.address}</span>
               </li>
               <li className="flex gap-3">
                 <Phone size={18} className="shrink-0 text-terracotta" />
-                <a href="tel:+910000000000" className="inline-block py-1 hover:text-terracotta">
-                  +91 00000 00000
+                <a href={CONTACT.phoneHref} className="inline-block py-1 hover:text-terracotta">
+                  {CONTACT.phone}
                 </a>
               </li>
               <li className="flex gap-3">
                 <Mail size={18} className="shrink-0 text-terracotta" />
-                <a href="mailto:info@dpi.com" className="inline-block break-all py-1 hover:text-terracotta">
-                  info@dpi.com
+                <a href={CONTACT.emailHref} className="inline-block break-all py-1 hover:text-terracotta">
+                  {CONTACT.email}
                 </a>
               </li>
             </ul>

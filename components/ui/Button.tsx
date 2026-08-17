@@ -73,7 +73,8 @@ export function ButtonLink({
   variant = "primary",
   className,
   children,
-}: CommonProps & { href: string }) {
+  onClick,
+}: CommonProps & { href: string; onClick?: () => void }) {
   const { ref, onMouseMove, onMouseLeave } = useMagnetic<HTMLAnchorElement>();
   return (
     <Link
@@ -81,6 +82,7 @@ export function ButtonLink({
       href={href}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
       className={cn(base, variantStyles[variant], className)}
     >
       {variant === "outline" && <DrawBorder />}

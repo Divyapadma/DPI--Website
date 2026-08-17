@@ -3,23 +3,50 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Phone, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { NAV_LINKS } from "./site-info";
+import MobileNavDrawer from "./MobileNavDrawer";
 
-const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/projects", label: "Projects" },
-  { href: "/blog", label: "Blog" },
-  { href: "/careers", label: "Careers" },
-  { href: "/contact", label: "Contact" },
-];
+const hamburgerLine = "block h-[1.5px] w-full origin-center rounded-full bg-current";
+
+/** Hamburger that morphs into an × — three lines rotating/collapsing into
+ * place instead of a hard icon swap. */
+function MenuToggle({ open, onClick }: { open: boolean; onClick: () => void }) {
+  return (
+    <button
+      aria-label={open ? "Close menu" : "Open menu"}
+      aria-expanded={open}
+      onClick={onClick}
+      className="-mr-2.5 flex h-11 w-11 items-center justify-center text-charcoal lg:hidden"
+    >
+      <span className="relative flex h-[13px] w-6 flex-col justify-between">
+        <motion.span
+          className={hamburgerLine}
+          animate={open ? { rotate: 45, y: 5.5 } : { rotate: 0, y: 0 }}
+          transition={{ duration: 0.32, ease: [0.65, 0, 0.35, 1] }}
+        />
+        <motion.span
+          className={hamburgerLine}
+          animate={open ? { opacity: 0, x: -6 } : { opacity: 1, x: 0 }}
+          transition={{ duration: 0.2 }}
+        />
+        <motion.span
+          className={hamburgerLine}
+          animate={open ? { rotate: -45, y: -5.5 } : { rotate: 0, y: 0 }}
+          transition={{ duration: 0.32, ease: [0.65, 0, 0.35, 1] }}
+        />
+      </span>
+    </button>
+  );
+}
 
 export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [lastPathname, setLastPathname] = useState(pathname);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -27,6 +54,16 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Keep the drawer's open state in sync with the route (covers the browser
+  // back/forward buttons, not just in-drawer link clicks which already
+  // close it themselves via onClose). Adjusted synchronously during render
+  // rather than in an effect, per React's "adjusting state when a prop
+  // changes" pattern — avoids an extra post-commit render pass.
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
+    setOpen(false);
+  }
 
   return (
     <header
@@ -70,53 +107,10 @@ export default function Navbar() {
           </a>
         </div>
 
-        <button
-          aria-label="Toggle menu"
-          className="-mr-2.5 p-2.5 text-charcoal lg:hidden"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <MenuToggle open={open} onClick={() => setOpen((v) => !v)} />
       </nav>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-line bg-cream lg:hidden"
-          >
-            <ul className="flex flex-col gap-1 px-5 py-4 sm:px-6">
-              {NAV_LINKS.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className={cn(
-                      "block min-h-[44px] py-3 text-sm uppercase tracking-[0.15em] leading-[20px]",
-                      pathname === link.href ? "text-terracotta" : "text-taupe"
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-              <li className="pt-2">
-                <a
-                  href="tel:+910000000000"
-                  onClick={() => setOpen(false)}
-                  className="flex w-full items-center justify-center gap-2 rounded-full border border-terracotta/40 px-5 py-3 text-sm text-terracotta sm:w-fit"
-                >
-                  <Phone size={15} />
-                  Enquire Now
-                </a>
-              </li>
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <MobileNavDrawer open={open} onClose={() => setOpen(false)} />
     </header>
   );
 }

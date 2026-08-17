@@ -136,16 +136,23 @@ video {
 }
 
 /* Barely-there paper grain — adds tactile texture to flat cream sections
-   without ever being a visible "pattern". Rendered once as a fixed overlay
-   by <GrainOverlay>, styled here so it stays out of the component tree. */
+   without ever being a visible "pattern". `.grain-texture` is just the
+   noise itself (no positioning), so it can be reused anywhere a surface
+   wants the same tactile feel — e.g. inside the mobile nav drawer, which
+   sits above the global overlay's z-index and needs its own layer.
+   `.grain-overlay` composes it into the site-wide fixed layer rendered
+   once by <GrainOverlay>. */
+.grain-texture {
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 .grain-overlay {
   position: fixed;
   inset: 0;
   z-index: 3;
-  pointer-events: none;
   opacity: 0.035;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* Terracotta focus glow for form fields, in place of a harsh outline */
