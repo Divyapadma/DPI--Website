@@ -12,7 +12,6 @@ import { gsap, SplitText } from "@/lib/gsap";
 const HERO_VIDEO_URL = process.env.NEXT_PUBLIC_HERO_VIDEO_URL;
 
 export default function Hero() {
-  const bgRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
 
@@ -25,11 +24,16 @@ export default function Hero() {
     let split: SplitText | undefined;
 
     const ctx = gsap.context(() => {
-      // Slow cinematic Ken Burns zoom on the background - kept subtle
-      // (1.06, not 1.15) since it's layered on top of object-cover's own
-      // crop; a bigger start scale compounds with that crop and reads as
-      // "too zoomed in" rather than a gentle drift.
-      gsap.fromTo(bgRef.current, { scale: 1.06 }, { scale: 1, duration: 8, ease: "power1.out" });
+      // No Ken Burns scale on the background anymore - it settled back to
+      // scale(1) by 8s (verified repeatedly via computed-transform
+      // sampling) and was never the source of the reported crop, but it
+      // was named as a suspect enough times that removing it outright is
+      // more useful than continuing to argue the measurement: it
+      // guarantees zero scale-related zoom at every point in time,
+      // including the first 8 seconds, not just after settling. The real
+      // crop was min-h-[90vh] having no relationship to the video's own
+      // aspect ratio - see the section's className comment for the actual
+      // fix (aspect-video).
 
       if (headlineRef.current) {
         // Split into words *and* chars — the word wrapper is what the
@@ -90,8 +94,8 @@ export default function Hero() {
     // uncapped aspect-video hero being tall on a genuinely ultra-wide
     // monitor is a fine trade-off; breaking the single most common
     // resolution to guard against that is not.)
-    <section className="relative flex w-full items-center overflow-hidden py-12 sm:py-16 lg:aspect-video lg:min-h-[560px] lg:py-32">
-      <div ref={bgRef} className="absolute inset-0">
+    <section className="relative flex w-full items-center overflow-hidden py-12 sm:py-16 md:aspect-video md:min-h-[420px] lg:min-h-[560px] lg:py-32">
+      <div className="absolute inset-0">
         {HERO_VIDEO_URL ? (
           // autoPlay requires muted in every browser that allows it at all.
           // `loop` plays the full video through once and restarts it from
