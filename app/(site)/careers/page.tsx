@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description: "Open positions at DPI — join a team building landmark residential projects.",
 };
 
+// Renders fresh on every request — see app/(site)/page.tsx for why.
+export const dynamic = "force-dynamic";
+
 const SPAN = (i: number) => (i === 0 ? "lg:col-span-2 lg:row-span-2" : "lg:col-span-1 lg:row-span-1");
 
 export default async function CareersPage() {

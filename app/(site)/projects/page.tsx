@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   description: "Browse DPI's residential projects by location, price, and construction status.",
 };
 
+// Renders fresh on every request instead of once at build time — content
+// here is admin-managed and needs to show up immediately, including on
+// client-side <Link> navigation. See app/(site)/page.tsx for the full
+// rationale.
+export const dynamic = "force-dynamic";
+
 export default async function ProjectsPage() {
   const projects = await getProjects();
 

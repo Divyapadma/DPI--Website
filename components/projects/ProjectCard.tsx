@@ -50,7 +50,7 @@ export default function ProjectCard({ project, imageHeight = "h-64" }: { project
 
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
           <span className="text-taupe">{project.configuration}</span>
-          <span className="font-display text-terracotta">
+          <span className="font-semibold text-terracotta">
             {formatINR(project.priceFromLakhs)}
             {project.priceToLakhs ? ` – ${formatINR(project.priceToLakhs)}` : "+"}
           </span>

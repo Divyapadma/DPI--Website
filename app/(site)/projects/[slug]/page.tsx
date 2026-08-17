@@ -11,9 +11,14 @@ import SwipeGallery from "@/components/projects/SwipeGallery";
 import WalkthroughVideo from "@/components/projects/WalkthroughVideo";
 import LeadForm from "@/components/forms/LeadForm";
 
-// No generateStaticParams — projects are managed live via /admin, so this
-// route renders dynamically per request instead of being pre-built from a
-// fixed list at build time.
+// No generateStaticParams — projects are managed live via /admin. Without
+// force-dynamic, a param not listed at build time still gets rendered on
+// its first request, but Next then caches *that* result indefinitely
+// (default revalidate: false) the same as a build-time static page, so a
+// later edit wouldn't show up without an explicit revalidatePath() call —
+// and even then, the client router cache can still serve a stale copy for
+// a few minutes. force-dynamic renders fresh every time.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PageProps<"/projects/[slug]">): Promise<Metadata> {
   const { slug } = await params;
@@ -113,7 +118,7 @@ export default async function ProjectDetailPage({ params }: PageProps<"/projects
           <FadeIn className="lg:sticky lg:top-28">
             <div id="price-sheet" className="glass-card scroll-mt-24 rounded-2xl p-6 sm:p-7">
               <p className="text-xs uppercase tracking-[0.25em] text-taupe">Starting From</p>
-              <p className="font-display mt-1 text-3xl text-terracotta">
+              <p className="mt-1 text-3xl font-bold text-terracotta">
                 {formatINR(project.priceFromLakhs)}
                 {project.priceToLakhs ? ` – ${formatINR(project.priceToLakhs)}` : "+"}
               </p>

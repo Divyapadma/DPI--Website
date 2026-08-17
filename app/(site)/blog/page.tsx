@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description: "Real estate insights and market updates from the DPI research desk.",
 };
 
+// Renders fresh on every request — see app/(site)/page.tsx for why.
+export const dynamic = "force-dynamic";
+
 // First post gets a big footprint, the rest fill single cells.
 const SPAN = (i: number) => (i === 0 ? "lg:col-span-2 lg:row-span-2" : "lg:col-span-1 lg:row-span-1");
 

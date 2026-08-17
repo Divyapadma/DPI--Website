@@ -4,6 +4,15 @@ import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
+// Applies to every page under this layout (dashboard, projects, blog,
+// careers, settings) — a `dynamic` route segment config set on a layout
+// cascades to all child pages. These pages read live Supabase data via
+// the mutations in lib/mutations.ts, which the admin panel itself just
+// wrote, so they must never serve a stale cached copy — force-dynamic
+// guarantees a fresh render (and no client-side router-cache staleness
+// window either) on every navigation.
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboardLayout({ children }: LayoutProps<"/admin">) {
   if (isSupabaseConfigured) {
     const supabase = await createServerSupabaseClient();

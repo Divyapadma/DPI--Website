@@ -5,6 +5,16 @@ import FeaturedProjects from "@/components/home/FeaturedProjects";
 import Testimonials from "@/components/home/Testimonials";
 import CTASection from "@/components/home/CTASection";
 
+// FeaturedProjects reads live, admin-managed Supabase data with no
+// revalidate/cache directive, so without this the route gets prerendered
+// once at build time and only refreshed by an explicit revalidatePath()
+// call — and even then, the *client* router cache still serves a stale
+// copy for up to 5 minutes on <Link> navigation (Next's default
+// staleTimes.static). force-dynamic renders fresh on every request and
+// disables that client-side staleness window entirely (staleTimes.dynamic
+// defaults to 0s).
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <>
