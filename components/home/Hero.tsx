@@ -25,8 +25,11 @@ export default function Hero() {
     let split: SplitText | undefined;
 
     const ctx = gsap.context(() => {
-      // Slow cinematic Ken Burns zoom on the background
-      gsap.fromTo(bgRef.current, { scale: 1.15 }, { scale: 1, duration: 8, ease: "power1.out" });
+      // Slow cinematic Ken Burns zoom on the background - kept subtle
+      // (1.06, not 1.15) since it's layered on top of object-cover's own
+      // crop; a bigger start scale compounds with that crop and reads as
+      // "too zoomed in" rather than a gentle drift.
+      gsap.fromTo(bgRef.current, { scale: 1.06 }, { scale: 1, duration: 8, ease: "power1.out" });
 
       if (headlineRef.current) {
         // Split into words *and* chars — the word wrapper is what the
@@ -90,7 +93,20 @@ export default function Hero() {
             playsInline
             preload="auto"
             poster="/images/placeholder-hero.svg"
-            className="h-full w-full object-cover"
+            // Tailwind's own base preflight sets `video { height: auto }`
+            // to preserve intrinsic aspect ratio by default. Confirmed via
+            // computed-style inspection that this rule wins over the
+            // h-full utility class in this project's cascade (regardless
+            // of `absolute inset-0` also being applied) - the video's own
+            // box was rendering taller than its container (810px vs. the
+            // container's 702px at a typical viewport), silently clipped
+            // by this section's overflow-hidden, cutting off part of the
+            // frame. A plain inline style is the one thing guaranteed by
+            // the CSS cascade to beat a non-!important stylesheet rule
+            // regardless of specificity or layer order, so it's used here
+            // instead of trying to out-specificity a Tailwind internal.
+            className="absolute inset-0 object-cover"
+            style={{ width: "100%", height: "100%" }}
           >
             <source src={HERO_VIDEO_URL} type="video/mp4" />
           </video>
