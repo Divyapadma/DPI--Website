@@ -6,9 +6,9 @@ import { ChevronDown } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { gsap, SplitText } from "@/lib/gsap";
 
-// Set once real footage is on ImageKit — falls back to the image below
-// until then. Video files aren't run through the ImageKit image loader
-// (that's images-only), so this is just the raw ImageKit video URL.
+// Falls back to the image below if unset. Video files aren't run through
+// the ImageKit image loader (that's images-only), so this is just the raw
+// ImageKit video URL, set in .env.local.
 const HERO_VIDEO_URL = process.env.NEXT_PUBLIC_HERO_VIDEO_URL;
 
 export default function Hero() {
@@ -73,11 +73,22 @@ export default function Hero() {
     <section className="relative flex w-full items-center overflow-hidden py-24 sm:py-28 lg:min-h-[78vh] lg:py-32">
       <div ref={bgRef} className="absolute inset-0">
         {HERO_VIDEO_URL ? (
+          // autoPlay requires muted in every browser that allows it at all.
+          // `loop` plays the full video through once and restarts it from
+          // the beginning automatically - correct for a full-length feature
+          // video, not just a short clip. `poster` shows the (real, no
+          // dev-placeholder-text) fallback image until enough of the video
+          // has buffered to paint a frame - this is a large (~58MB) file,
+          // so that gap is the whole point of having a poster at all.
+          // `preload="auto"` hints the browser to start fetching
+          // immediately rather than waiting for user interaction, since
+          // autoplay already means it's going to need the data right away.
           <video
             autoPlay
             muted
             loop
             playsInline
+            preload="auto"
             poster="/images/placeholder-hero.svg"
             className="h-full w-full object-cover"
           >
