@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { Mail, MapPin, Phone, X } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin, Phone, X } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { getLenisInstance } from "@/components/providers/lenis-store";
@@ -22,19 +22,21 @@ const panelVariants: Variants = {
 };
 
 // One shared stagger orchestrator for every row in the scrollable middle
-// section — nav links, divider, contact rows, and the social row all sit
-// underneath it (through plain, non-motion <ul>/<div> wrappers, which don't
-// break variant propagation) so the whole thing cascades in as one sequence
-// rather than several independent bursts.
+// section. Plain (non-motion) <ul>/<div> wrappers sit between this and the
+// individual motion.* rows without breaking propagation, so the whole
+// thing cascades in as one continuous sequence rather than several
+// independent bursts.
 const contentVariants: Variants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.055, delayChildren: 0.22 } },
+  visible: { transition: { staggerChildren: 0.045, delayChildren: 0.2 } },
 };
 
 const rowVariants: Variants = {
-  hidden: { opacity: 0, x: 28 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, x: 24 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
+
+const eyebrowClass = "text-[11px] font-semibold uppercase tracking-[0.24em] text-terracotta";
 
 export default function MobileNavDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
@@ -77,21 +79,27 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
             role="dialog"
             aria-modal="true"
             aria-label="Site navigation"
-            className="fixed inset-y-0 right-0 z-[95] flex w-[86vw] max-w-[400px] flex-col bg-ivory shadow-[-24px_0_60px_-20px_rgba(46,42,38,0.35)] lg:hidden"
+            className="fixed inset-y-0 right-0 z-[95] flex w-[88vw] max-w-[420px] flex-col bg-ivory shadow-[-32px_0_70px_-24px_rgba(46,42,38,0.4)] lg:hidden"
           >
             <div className="grain-texture pointer-events-none absolute inset-0 opacity-[0.035]" aria-hidden="true" />
+            {/* Soft atmospheric glow, same device used on PageHero/Hero — ties the
+                drawer back into the rest of the site's visual language instead
+                of reading as a plain flat panel. */}
+            <div className="pointer-events-none absolute -top-24 right-[-40px] h-72 w-72 rounded-full bg-terracotta/10 blur-[110px]" aria-hidden="true" />
 
-            {/* Header */}
+            {/* Header — logo and close button share one h-11 box so both center
+                on the exact same line regardless of the two elements' differing
+                font metrics (Playfair Display's line-box vs. the icon's own). */}
             <div className="relative flex shrink-0 items-center justify-between border-b border-line px-6 py-4 sm:px-8">
-              <Link href="/" onClick={onClose} className="font-display text-2xl text-charcoal">
+              <Link href="/" onClick={onClose} className="flex h-11 items-center font-display text-2xl text-charcoal">
                 DPI<span className="text-terracotta">.</span>
               </Link>
               <button
                 aria-label="Close menu"
                 onClick={onClose}
-                className="-mr-2 flex h-11 w-11 items-center justify-center rounded-full text-taupe transition-colors hover:bg-paper hover:text-terracotta"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-taupe transition-all duration-200 hover:border-terracotta hover:bg-terracotta hover:text-cream active:scale-95"
               >
-                <X size={20} />
+                <X size={19} />
               </button>
             </div>
 
@@ -100,63 +108,98 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
               variants={contentVariants}
               initial="hidden"
               animate="visible"
-              className="relative flex-1 overflow-y-auto px-6 py-6 sm:px-8"
+              className="relative flex-1 overflow-y-auto px-6 pb-8 pt-7 sm:px-8"
             >
-              <ul className="space-y-0.5">
-                {NAV_LINKS.map((link) => {
+              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-1")}>
+                Menu
+              </motion.p>
+
+              <ul>
+                {NAV_LINKS.map((link, i) => {
                   const active = pathname === link.href;
                   return (
-                    <motion.li key={link.href} variants={rowVariants}>
+                    <motion.li
+                      key={link.href}
+                      variants={rowVariants}
+                      className={cn("border-b border-line/70", i === 0 && "border-t")}
+                    >
                       <Link
                         href={link.href}
                         onClick={onClose}
-                        data-active={active}
-                        className={cn(
-                          "underline-grow font-display inline-block py-1.5 text-[1.7rem] leading-tight transition-colors sm:text-[2.05rem]",
-                          active ? "text-terracotta" : "text-charcoal hover:text-terracotta"
-                        )}
+                        className="group flex items-center justify-between gap-3 py-3.5"
                       >
-                        {link.label}
+                        <span className="flex items-baseline gap-4">
+                          <span className="font-body text-[11px] tabular-nums text-taupe/50">0{i + 1}</span>
+                          <span
+                            className={cn(
+                              "font-display text-[2.35rem] leading-[0.95] transition-colors sm:text-[2.6rem]",
+                              active ? "text-terracotta" : "text-charcoal group-hover:text-terracotta"
+                            )}
+                          >
+                            {link.label}
+                          </span>
+                        </span>
+                        <ArrowUpRight
+                          size={20}
+                          className={cn(
+                            "shrink-0 text-terracotta transition-all duration-300",
+                            active
+                              ? "translate-x-0 translate-y-0 opacity-100"
+                              : "translate-x-1 -translate-y-1 opacity-0 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+                          )}
+                        />
                       </Link>
                     </motion.li>
                   );
                 })}
               </ul>
 
-              <motion.div variants={rowVariants} className="my-6 h-px bg-line" />
+              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-4 mt-9")}>
+                Get in Touch
+              </motion.p>
 
-              <div className="space-y-3 text-sm text-taupe">
-                <motion.div variants={rowVariants} className="flex gap-3">
-                  <MapPin size={18} className="mt-0.5 shrink-0 text-terracotta" />
-                  <span>{CONTACT.address}</span>
+              <div className="space-y-4">
+                <motion.div variants={rowVariants} className="flex items-start gap-3.5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-terracotta/10">
+                    <MapPin size={16} className="text-terracotta" />
+                  </span>
+                  <span className="pt-1.5 text-sm leading-relaxed text-taupe">{CONTACT.address}</span>
                 </motion.div>
                 <motion.a
                   variants={rowVariants}
                   href={CONTACT.phoneHref}
-                  className="flex min-h-[44px] items-center gap-3 transition-colors hover:text-terracotta"
+                  className="group flex items-center gap-3.5 text-sm text-taupe transition-colors hover:text-terracotta"
                 >
-                  <Phone size={18} className="shrink-0 text-terracotta" />
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-terracotta/10 transition-colors group-hover:bg-terracotta/15">
+                    <Phone size={16} className="text-terracotta" />
+                  </span>
                   {CONTACT.phone}
                 </motion.a>
                 <motion.a
                   variants={rowVariants}
                   href={CONTACT.emailHref}
-                  className="flex min-h-[44px] items-center gap-3 break-all transition-colors hover:text-terracotta"
+                  className="group flex items-center gap-3.5 text-sm text-taupe transition-colors hover:text-terracotta"
                 >
-                  <Mail size={18} className="shrink-0 text-terracotta" />
-                  {CONTACT.email}
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-terracotta/10 transition-colors group-hover:bg-terracotta/15">
+                    <Mail size={16} className="text-terracotta" />
+                  </span>
+                  <span className="break-all">{CONTACT.email}</span>
                 </motion.a>
               </div>
 
-              <motion.div variants={rowVariants} className="mt-5 flex gap-3">
+              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-4 mt-9")}>
+                Follow Us
+              </motion.p>
+
+              <motion.div variants={rowVariants} className="flex gap-2.5">
                 {SOCIALS.map(({ href, label, icon: Icon }) => (
                   <a
                     key={label}
                     href={href}
                     aria-label={label}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-sage/35 text-sage transition-all duration-200 hover:scale-110 hover:border-terracotta hover:text-terracotta active:scale-95"
+                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-cream text-charcoal/70 transition-all duration-200 hover:scale-105 hover:border-terracotta hover:bg-terracotta hover:text-cream hover:shadow-terracotta-glow active:scale-95"
                   >
-                    <Icon size={16} />
+                    <Icon size={17} />
                   </a>
                 ))}
               </motion.div>
@@ -165,10 +208,13 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
             {/* Hints there's more to scroll, without needing a visible scrollbar —
                 harmless/invisible when content already fits (blends into the
                 solid ivory below it either way). */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-[76px] h-8 bg-gradient-to-t from-ivory to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-[77px] h-10 bg-gradient-to-t from-ivory to-transparent" />
 
-            {/* Fixed bottom CTA — stays put regardless of middle-section scroll */}
-            <div className="relative shrink-0 border-t border-line px-6 py-4 sm:px-8">
+            {/* Fixed bottom CTA — lifted off the content above with its own
+                shadow (a "raised sheet" reads as a deliberate surface, not
+                just a flat border cutting the panel in two) and stays put
+                regardless of middle-section scroll. */}
+            <div className="relative shrink-0 border-t border-line bg-ivory px-6 py-4 shadow-[0_-10px_28px_-16px_rgba(46,42,38,0.18)] sm:px-8">
               <ButtonLink href="/contact" onClick={onClose} variant="primary" className="w-full">
                 Enquire Now
               </ButtonLink>
