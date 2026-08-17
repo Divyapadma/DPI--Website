@@ -12,7 +12,7 @@ const EXPLORE_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-line bg-ivory">
+    <footer className="surface-gradient border-t border-line">
       <div className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16">
         <div className="grid gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>

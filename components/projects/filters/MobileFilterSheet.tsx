@@ -69,7 +69,7 @@ export default function MobileFilterSheet({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={onClose}
-            className="fixed inset-0 z-[90] bg-charcoal/45 backdrop-blur-sm sm:hidden"
+            className="fixed inset-0 z-[90] bg-charcoal/35 backdrop-blur-[2px] sm:hidden"
           />
 
           <motion.div
@@ -85,7 +85,7 @@ export default function MobileFilterSheet({
             role="dialog"
             aria-modal="true"
             aria-label="Filter projects"
-            className="fixed inset-x-0 bottom-0 z-[95] flex max-h-[85vh] flex-col rounded-t-[28px] bg-ivory shadow-[0_-24px_60px_-20px_rgba(46,42,38,0.35)] sm:hidden"
+            className="surface-gradient fixed inset-x-0 bottom-0 z-[95] flex max-h-[85vh] flex-col rounded-t-[28px] shadow-[0_-24px_60px_-20px_rgba(46,42,38,0.35)] sm:hidden"
           >
             <div className="grain-texture pointer-events-none absolute inset-0 rounded-t-[28px] opacity-[0.035]" aria-hidden="true" />
 

@@ -79,7 +79,7 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
             role="dialog"
             aria-modal="true"
             aria-label="Site navigation"
-            className="fixed inset-y-0 right-0 z-[95] flex w-[88vw] max-w-[420px] flex-col bg-ivory shadow-[-32px_0_70px_-24px_rgba(46,42,38,0.4)] lg:hidden"
+            className="surface-gradient fixed inset-y-0 right-0 z-[95] flex w-[88vw] max-w-[420px] flex-col shadow-[-32px_0_70px_-24px_rgba(46,42,38,0.4)] lg:hidden"
           >
             <div className="grain-texture pointer-events-none absolute inset-0 opacity-[0.035]" aria-hidden="true" />
             {/* Soft atmospheric glow, same device used on PageHero/Hero — ties the

@@ -10,8 +10,9 @@ export default function PageHero({
   description?: string;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-line bg-ivory">
+    <section className="surface-gradient relative overflow-hidden border-b border-line">
       <div className="pointer-events-none absolute -top-32 right-0 h-72 w-72 rounded-full bg-terracotta/10 blur-[120px]" />
+      <div className="pointer-events-none absolute -bottom-24 -left-20 h-64 w-64 rounded-full bg-sage/10 blur-[110px]" />
       <div className="relative mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-16 lg:px-10 lg:py-28">
         <p className="mb-3 text-[11px] uppercase tracking-[0.3em] text-terracotta sm:text-xs">{eyebrow}</p>
         <SplitHeading

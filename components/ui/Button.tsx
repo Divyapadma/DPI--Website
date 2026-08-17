@@ -14,7 +14,11 @@ interface CommonProps {
 }
 
 const variantStyles: Record<Variant, string> = {
-  primary: "bg-terracotta text-cream hover:bg-terracotta-soft active:bg-terracotta-deep",
+  // Diagonal gradient instead of a flat fill, plus an inset top highlight +
+  // outer glow shadow for a tactile "raised" feel rather than a flat color
+  // swatch. Hover/active shift the gradient itself, not just a solid color.
+  primary:
+    "bg-gradient-to-br from-terracotta-soft via-terracotta to-terracotta-deep text-cream shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_6px_20px_-6px_rgba(168,95,66,0.5)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_26px_-6px_rgba(168,95,66,0.6)] hover:brightness-105 active:brightness-95",
   // A soft resting border (visible on touch, where :hover never fires) plus
   // the SVG rect below draws a crisper full-opacity line in on hover.
   outline: "border border-sage/35 text-sage hover:bg-sage/10 active:bg-sage/15 active:border-sage",
@@ -24,7 +28,7 @@ const variantStyles: Record<Variant, string> = {
 // min-h-[44px] guarantees a touch-friendly tap target regardless of text
 // line-height; active: styles give touch devices (no :hover) visible feedback.
 const base =
-  "group relative inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-7 py-3 text-sm uppercase tracking-[0.15em] transition-colors duration-300 active:scale-[0.98]";
+  "group relative inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-7 py-3 text-sm uppercase tracking-[0.15em] transition-all duration-300 active:scale-[0.98]";
 
 /** Thin rounded-rect outline that draws itself in on hover, via SVG stroke-dashoffset. */
 function DrawBorder() {

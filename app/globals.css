@@ -33,7 +33,18 @@ html {
 }
 
 body {
-  background: var(--color-cream);
+  /* Soft ambient wash instead of a flat fill — three low-opacity radial
+     terracotta/sage glows, viewport-anchored (background-attachment: fixed)
+     so the depth stays consistent as the page scrolls rather than smearing
+     past. Every page gets this for free since it's on body, not per-section
+     decoration — the flat-page complaint was largely "most sections have
+     nothing but solid cream behind them". */
+  background:
+    radial-gradient(820px circle at 10% -10%, rgba(201, 124, 93, 0.09), transparent 55%),
+    radial-gradient(680px circle at 100% 8%, rgba(138, 154, 126, 0.08), transparent 55%),
+    radial-gradient(900px circle at 50% 105%, rgba(201, 124, 93, 0.06), transparent 60%),
+    var(--color-cream);
+  background-attachment: fixed;
   color: var(--color-charcoal);
   font-family: var(--font-body);
   overflow-x: hidden;
@@ -78,11 +89,14 @@ video {
     font-family: var(--font-display);
   }
 
-  /* Light glassmorphism — translucent ivory, soft warm shadow, no dark/gold */
+  /* Light glassmorphism — soft warm shadow, no dark/gold. A gentle diagonal
+     gradient (not a flat translucent fill) gives cards a touch of surface
+     dimension; blur is intentionally light (10px, down from 16px) so it
+     reads as a soft frosted surface rather than obscuring what's behind it. */
   .glass-card {
-    background: rgba(253, 251, 247, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: linear-gradient(165deg, rgba(255, 254, 251, 0.8) 0%, rgba(253, 251, 247, 0.68) 55%, rgba(247, 240, 230, 0.72) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(46, 42, 38, 0.08);
     box-shadow: var(--shadow-soft);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -105,6 +119,14 @@ video {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+  }
+
+  /* Subtle warm gradient for solid (non-glass) panels — PageHero, the
+     Projects filter panel, Footer, admin surfaces — instead of a flat
+     ivory fill. Same intent as .glass-card's gradient but opaque, for
+     surfaces that shouldn't be translucent. */
+  .surface-gradient {
+    background: linear-gradient(160deg, var(--color-paper) 0%, var(--color-ivory) 45%, var(--color-cream) 100%);
   }
 
   .divider-terracotta {

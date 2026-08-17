@@ -59,7 +59,9 @@ export default function WhyChooseUsPinned({ items }: { items: WhyItem[] }) {
   }, [items.length]);
 
   return (
-    <section ref={sectionRef} className="border-y border-line bg-ivory/60">
+    <section ref={sectionRef} className="surface-gradient relative border-y border-line">
+      <div className="pointer-events-none absolute -top-16 left-1/4 h-72 w-72 rounded-full bg-terracotta/8 blur-[130px]" />
+      <div className="pointer-events-none absolute -bottom-16 right-1/4 h-64 w-64 rounded-full bg-sage/8 blur-[120px]" />
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
         <SectionHeading eyebrow="Why Choose Us" title="What Sets DPI Apart" />
 

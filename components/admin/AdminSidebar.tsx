@@ -29,7 +29,7 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Mobile / tablet top bar */}
-      <div className="flex items-center justify-between border-b border-line bg-ivory px-5 py-4 lg:hidden">
+      <div className="surface-gradient flex items-center justify-between border-b border-line px-5 py-4 lg:hidden">
         <Link href="/admin" className="font-display text-lg text-charcoal">
           DPI<span className="text-terracotta">.</span> Admin
         </Link>
@@ -57,7 +57,7 @@ export default function AdminSidebar() {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-72 max-w-[85vw] flex-col border-r border-line bg-ivory px-5 py-6 transition-transform duration-300 ease-in-out",
+          "surface-gradient fixed inset-y-0 left-0 z-50 flex w-72 max-w-[85vw] flex-col border-r border-line px-5 py-6 transition-transform duration-300 ease-in-out",
           "lg:static lg:z-auto lg:h-full lg:w-64 lg:max-w-none lg:shrink-0 lg:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full"
         )}

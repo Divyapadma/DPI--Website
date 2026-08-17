@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { RotateCcw, SlidersHorizontal } from "lucide-react";
+import { RotateCcw, SlidersHorizontal, Sparkles } from "lucide-react";
 import type { Project, ProjectStatus } from "@/lib/types";
 import { formatINR } from "@/lib/utils";
 import ProjectCard from "@/components/projects/ProjectCard";
 import TiltCard from "@/components/ui/TiltCard";
+import { ButtonLink } from "@/components/ui/Button";
 import StatusPills, { STATUS_OPTIONS } from "./filters/StatusPills";
 import CityCombobox from "./filters/CityCombobox";
 import BudgetSlider from "./filters/BudgetSlider";
@@ -117,31 +118,54 @@ export default function ProjectsExplorer({ projects }: { projects: Project[] }) 
         setMaxBudget={setMaxBudget}
       />
 
-      {/* Tablet+: full filter bar, staggered in on mount. Wrapped in one
-          bordered card (rather than loose elements on the page background)
-          so status/location/budget read as a single grouped control panel. */}
+      {/* Tablet+: full filter panel, staggered in on mount. An asymmetric
+          editorial composition (eyebrow + heading beside the controls,
+          like a magazine spread) rather than a plain bordered box — grain
+          texture and an atmospheric glow tie it back into the rest of the
+          site's visual language, matching PageHero/the nav drawer. */}
       <motion.div
         variants={barVariants}
         initial="hidden"
         animate="visible"
-        className="hidden flex-col gap-6 rounded-2xl border border-line bg-ivory p-6 sm:flex sm:p-7"
+        className="surface-gradient relative hidden rounded-3xl border border-line shadow-soft sm:block"
       >
-        <motion.div variants={rowVariants}>
-          <span className="mb-3 block text-xs uppercase tracking-[0.15em] text-taupe">Status</span>
-          <StatusPills value={status} onChange={setStatus} layoutId="status-pill-desktop" />
-        </motion.div>
-        <motion.div
-          variants={rowVariants}
-          className="flex flex-wrap items-end gap-x-10 gap-y-6 border-t border-line pt-6"
-        >
-          <div>
-            <span className="mb-3 block text-xs uppercase tracking-[0.15em] text-taupe">Location</span>
-            <CityCombobox cities={cities} value={city} onChange={setCity} />
+        {/* Decorative layer clipped to the rounded corners on its own —
+            NOT on the outer card itself, which would also clip the
+            CityCombobox dropdown below (an absolutely-positioned
+            descendant that needs to escape the card's bounds). */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl" aria-hidden="true">
+          <div className="grain-texture absolute inset-0 opacity-[0.025]" />
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-terracotta/8 blur-[110px]" />
+        </div>
+
+        <div className="relative grid gap-8 p-7 sm:p-9 lg:grid-cols-[13rem_1fr] lg:gap-12">
+          <motion.div variants={rowVariants} className="lg:pt-1">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-terracotta">Refine</p>
+            <h3 className="font-display mt-2 text-2xl leading-tight text-charcoal">Your Search</h3>
+            <p className="mt-2 hidden text-sm leading-relaxed text-taupe lg:block">
+              Narrow down by status, city, and budget.
+            </p>
+          </motion.div>
+
+          <div className="space-y-7">
+            <motion.div variants={rowVariants}>
+              <span className="mb-3 block text-xs uppercase tracking-[0.15em] text-taupe">Status</span>
+              <StatusPills value={status} onChange={setStatus} layoutId="status-pill-desktop" />
+            </motion.div>
+            <motion.div
+              variants={rowVariants}
+              className="flex flex-wrap items-end gap-x-10 gap-y-6 border-t border-line pt-6"
+            >
+              <div>
+                <span className="mb-3 block text-xs uppercase tracking-[0.15em] text-taupe">Location</span>
+                <CityCombobox cities={cities} value={city} onChange={setCity} />
+              </div>
+              <div className="min-w-[240px] max-w-sm flex-1">
+                <BudgetSlider min={budgetBounds.min} max={budgetBounds.max} value={maxBudget} onChange={setMaxBudget} />
+              </div>
+            </motion.div>
           </div>
-          <div className="min-w-[240px] max-w-sm flex-1">
-            <BudgetSlider min={budgetBounds.min} max={budgetBounds.max} value={maxBudget} onChange={setMaxBudget} />
-          </div>
-        </motion.div>
+        </div>
       </motion.div>
 
       <div className="mt-6 space-y-4 sm:mt-8">
@@ -182,6 +206,41 @@ export default function ProjectsExplorer({ projects }: { projects: Project[] }) 
               </TiltCard>
             </motion.div>
           ))}
+
+          {/* The catalog itself is sparse right now (not "no matches for
+              your filters" - that's the empty-state message below) - fill
+              the remaining grid slots with an intentional "more coming"
+              tile instead of leaving dead white space that reads as
+              unfinished. Only when no filter is narrowing things down,
+              since a filtered-down result set isn't the same claim as
+              "that's everything we have". */}
+          {activeCount === 0 &&
+            filtered.length > 0 &&
+            filtered.length < 3 &&
+            Array.from({ length: 3 - filtered.length }).map((_, i) => (
+              <motion.div
+                key={`coming-soon-${i}`}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.45, delay: (filtered.length + i) * 0.04, ease: [0.22, 1, 0.36, 1] },
+                }}
+                className="flex min-h-[320px] flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-line p-8 text-center"
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-terracotta/10">
+                  <Sparkles size={18} className="text-terracotta" />
+                </span>
+                <p className="font-display text-lg text-charcoal">More Addresses Coming Soon</p>
+                <p className="max-w-[22ch] text-sm leading-relaxed text-taupe">
+                  New developments are added regularly.
+                </p>
+                <ButtonLink href="/contact" variant="outline" className="mt-1">
+                  Notify Me
+                </ButtonLink>
+              </motion.div>
+            ))}
         </AnimatePresence>
       </motion.div>
 
