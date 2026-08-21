@@ -144,8 +144,10 @@ export default function Hero() {
           contrasting. Dark-behind-light is the standard, working pattern
           for text over video/photo heroes — text below switches to
           cream/light accordingly (this section only; the shared Button
-          component's own colors are untouched). */}
-      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/55 to-charcoal/25" />
+          component's own colors are untouched). Pushed noticeably darker
+          (92/72/45%, up from 85/55/25%) for stronger guaranteed contrast
+          regardless of how bright any given frame of the video is. */}
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/92 via-charcoal/72 to-charcoal/45" />
       <div className="absolute inset-0 bg-gradient-to-br from-terracotta/15 via-transparent to-sage/15" />
 
       <div ref={contentRef} className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-10">
