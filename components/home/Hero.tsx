@@ -77,24 +77,20 @@ export default function Hero() {
   }, []);
 
   return (
-    // The real bug: min-h-[90vh] is pure viewport-HEIGHT, with no
-    // relationship to the video's actual 16:9 ratio - it only avoided
-    // crop by coincidence at one specific viewport (1440x900) tested
-    // earlier. Measured across real resolutions: 1920x1080/1366x768/
-    // 1280x720 all still had ~10% vertical crop, and mobile (where a
-    // landscape 16:9 video covers a *portrait* container) had a severe
-    // 59-63% HORIZONTAL crop - the video's width cut to under half,
-    // which is almost certainly what actually read as "too zoomed in".
-    // aspect-video ties this section's height directly to the video's
-    // own ratio, so on desktop widths object-cover needs ~0% crop on
-    // any resolution, not just one lucky one. (First pass here also
-    // added a max-h-[900px] "ultra-wide monitor" cap - measured it and
-    // found it was clipping the extremely common 1920x1080 case back
-    // down to 16.7% crop for no good reason, so removed it. An
-    // uncapped aspect-video hero being tall on a genuinely ultra-wide
-    // monitor is a fine trade-off; breaking the single most common
-    // resolution to guard against that is not.)
-    <section className="relative flex w-full items-center overflow-hidden py-12 sm:py-16 md:aspect-video md:min-h-[420px] lg:min-h-[560px] lg:py-32">
+    // aspect-video ties this section's height to the video's own 16:9
+    // ratio, so object-cover needs ~0% crop regardless of resolution
+    // (see git history for the full crop-elimination story). A plain
+    // uncapped aspect-video hero was deliberately kept that way earlier
+    // specifically because an unsolicited max-height cap was breaking
+    // the 1920x1080 case for no benefit - this time there IS a benefit
+    // (shorter hero, explicitly requested), so a cap is the right call:
+    // max-h-[720px] trades a little crop back on the largest monitors
+    // (1920px+, where uncapped aspect-video wants a full 1080px-tall
+    // hero) for a meaningfully shorter section everywhere, while common
+    // laptop/smaller-desktop widths (up to ~1280px) still land at or
+    // near 0% crop since their natural aspect-video height is already
+    // under the cap.
+    <section className="relative flex w-full items-center overflow-hidden py-10 sm:py-14 md:aspect-video md:max-h-[800px] md:min-h-[380px] lg:py-20">
       <div className="absolute inset-0">
         {HERO_VIDEO_URL ? (
           // autoPlay requires muted in every browser that allows it at all.
