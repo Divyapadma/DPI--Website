@@ -135,7 +135,6 @@ export default function ProjectsExplorer({ projects }: { projects: Project[] }) 
             descendant that needs to escape the card's bounds). */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl" aria-hidden="true">
           <div className="grain-texture absolute inset-0 opacity-[0.025]" />
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-terracotta/8 blur-[110px]" />
         </div>
 
         <div className="relative grid gap-8 p-7 sm:p-9 lg:grid-cols-[13rem_1fr] lg:gap-12">

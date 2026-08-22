@@ -1,21 +1,34 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
-/* DPI — Warm Editorial Palette (cream / terracotta / sage)           */
-/* ------------------------------------------------------------------ */
+/* DPI — Editorial Premium Palette (cream / clay terracotta / olive sage) */
+/* Corrected from an earlier pass whose terracotta ran too light/saturated
+   for its hue (~16°) - blended with white/cream at low opacity (glows,
+   badges, gradient text) it read as coral/blush/rose rather than clay.
+   Pushed the hue toward orange-brown and cut saturation + lightness so it
+   reads as baked clay/raw pottery even in translucent layers - the test
+   used throughout this file: does it still read as terracotta at 10-15%
+   opacity over cream, not just at 100%. Sage nudged the same direction,
+   toward muted olive rather than a cooler, minty green. */
 @theme {
   --color-cream: #f7f3ec; /* base page background — warm off-white */
   --color-ivory: #fdfbf7; /* secondary bg — cards, elevated sections */
   --color-paper: #ffffff; /* highest elevation — nav-on-scroll, dropdowns */
   --color-line: #e8e1d5; /* hairline borders / dividers */
 
-  --color-terracotta: #c97c5d; /* primary accent — CTAs, key highlights */
-  --color-terracotta-soft: #d9967a; /* hover state */
-  --color-terracotta-deep: #a85f42; /* active / pressed state */
+  --color-terracotta: #a6674a; /* primary accent — CTAs, key highlights */
+  --color-terracotta-soft: #b98164; /* hover state */
+  --color-terracotta-deep: #7d4a32; /* active / pressed state */
+  /* Lighter than -soft specifically for accent text set directly on dark
+     backgrounds (Hero scrim, Footer) — the light-surface accent stops
+     (terracotta, and especially terracotta-deep) measure well under
+     WCAG AA against charcoal; this one is checked to clear it. Not a
+     hover/active state like the others — a dark-background variant. */
+  --color-terracotta-light: #dba080;
 
-  --color-sage: #8a9a7e; /* secondary accent — secondary buttons, tags */
-  --color-sage-soft: #a3b098; /* hover state */
-  --color-sage-deep: #6f7d64; /* active / pressed state */
+  --color-sage: #7d8a70; /* secondary accent — secondary buttons, tags */
+  --color-sage-soft: #97a389; /* hover state */
+  --color-sage-deep: #5f6b54; /* active / pressed state */
 
   --color-charcoal: #2e2a26; /* primary text — warm, not pure black */
   --color-taupe: #7a7368; /* secondary / muted text */
@@ -23,7 +36,9 @@
   --font-display: var(--font-playfair);
   --font-body: var(--font-inter);
 
-  --shadow-terracotta-glow: 0 0 0 1px rgba(201, 124, 93, 0.28), 0 8px 32px -10px rgba(201, 124, 93, 0.3);
+  /* Neutral elevation shadow, not a colored "glow" - depth here comes from
+     shadow and layering, not a decorative color halo. */
+  --shadow-elevated: 0 16px 40px -14px rgba(46, 42, 38, 0.22);
   --shadow-soft: 0 4px 24px -8px rgba(46, 42, 38, 0.08);
 }
 
@@ -33,30 +48,18 @@ html {
 }
 
 body {
-  /* Soft ambient wash instead of a flat fill — three low-opacity radial
-     terracotta/sage glows, viewport-anchored (background-attachment: fixed)
-     so the depth stays consistent as the page scrolls rather than smearing
-     past. Every page gets this for free since it's on body, not per-section
-     decoration — the flat-page complaint was largely "most sections have
-     nothing but solid cream behind them". */
-  background:
-    radial-gradient(820px circle at 10% -10%, rgba(201, 124, 93, 0.16), transparent 55%),
-    radial-gradient(680px circle at 100% 8%, rgba(138, 154, 126, 0.14), transparent 55%),
-    radial-gradient(900px circle at 50% 105%, rgba(201, 124, 93, 0.12), transparent 60%),
-    var(--color-cream);
-  background-attachment: fixed;
+  /* Flat, clean cream — an earlier pass added a site-wide ambient
+     terracotta/sage radial-gradient wash for "depth", but layered under
+     every section on every page, that low-opacity warm tint was the
+     single biggest contributor to the whole site reading pink/rose
+     rather than editorial. Depth now comes from real photography,
+     shadows, and layering (per section), not a colored wash under
+     everything. */
+  background: var(--color-cream);
   color: var(--color-charcoal);
   font-family: var(--font-body);
   overflow-x: hidden;
   position: relative;
-}
-
-/* Applied to <html> by CustomCursor once it detects a fine pointer, so
-   touch devices/SSR keep the native cursor and there's no hydration risk. */
-.has-custom-cursor,
-.has-custom-cursor a,
-.has-custom-cursor button {
-  cursor: none;
 }
 
 ::selection {
@@ -78,10 +81,24 @@ body {
   background: var(--color-terracotta-deep);
 }
 
-img,
-video {
-  max-width: 100%;
-  height: auto;
+/* @layer base, not a bare global rule: unlayered CSS outranks every
+   layered rule regardless of specificity, which meant this was silently
+   overriding every Tailwind height/width utility ever applied to an img
+   or video (the logo's h-[Npx] classes included — computed style showed
+   the raw intrinsic image size no matter what class was applied, since
+   both width:auto and height:auto resolved with nothing to derive from).
+   The Hero video works around the same underlying issue with an inline
+   style (which beats layers and specificity both) rather than depending
+   on this being fixed — left as-is since it's already verified working.
+   Base layer keeps the original intent (a sane default so a bare <img>
+   doesn't overflow its container) while letting `@layer utilities`,
+   which Tailwind always places after base, win when a class is applied. */
+@layer base {
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 @layer utilities {
@@ -89,52 +106,34 @@ video {
     font-family: var(--font-display);
   }
 
-  /* Light glassmorphism — soft warm shadow, no dark/gold. A deliberately
-     visible diagonal gradient (light corner through a warm terracotta-
-     tinted corner) instead of a near-flat translucent fill, plus a thin
-     terracotta-to-sage accent bar along the top edge — every card gets a
-     clear, deliberate signature rather than reading as one more flat
-     white/ivory box. Blur is intentionally light (8px) so it reads as a
-     soft frosted surface rather than obscuring what's behind it.
-     The accent bar's own top corners inherit the card's border-radius
-     (`border-radius: inherit`) rather than reaching for `overflow: hidden`
-     on the card itself — several usages (the admin table list, e.g.) rely
-     on their own `overflow-x-auto`, and a blanket `overflow: hidden` here
-     would fight that in the same Tailwind cascade layer. */
+  /* Light glassmorphism. A flat single-color fill (the previous pass, after
+     removing an earlier gradient that drifted pink) read as too flat -
+     brought a gradient back, but this time confined entirely to neutral
+     warm-white-to-cream stops with no accent color mixed into any stop, so
+     it can't reintroduce a color cast the way the terracotta-tinted
+     end-stop did before. Depth comes from that gradient + blur + a neutral
+     elevation shadow on hover, not a decorative color halo. */
   .glass-card {
     position: relative;
-    background: linear-gradient(150deg, rgba(255, 255, 255, 0.88) 0%, rgba(253, 247, 239, 0.75) 42%, rgba(224, 189, 165, 0.42) 100%);
+    background: linear-gradient(165deg, rgba(255, 253, 250, 0.9) 0%, rgba(250, 246, 238, 0.82) 100%);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(46, 42, 38, 0.08);
     box-shadow: var(--shadow-soft);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .glass-card::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 3px;
-    /* Only the top corners - a full border-radius: inherit on a 3px-tall
-       bar would round the bottom edge too, at the same large radius as
-       the card itself, making it look like a detached pill instead of a
-       bar flush against the card's own top edge. */
-    border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
-    background: linear-gradient(90deg, var(--color-terracotta), var(--color-terracotta-soft), var(--color-sage));
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   }
 
   @media (hover: hover) and (pointer: fine) {
     .glass-card:hover {
-      border-color: rgba(201, 124, 93, 0.35);
-      box-shadow: var(--shadow-terracotta-glow);
+      border-color: rgba(46, 42, 38, 0.14);
+      box-shadow: var(--shadow-elevated);
+      transform: translateY(-4px);
     }
   }
 
   .glass-card:active {
-    border-color: rgba(201, 124, 93, 0.35);
-    box-shadow: var(--shadow-terracotta-glow);
+    border-color: rgba(46, 42, 38, 0.14);
+    box-shadow: var(--shadow-elevated);
   }
 
   .text-terracotta-gradient {
@@ -148,8 +147,43 @@ video {
      Projects filter panel, Footer, admin surfaces — instead of a flat
      ivory fill. Same intent as .glass-card's gradient but opaque, for
      surfaces that shouldn't be translucent. */
+  /* Widened from paper->ivory->cream (a few RGB points apart, essentially
+     invisible over a large surface like the footer) to run all the way to
+     a deeper warm beige - still entirely inside the neutral cream family,
+     no accent color in any stop, but now an actually-visible transition. */
   .surface-gradient {
-    background: linear-gradient(160deg, var(--color-paper) 0%, var(--color-ivory) 45%, var(--color-cream) 100%);
+    background: linear-gradient(160deg, var(--color-paper) 0%, var(--color-ivory) 40%, #ede4d5 100%);
+  }
+
+  /* Dark editorial gradient — the Footer's counterpart to .surface-gradient.
+     Two prior passes were still judged too subtle to register as "rich"
+     at a glance rather than "basically flat + a hint of color in one
+     corner" — each widened the range, but incrementally. This pass commits
+     properly: a strong warm terracotta bloom from the top-right (0.55
+     opacity, spread further than the box itself so it bleeds in rather
+     than sitting as an obviously-bounded shape), a second, darker pool of
+     near-black in the opposite corner for real depth (not a new hue — pure
+     black keeps this inside the palette), and a much wider top-to-bottom
+     base range (#4f473c down to #0a0908, close to true black at the
+     bottom) than either earlier attempt. */
+  .footer-gradient {
+    background:
+      radial-gradient(85% 110% at 100% -15%, rgba(166, 103, 74, 0.55) 0%, rgba(166, 103, 74, 0) 60%),
+      radial-gradient(60% 70% at -10% 110%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 60%),
+      linear-gradient(165deg, #4f473c 0%, #2e2a26 22%, #171613 58%, #0a0908 100%);
+  }
+
+  /* Dark-background counterpart to .text-terracotta-gradient. That gradient
+     runs light-soft -> terracotta -> terracotta-deep, tuned for cream/ivory
+     surfaces — its darkest stop measures ~2:1 against charcoal, badly
+     failing contrast when the same class was reused as-is for the Hero's
+     accent line over its dark scrim. This bounds every stop to colors
+     already checked >=3:1 (the large-text AA threshold) against charcoal. */
+  .text-gradient-on-dark {
+    background: linear-gradient(120deg, var(--color-terracotta-light), var(--color-terracotta-soft) 60%, var(--color-terracotta));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   .divider-terracotta {
@@ -200,9 +234,29 @@ video {
   opacity: 0.035;
 }
 
+/* Intermittent attention pulse behind the floating WhatsApp button — most
+   of each 5s cycle is spent fully invisible (the ring finishes expanding
+   and fading by 25% in), unlike Tailwind's built-in animate-ping which
+   runs continuously. Occasional, not nagging. */
+@keyframes whatsapp-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  25%,
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+.whatsapp-ping-ring {
+  animation: whatsapp-ping 5s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+}
+
 /* Terracotta focus glow for form fields, in place of a harsh outline */
 .focus-glow:focus {
   outline: none;
   border-color: var(--color-terracotta);
-  box-shadow: 0 0 0 4px rgba(201, 124, 93, 0.14);
+  box-shadow: 0 0 0 4px rgba(166, 103, 74, 0.16);
 }

@@ -8,7 +8,6 @@ export default function CTASection() {
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24">
         <ScrollReveal>
           <div className="glass-card relative overflow-hidden rounded-3xl px-6 py-12 text-center sm:px-16 sm:py-16">
-            <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-terracotta/20 blur-[100px]" />
             <p className="relative mb-3 text-[11px] uppercase tracking-[0.25em] text-terracotta sm:text-xs sm:tracking-[0.3em]">
               Find Your Address
             </p>

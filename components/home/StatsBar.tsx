@@ -27,27 +27,32 @@ function Counter({ value }: { value: string }) {
   return <span ref={ref}>{display}</span>;
 }
 
+/**
+ * A clean, minimal credibility strip — confident typography and generous
+ * whitespace, not a decorated dashboard widget. Pulled back from an earlier
+ * pass (gradient card backgrounds, icon badges, gradient-fill numbers) that
+ * read as "SaaS dashboard" rather than editorial. Thin dividers between
+ * each stat is the one structural device, in keeping with a classic
+ * editorial "by the numbers" convention.
+ */
 export default function StatsBar() {
   return (
-    <section className="relative overflow-hidden border-y border-line bg-gradient-to-r from-terracotta/[0.07] via-ivory to-sage/[0.07]">
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-terracotta/5 blur-[140px]" />
-      <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-x-4 gap-y-8 px-5 py-12 sm:gap-x-6 sm:px-6 sm:py-14 lg:grid-cols-4 lg:gap-8 lg:px-10">
+    <section className="border-y border-line bg-ivory">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 divide-y divide-line px-5 py-14 sm:px-6 sm:py-16 lg:grid-cols-4 lg:divide-x lg:divide-y-0 lg:px-10 lg:py-20">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="min-w-0 text-center"
+            transition={{ duration: 0.5, delay: i * 0.08 }}
+            className="flex flex-col items-center gap-2 px-4 py-8 text-center lg:py-0"
           >
-            <p className="font-display text-[clamp(1.5rem,5vw,3rem)] leading-tight text-terracotta">
+            <p className="font-display text-[clamp(2rem,5vw,3.25rem)] leading-none text-terracotta">
               <Counter value={stat.value} />
               {stat.suffix}
             </p>
-            <p className="mt-2 text-[11px] uppercase tracking-[0.15em] text-taupe sm:text-xs sm:tracking-[0.2em]">
-              {stat.label}
-            </p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-taupe sm:text-xs">{stat.label}</p>
           </motion.div>
         ))}
       </div>

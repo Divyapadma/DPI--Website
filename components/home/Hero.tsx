@@ -148,11 +148,14 @@ export default function Hero() {
           (92/72/45%, up from 85/55/25%) for stronger guaranteed contrast
           regardless of how bright any given frame of the video is. */}
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal/92 via-charcoal/72 to-charcoal/45" />
-      <div className="absolute inset-0 bg-gradient-to-br from-terracotta/15 via-transparent to-sage/15" />
 
       <div ref={contentRef} className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-10">
-        <p className="hero-eyebrow mb-4 text-[11px] uppercase tracking-[0.3em] text-terracotta sm:mb-5 sm:text-xs sm:tracking-[0.35em]">
-          DPI Real Estate &mdash; Multi-City Developer
+        {/* text-terracotta-light, not the shared text-terracotta: the base
+            accent color measures ~3.3:1 against this scrim, short of the
+            4.5:1 small-text AA threshold — this lighter, dark-background
+            variant (see globals.css) clears it comfortably. */}
+        <p className="hero-eyebrow mb-4 text-[11px] uppercase tracking-[0.3em] text-terracotta-light sm:mb-5 sm:text-xs sm:tracking-[0.35em]">
+          DPI Real Estate &mdash; Your Trusted Channel Partner
         </p>
         <h1 className="font-display max-w-full text-[clamp(2.25rem,6vw,5.25rem)] leading-[1.05] text-cream break-words">
           {/* Split separately from the accent line below: SplitText wraps
@@ -161,18 +164,25 @@ export default function Hero() {
               clip to once the glyphs move into child elements) — so the
               gradient phrase gets a simple fade/rise instead of a letter
               reveal. */}
-          <span ref={headlineRef}>Building Landmarks,</span>{" "}
-          <span className="hero-accent text-terracotta-gradient">Delivering Trust.</span>
+          <span ref={headlineRef}>Discovering Landmarks,</span>{" "}
+          {/* text-gradient-on-dark, not the shared text-terracotta-gradient:
+              that gradient's darkest stop (terracotta-deep) measures ~2:1
+              against this scrim — this dark-background variant bounds every
+              stop to colors already checked >=3:1 (see globals.css). */}
+          <span className="hero-accent text-gradient-on-dark">Delivering Trust.</span>
         </h1>
         <p className="hero-sub mt-5 max-w-xl text-sm leading-relaxed text-cream/85 sm:mt-6 sm:text-base lg:text-lg">
-          Landmark residences across India&apos;s fastest-growing cities &mdash; crafted with uncompromising
-          quality and delivered on trust.
+          Landmark residences across Greater Noida, Ghaziabad, Aligarh, and Uttarakhand &mdash; curated for
+          you and backed by transparent, trusted guidance.
         </p>
         <div className="hero-cta mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
           <ButtonLink href="/projects" variant="primary" className="w-full sm:w-auto">
             Explore Projects
           </ButtonLink>
-          <ButtonLink href="/contact" variant="outline" className="w-full sm:w-auto">
+          {/* outline-light, not the shared outline variant — this button sits
+              on a dark charcoal video scrim, and the default outline's sage
+              text/border is tuned for light surfaces (see Button.tsx). */}
+          <ButtonLink href="/contact" variant="outline-light" className="w-full sm:w-auto">
             Talk to Us
           </ButtonLink>
         </div>

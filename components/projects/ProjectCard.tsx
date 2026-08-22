@@ -26,7 +26,7 @@ export default function ProjectCard({ project, imageHeight = "h-64" }: { project
           className="object-cover transition-transform duration-700 group-hover:scale-110 group-active:scale-110"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-cream via-cream/10 to-transparent" />
-        <span className="absolute left-4 top-4 rounded-full border border-terracotta/40 bg-cream/70 px-3 py-1 text-[11px] uppercase tracking-[0.15em] text-terracotta">
+        <span className="absolute left-4 top-4 rounded-full border border-terracotta/40 bg-cream/70 px-3 py-1 text-[11px] uppercase tracking-[0.15em] text-terracotta shadow-[0_2px_10px_-4px_rgba(46,42,38,0.25)] backdrop-blur-sm">
           {STATUS_LABEL[project.status]}
         </span>
       </div>

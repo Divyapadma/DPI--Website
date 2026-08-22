@@ -17,13 +17,30 @@ const inter = Inter({
   display: "swap",
 });
 
+// Real logo (see app/icon.png, app/apple-icon.png, app/favicon.ico for the
+// generated favicon set from this same source) — used directly here rather
+// than a self-hosted copy since every other image on this site already
+// goes through ImageKit URLs via lib/imagekit-loader.ts.
+const LOGO_URL = "https://ik.imagekit.io/divyapadma07/DPI-Logo-PNG.webp";
+
 export const metadata: Metadata = {
   title: {
-    default: "DPI | Building Landmarks, Delivering Trust",
+    default: "DPI | Discovering Landmarks, Delivering Trust",
     template: "%s | DPI",
   },
   description:
-    "DPI is a multi-city real estate developer delivering landmark residential projects built on quality, transparency, and trust.",
+    "DPI (Divya Padma Infosystem LLP) is a real estate channel partner helping you discover and secure landmark residential projects across Greater Noida, Ghaziabad, Aligarh, and Uttarakhand, backed by transparency and trust.",
+  openGraph: {
+    title: "DPI | Discovering Landmarks, Delivering Trust",
+    description:
+      "DPI (Divya Padma Infosystem LLP) is a real estate channel partner helping you discover and secure landmark residential projects across Greater Noida, Ghaziabad, Aligarh, and Uttarakhand.",
+    images: [{ url: LOGO_URL, width: 500, height: 500, alt: "DPI — Divya Padma Infosystem LLP" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "DPI | Discovering Landmarks, Delivering Trust",
+    images: [LOGO_URL],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

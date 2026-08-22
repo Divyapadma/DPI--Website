@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-terracotta-soft via-terracotta to-terracotta-deep px-7 py-3 text-sm uppercase tracking-[0.15em] text-cream shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_6px_20px_-6px_rgba(168,95,66,0.5)] transition-all hover:brightness-105 active:brightness-95 disabled:opacity-60"
+            className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-terracotta px-7 py-3 text-sm uppercase tracking-[0.15em] text-cream shadow-[0_4px_14px_-6px_rgba(46,42,38,0.35)] transition-all hover:bg-terracotta-deep active:shadow-[0_1px_4px_-2px_rgba(46,42,38,0.3)] disabled:opacity-60"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             Sign In

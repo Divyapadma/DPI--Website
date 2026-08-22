@@ -52,12 +52,12 @@ export default function BudgetSlider({
             "[&::-moz-range-track]:appearance-none [&::-moz-range-track]:bg-transparent",
             "[&::-webkit-slider-thumb]:h-[22px] [&::-webkit-slider-thumb]:w-[22px] [&::-webkit-slider-thumb]:appearance-none",
             "[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-[3px] [&::-webkit-slider-thumb]:border-ivory",
-            "[&::-webkit-slider-thumb]:bg-terracotta [&::-webkit-slider-thumb]:shadow-[0_2px_10px_rgba(201,124,93,0.5)]",
+            "[&::-webkit-slider-thumb]:bg-terracotta [&::-webkit-slider-thumb]:shadow-[0_2px_10px_rgba(166,103,74,0.5)]",
             "[&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-150",
             "hover:[&::-webkit-slider-thumb]:scale-110 active:[&::-webkit-slider-thumb]:scale-125",
             "[&::-moz-range-thumb]:h-[22px] [&::-moz-range-thumb]:w-[22px] [&::-moz-range-thumb]:rounded-full",
             "[&::-moz-range-thumb]:border-[3px] [&::-moz-range-thumb]:border-ivory [&::-moz-range-thumb]:bg-terracotta",
-            "[&::-moz-range-thumb]:shadow-[0_2px_10px_rgba(201,124,93,0.5)]"
+            "[&::-moz-range-thumb]:shadow-[0_2px_10px_rgba(166,103,74,0.5)]"
           )}
         />
       </div>

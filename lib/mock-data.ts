@@ -1,27 +1,34 @@
 // Placeholder content so every page renders end-to-end before real data
 // (Supabase tables + client photos/copy) is wired in. Replace page by page.
+//
+// The three sample projects below are placeholder fixtures for local dev
+// without Supabase credentials configured - not real DPI listings. DPI is a
+// channel partner, not a developer, so these are deliberately named as
+// generic samples rather than "DPI [Name]" (which would incorrectly imply
+// DPI built them) or any of DPI's actual 10 real project partnerships,
+// which live in the admin-managed projects table, not in code.
 
 import type { BlogPost, CareerListing, Project, StatItem, Testimonial } from "./types";
 
 export const stats: StatItem[] = [
-  { label: "Business Delivered", value: "500", suffix: "+ Cr" },
-  { label: "Projects Completed", value: "25", suffix: "+" },
   { label: "Cities Present", value: "6", suffix: "+" },
-  { label: "Happy Families", value: "3,000", suffix: "+" },
+  { label: "Projects Partnered", value: "10", suffix: "+" },
+  { label: "Happy Families", value: "250", suffix: "+" },
+  { label: "Years of Experience", value: "4", suffix: "+" },
 ];
 
 export const projects: Project[] = [
   {
     id: "1",
-    slug: "dpi-crown-heights",
-    title: "DPI Crown Heights",
-    location: { city: "Pune", area: "Baner" },
+    slug: "sample-project-one",
+    title: "Sample Project One",
+    location: { city: "Greater Noida", area: "Techzone 4" },
     status: "ongoing",
     priceFromLakhs: 85,
     priceToLakhs: 180,
     configuration: "2 & 3 BHK",
     description:
-      "A landmark residential address offering skyline views, resort-style amenities, and effortless connectivity to Pune's business districts.",
+      "Placeholder listing — a landmark residential address offering skyline views, resort-style amenities, and effortless connectivity.",
     heroImage: "/images/placeholder-project.svg",
     gallery: ["/images/placeholder-project.svg"],
     amenities: ["Infinity Pool", "Clubhouse", "Landscaped Gardens", "24x7 Security", "EV Charging"],
@@ -29,15 +36,14 @@ export const projects: Project[] = [
   },
   {
     id: "2",
-    slug: "dpi-emerald-bay",
-    title: "DPI Emerald Bay",
-    location: { city: "Mumbai", area: "Thane West" },
+    slug: "sample-project-two",
+    title: "Sample Project Two",
+    location: { city: "Ghaziabad", area: "NH24" },
     status: "ready-to-move",
     priceFromLakhs: 120,
     priceToLakhs: 260,
     configuration: "2, 3 & 4 BHK",
-    description:
-      "Waterfront-inspired living with curated interiors, private decks, and a wellness-first amenity deck overlooking the bay.",
+    description: "Placeholder listing — curated interiors, private decks, and a wellness-first amenity deck.",
     heroImage: "/images/placeholder-project.svg",
     gallery: ["/images/placeholder-project.svg"],
     amenities: ["Sky Lounge", "Spa & Wellness", "Kids' Play Zone", "Multipurpose Hall"],
@@ -45,15 +51,15 @@ export const projects: Project[] = [
   },
   {
     id: "3",
-    slug: "dpi-the-orchard",
-    title: "DPI The Orchard",
-    location: { city: "Nagpur", area: "Wardha Road" },
+    slug: "sample-project-three",
+    title: "Sample Project Three",
+    location: { city: "Aligarh", area: "GT Road" },
     status: "upcoming",
     priceFromLakhs: 55,
     priceToLakhs: 95,
     configuration: "2 & 3 BHK",
     description:
-      "Low-density villas and mid-rise residences set within a private orchard — designed for families who want space without compromise.",
+      "Placeholder listing — low-density villas and mid-rise residences designed for families who want space without compromise.",
     heroImage: "/images/placeholder-project.svg",
     gallery: ["/images/placeholder-project.svg"],
     amenities: ["Private Gardens", "Jogging Track", "Clubhouse", "Solar Power Backup"],
@@ -65,7 +71,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "1",
     name: "Rohan Mehta",
-    role: "Homeowner, DPI Crown Heights",
+    role: "Homeowner, Greater Noida West",
     quote:
       "From the first site visit to handover, the DPI team made the entire process transparent and stress-free. The finish quality exceeded what we saw in the sample flat.",
     rating: 5,
@@ -73,9 +79,9 @@ export const testimonials: Testimonial[] = [
   {
     id: "2",
     name: "Ananya Kulkarni",
-    role: "Homeowner, DPI Emerald Bay",
+    role: "Homeowner, Ghaziabad",
     quote:
-      "We compared six builders before choosing DPI — the clarity on pricing and construction timelines was unmatched.",
+      "We compared several channel partners before choosing DPI — the clarity on pricing and project timelines was unmatched.",
     rating: 5,
   },
   {
@@ -83,7 +89,7 @@ export const testimonials: Testimonial[] = [
     name: "Vikram Singh",
     role: "Investor",
     quote:
-      "Consistent appreciation across every DPI project I've invested in. Their location scouting is genuinely best-in-class.",
+      "Consistent appreciation across every project DPI has helped me invest in. Their location scouting is genuinely best-in-class.",
     rating: 5,
   },
 ];
@@ -114,25 +120,52 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
+// Kept in sync with the real listings seeded into the career_listings table
+// (see /admin/careers to manage them) so local dev without Supabase
+// credentials still shows accurate roles instead of stale placeholders.
 export const careerListings: CareerListing[] = [
   {
     id: "1",
-    slug: "senior-sales-manager-pune",
-    title: "Senior Sales Manager",
-    department: "Sales",
-    location: "Pune",
+    slug: "hr-manager",
+    title: "HR Manager",
+    department: "Human Resources",
+    location: "Greater Noida West",
     employmentType: "full-time",
-    description: "Lead a team of relationship managers driving residential sales across our Pune portfolio.",
+    description:
+      "Minimum 1 year of experience required. Manage recruitment, onboarding, and day-to-day HR operations for our growing sales team.",
     postedAt: "2026-08-01",
   },
   {
     id: "2",
-    slug: "site-engineer-thane",
-    title: "Site Engineer",
-    department: "Construction",
-    location: "Thane",
+    slug: "sales-executive",
+    title: "Sales Executive",
+    department: "Sales",
+    location: "Greater Noida West",
     employmentType: "full-time",
-    description: "Oversee on-site execution quality and timelines for an ongoing residential tower.",
-    postedAt: "2026-07-20",
+    description:
+      "Freshers and experienced candidates both welcome. Drive property sales and client relationships across our active project partnerships.",
+    postedAt: "2026-08-01",
+  },
+  {
+    id: "3",
+    slug: "team-lead",
+    title: "Team Lead",
+    department: "Sales",
+    location: "Greater Noida West",
+    employmentType: "full-time",
+    description:
+      "Minimum 1 year of experience specifically leading a real estate sales team required. Lead and mentor a team of sales executives to hit targets.",
+    postedAt: "2026-08-01",
+  },
+  {
+    id: "4",
+    slug: "telecaller",
+    title: "Telecaller",
+    department: "Sales",
+    location: "Greater Noida West",
+    employmentType: "full-time",
+    description:
+      "Freshers and experienced candidates both welcome. Handle inbound and outbound calls to generate and qualify leads for our sales team.",
+    postedAt: "2026-08-01",
   },
 ];

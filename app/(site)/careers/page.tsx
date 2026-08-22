@@ -9,7 +9,7 @@ import { getCareerListings } from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "Careers",
-  description: "Open positions at DPI — join a team building landmark residential projects.",
+  description: "Open positions at DPI — join our real estate sales and marketing team.",
 };
 
 // Renders fresh on every request — see app/(site)/page.tsx for why.
@@ -25,7 +25,7 @@ export default async function CareersPage() {
       <PageHero
         eyebrow="Careers at DPI"
         title="Build Your Career With Us"
-        description="We're always looking for people who care about craftsmanship, transparency, and getting the details right."
+        description="We're always looking for people who care about client relationships, transparency, and getting the details right."
       />
 
       <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16">

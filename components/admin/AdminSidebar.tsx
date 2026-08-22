@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Briefcase, LayoutDashboard, Menu, Newspaper, Building2, Settings, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LOGO_URL } from "@/components/layout/site-info";
 import LogoutButton from "@/components/admin/LogoutButton";
 
 const NAV = [
@@ -30,8 +32,9 @@ export default function AdminSidebar() {
     <>
       {/* Mobile / tablet top bar */}
       <div className="surface-gradient flex items-center justify-between border-b border-line px-5 py-4 lg:hidden">
-        <Link href="/admin" className="font-display text-lg text-charcoal">
-          DPI<span className="text-terracotta">.</span> Admin
+        <Link href="/admin" className="flex items-center gap-2">
+          <Image src={LOGO_URL} alt="DPI" width={293} height={251} className="h-9 w-auto" />
+          <span className="font-display text-lg text-charcoal">Admin</span>
         </Link>
         <button
           aria-label="Open admin menu"
@@ -63,8 +66,9 @@ export default function AdminSidebar() {
         )}
       >
         <div className="flex items-center justify-between">
-          <Link href="/admin" className="font-display px-2 text-xl text-charcoal">
-            DPI<span className="text-terracotta">.</span> Admin
+          <Link href="/admin" className="flex items-center gap-2.5 px-2">
+            <Image src={LOGO_URL} alt="DPI" width={293} height={251} className="h-10 w-auto" />
+            <span className="font-display text-xl text-charcoal">Admin</span>
           </Link>
           <button
             aria-label="Close admin menu"

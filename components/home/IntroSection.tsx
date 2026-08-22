@@ -5,37 +5,66 @@ import RevealImage from "@/components/ui/RevealImage";
 import SplitHeading from "@/components/ui/SplitHeading";
 
 const POINTS = [
-  "Multi-city portfolio spanning residential landmarks",
-  "Transparent pricing and construction timelines",
-  "In-house design, execution, and after-sales care",
+  "Active project partnerships across Greater Noida, Ghaziabad, Aligarh, and Uttarakhand",
+  "Transparent pricing and honest project timelines",
+  "Dedicated guidance from site visit to handover",
 ];
 
 export default function IntroSection() {
   return (
-    <section className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 sm:gap-14 sm:px-6 sm:py-20 lg:grid-cols-2 lg:px-10 lg:py-24">
-      <div className="relative h-[260px] overflow-hidden rounded-2xl sm:h-[340px] lg:h-[420px]">
-        <RevealImage
-          src="/images/placeholder-project.svg"
-          alt="DPI developments"
-          fill
-          wrapperClassName="h-full w-full"
-          className="object-cover"
-        />
-        <div className="pointer-events-none absolute inset-0 border border-terracotta/20" />
+    <section className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 sm:gap-14 sm:px-6 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:px-10 lg:py-24">
+      {/* Full-bleed within its own column — sharp edges, no rounded-corner
+          "framed photo" treatment, confident enough to run edge-to-edge.
+          A floating credential card overlaps its corner instead, the way
+          depth is meant to come from here on: real layering, not a
+          decorative gradient. */}
+      <div className="relative">
+        <div className="relative h-[280px] shadow-[0_24px_60px_-24px_rgba(46,42,38,0.35)] sm:h-[380px] lg:h-[460px]">
+          <RevealImage
+            src="/images/placeholder-project.svg"
+            alt="DPI project partnerships"
+            fill
+            wrapperClassName="h-full w-full"
+            className="object-cover"
+          />
+        </div>
+        {/* Positioning lives on this outer element, styling on the inner
+            one — .glass-card sets its own `position: relative`, which
+            fights the `absolute` utility when both land on the same
+            element (same class of bug as Tailwind's own base preflight
+            overriding a utility elsewhere in this codebase: whichever
+            rule is later in the compiled stylesheet wins, not whichever
+            reads more specific in the className string).
+
+            Below sm, this stays in normal flow (mt-4, stacked under the
+            image) instead of floating — at a ~330px-wide mobile column
+            the same absolute offset that reads as "elegant corner accent"
+            on a wider image instead covered nearly half of it (verified
+            via screenshot). The floating overlap only switches on at sm,
+            where there's enough image width for the card to sit mostly
+            outside it rather than on top of it. */}
+        <div className="mt-4 sm:absolute sm:-bottom-8 sm:-right-6 sm:mt-0">
+          <div className="glass-card flex items-center gap-4 rounded-xl px-5 py-4 sm:px-6 sm:py-5">
+            <p className="font-display text-3xl leading-none text-terracotta sm:text-4xl">4+</p>
+            <p className="max-w-[9rem] text-xs leading-snug text-taupe sm:text-sm">
+              Years of trusted guidance across every region we serve
+            </p>
+          </div>
+        </div>
       </div>
 
       <ScrollReveal delay={0.15}>
         <p className="mb-3 text-[11px] uppercase tracking-[0.3em] text-terracotta sm:text-xs">Who We Are</p>
         <SplitHeading
           as="h2"
-          text="Two decades of building homes people are proud of."
+          text="4+ years of helping families find homes they're proud of."
           splitType="words"
           className="font-display text-2xl leading-tight text-charcoal sm:text-3xl lg:text-5xl"
         />
         <p className="mt-4 text-sm leading-relaxed text-taupe sm:mt-5 sm:text-base">
-          DPI is a multi-city real estate developer known for landmark residential projects built on quality,
-          transparency, and lasting trust. From site selection to handover, every project reflects a commitment to
-          craftsmanship and the families who call it home.
+          DPI (Divya Padma Infosystem LLP) is a real estate channel partner — we don&apos;t build, we help you find
+          and secure the right home from trusted developers across Greater Noida West, Noida Extension, the Jewar
+          Airport corridor, Aligarh, Ghaziabad, and Uttarakhand.
         </p>
 
         <ul className="mt-7 space-y-3">

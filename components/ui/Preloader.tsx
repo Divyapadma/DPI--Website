@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
+import { LOGO_URL } from "@/components/layout/site-info";
 
 const SESSION_KEY = "dpi-preloader-shown";
 
@@ -39,14 +41,13 @@ export default function Preloader() {
           exit={{ opacity: 0, transition: { duration: 0.6, delay: 0.1, ease: "easeInOut" } }}
           className="fixed inset-0 z-[9998] flex flex-col items-center justify-center bg-cream"
         >
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-3xl text-charcoal"
           >
-            DPI<span className="text-terracotta">.</span>
-          </motion.p>
+            <Image src={LOGO_URL} alt="DPI — Divya Padma Infosystem LLP" width={293} height={251} priority className="h-24 w-auto sm:h-28" />
+          </motion.div>
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}

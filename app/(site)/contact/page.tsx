@@ -3,6 +3,7 @@ import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import PageHero from "@/components/ui/PageHero";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import LeadForm from "@/components/forms/LeadForm";
+import { CONTACT } from "@/components/layout/site-info";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -26,15 +27,15 @@ export default function ContactPage() {
               <MapPin className="mt-1 shrink-0 text-terracotta" size={20} />
               <div className="min-w-0">
                 <p className="text-sm text-charcoal">Head Office</p>
-                <p className="text-sm text-taupe">DPI Business Tower, Baner Road, Pune, Maharashtra 411045</p>
+                <p className="text-sm text-taupe">{CONTACT.address}</p>
               </div>
             </li>
             <li className="flex gap-4">
               <Phone className="mt-1 shrink-0 text-terracotta" size={20} />
               <div>
                 <p className="text-sm text-charcoal">Call Us</p>
-                <a href="tel:+910000000000" className="inline-block py-1 text-sm text-taupe hover:text-terracotta">
-                  +91 00000 00000
+                <a href={CONTACT.phoneHref} className="inline-block py-1 text-sm text-taupe hover:text-terracotta">
+                  {CONTACT.phone}
                 </a>
               </div>
             </li>
@@ -42,8 +43,8 @@ export default function ContactPage() {
               <Mail className="mt-1 shrink-0 text-terracotta" size={20} />
               <div>
                 <p className="text-sm text-charcoal">Email Us</p>
-                <a href="mailto:info@dpi.com" className="inline-block py-1 text-sm text-taupe hover:text-terracotta break-all">
-                  info@dpi.com
+                <a href={CONTACT.emailHref} className="inline-block py-1 text-sm text-taupe hover:text-terracotta break-all">
+                  {CONTACT.email}
                 </a>
               </div>
             </li>
@@ -52,7 +53,7 @@ export default function ContactPage() {
               <div>
                 <p className="text-sm text-charcoal">WhatsApp</p>
                 <a
-                  href="https://wa.me/910000000000"
+                  href={CONTACT.whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block py-1 text-sm text-taupe hover:text-terracotta"
@@ -63,13 +64,24 @@ export default function ContactPage() {
             </li>
           </ul>
 
-          <div className="glass-card mt-8 flex h-52 items-center justify-center rounded-2xl sm:mt-10 sm:h-64">
-            {/* TODO: embed real Google Maps iframe for office location(s) */}
-            <p className="flex items-center gap-2 text-sm text-taupe">
-              <MapPin size={16} className="text-terracotta" />
-              Office Location Map
-            </p>
+          <div className="glass-card mt-8 overflow-hidden rounded-2xl sm:mt-10">
+            <iframe
+              title="DPI office location"
+              src={`https://www.google.com/maps?q=${CONTACT.latitude},${CONTACT.longitude}&z=16&output=embed`}
+              className="h-52 w-full border-0 sm:h-64"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${CONTACT.latitude},${CONTACT.longitude}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 inline-flex items-center gap-1.5 text-sm text-terracotta hover:underline"
+          >
+            <MapPin size={14} />
+            Get Directions
+          </a>
         </ScrollReveal>
 
         <ScrollReveal delay={0.15} className="lg:col-span-3">

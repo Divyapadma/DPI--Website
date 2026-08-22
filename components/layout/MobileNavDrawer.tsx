@@ -197,7 +197,7 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                     key={label}
                     href={href}
                     aria-label={label}
-                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-cream text-charcoal/70 transition-all duration-200 hover:scale-105 hover:border-terracotta hover:bg-terracotta hover:text-cream hover:shadow-terracotta-glow active:scale-95"
+                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-cream text-charcoal/70 transition-all duration-200 hover:scale-105 hover:border-terracotta hover:bg-terracotta hover:text-cream active:scale-95"
                   >
                     <Icon size={17} />
                   </a>

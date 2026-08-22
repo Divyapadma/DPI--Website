@@ -5,7 +5,7 @@ import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import { useMagnetic } from "@/hooks/useMagnetic";
 
-type Variant = "primary" | "outline" | "ghost";
+type Variant = "primary" | "outline" | "outline-light" | "ghost";
 
 interface CommonProps {
   variant?: Variant;
@@ -17,11 +17,24 @@ const variantStyles: Record<Variant, string> = {
   // Diagonal gradient instead of a flat fill, plus an inset top highlight +
   // outer glow shadow for a tactile "raised" feel rather than a flat color
   // swatch. Hover/active shift the gradient itself, not just a solid color.
+  // Flat solid fill, not a diagonal gradient — pulled back from an earlier
+  // gradient/glow pass that pushed the site toward "SaaS dashboard" rather
+  // than editorial. Depth on press comes from a shadow that shrinks (a
+  // physically "pushed in" surface loses elevation), not a colored glow.
   primary:
-    "bg-gradient-to-br from-terracotta-soft via-terracotta to-terracotta-deep text-cream shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_6px_20px_-6px_rgba(168,95,66,0.5)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_26px_-6px_rgba(168,95,66,0.6)] hover:brightness-105 active:brightness-95",
+    "bg-terracotta text-cream shadow-[0_4px_14px_-6px_rgba(46,42,38,0.35)] hover:bg-terracotta-deep active:shadow-[0_1px_4px_-2px_rgba(46,42,38,0.3)]",
   // A soft resting border (visible on touch, where :hover never fires) plus
   // the SVG rect below draws a crisper full-opacity line in on hover.
+  // Sage-on-light: correct contrast on cream/ivory/glass-card surfaces,
+  // which is every current usage of "outline" except the Hero (see below).
   outline: "border border-sage/35 text-sage hover:bg-sage/10 active:bg-sage/15 active:border-sage",
+  // Same shape/motion as "outline", but for the one case where the button
+  // sits directly on a dark photo/video scrim (the Hero) rather than a
+  // light surface — sage text at ~35% border opacity reads as barely-there
+  // on a dark charcoal background, well short of the site-wide contrast
+  // requirement. Cream text/border reads clearly against dark charcoal or
+  // photography instead.
+  "outline-light": "border border-cream/50 text-cream hover:bg-cream/10 active:bg-cream/15 active:border-cream",
   ghost: "text-charcoal hover:text-terracotta active:text-terracotta-deep",
 };
 
@@ -66,7 +79,7 @@ export function Button({
       className={cn(base, variantStyles[variant], className)}
       {...props}
     >
-      {variant === "outline" && <DrawBorder />}
+      {(variant === "outline" || variant === "outline-light") && <DrawBorder />}
       <span className="relative">{children}</span>
     </button>
   );
@@ -89,7 +102,7 @@ export function ButtonLink({
       onClick={onClick}
       className={cn(base, variantStyles[variant], className)}
     >
-      {variant === "outline" && <DrawBorder />}
+      {(variant === "outline" || variant === "outline-light") && <DrawBorder />}
       <span className="relative">{children}</span>
     </Link>
   );
