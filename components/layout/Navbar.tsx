@@ -96,12 +96,36 @@ export default function Navbar() {
   }
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 transition-colors duration-300",
-        scrolled ? "bg-cream/90 backdrop-blur-sm border-b border-line" : "bg-transparent"
-      )}
-    >
+    <header className="sticky top-0 z-50">
+      {/* The scrolled-state tint/blur used to live directly on <header>
+          (as a conditional bg-cream/90 + backdrop-blur-sm className) —
+          but backdrop-filter on an element makes it a new CSS containing
+          block for its own `position: fixed` descendants, and
+          MobileNavDrawer below (fixed inset-y-0, meant to size against
+          the *viewport*) is exactly such a descendant. Confirmed via
+          getBoundingClientRect: at the top of the page (no
+          backdrop-filter yet) the drawer measured a correct 812px tall;
+          scrolled past 24px (backdrop-filter active) it collapsed to
+          exactly 76px — the header's own height — clipping everything
+          below the drawer's own header row. Moving the blur onto this
+          separate, purely decorative background layer (no fixed-position
+          descendants of its own) removes the containing-block trigger
+          entirely while keeping the drawer nested exactly where it was —
+          which matters because MenuToggle's z-[100] and the drawer
+          panel's z-[95] (MobileNavDrawer.tsx) only compare correctly
+          because they share this same local stacking context; moving the
+          drawer out to a header *sibling* instead (an earlier attempt at
+          this fix) put header's whole z-50 box, MenuToggle included,
+          behind the panel instead. -z-10 keeps this behind `nav`'s real
+          content below (nav has no z-index of its own, so its default
+          auto-stacking already sits above a negative-z sibling). */}
+      <div
+        aria-hidden="true"
+        className={cn(
+          "absolute inset-0 -z-10 transition-colors duration-300",
+          scrolled ? "bg-cream/90 backdrop-blur-sm border-b border-line" : "bg-transparent"
+        )}
+      />
       {/* Header height = py*2 + logo height (logo is the tallest row item).
           Solved deliberately so logo/header lands at 66-68% at every
           breakpoint, measured after the fact via getBoundingClientRect
@@ -112,7 +136,7 @@ export default function Navbar() {
           (see site-info.ts) — no box-size increase fixes that; the
           cropped LOGO_URL asset is what makes this percentage real
           rather than nominal. */}
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-6 sm:py-3.5 lg:px-10 lg:py-4">
+      <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-6 sm:py-3.5 lg:px-10 lg:py-4">
         <Link href="/" className="shrink-0">
           <Image
             src={LOGO_URL}
