@@ -148,14 +148,23 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
               </button>
             </div>
 
-            {/* Scrollable middle: nav links + contact + socials */}
+            {/* Middle: nav links + contact. Compact enough by design to fit
+                one screen without scrolling at 375px (verified down to
+                375x667, the tightest common viewport) — overflow-y-auto
+                stays on only as an accessibility safety net (e.g. a
+                visitor with enlarged system text), not because scrolling
+                is expected in normal use. Social icons used to live in
+                their own section here too; moved into the fixed bottom
+                bar below instead, both to save vertical space and because
+                "always visible, never needs a scroll to reach" fits icon
+                row better than the longer nav/contact list above it. */}
             <motion.div
               variants={contentVariants}
               initial="hidden"
               animate="visible"
-              className="relative min-h-0 flex-1 overflow-y-auto px-6 pb-8 pt-7 sm:px-8"
+              className="relative min-h-0 flex-1 overflow-y-auto px-6 pb-4 pt-4 sm:px-8"
             >
-              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-1")}>
+              <motion.p variants={rowVariants} className={eyebrowClass}>
                 Menu
               </motion.p>
 
@@ -171,13 +180,13 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                       <Link
                         href={link.href}
                         onClick={onClose}
-                        className="group flex items-center justify-between gap-3 py-2.5"
+                        className="group flex items-center justify-between gap-3 py-1.5"
                       >
-                        <span className="flex items-baseline gap-3.5">
-                          <span className="font-body text-[10px] tabular-nums text-taupe/50">0{i + 1}</span>
+                        <span className="flex items-baseline gap-3">
+                          <span className="font-body text-[9px] tabular-nums text-taupe/50">0{i + 1}</span>
                           <span
                             className={cn(
-                              "font-display text-[1.7rem] leading-[0.95] transition-colors sm:text-[1.9rem]",
+                              "font-display text-lg leading-tight transition-colors sm:text-xl",
                               active ? "text-terracotta" : "text-charcoal group-hover:text-terracotta"
                             )}
                           >
@@ -185,7 +194,7 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                           </span>
                         </span>
                         <ArrowUpRight
-                          size={18}
+                          size={15}
                           className={cn(
                             "shrink-0 text-terracotta transition-all duration-300",
                             active
@@ -199,73 +208,67 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                 })}
               </ul>
 
-              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-4 mt-7")}>
+              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-2.5 mt-4")}>
                 Get in Touch
               </motion.p>
 
-              <div className="space-y-3.5">
-                <motion.div variants={rowVariants} className="flex items-start gap-3.5">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-terracotta/10">
-                    <MapPin size={16} className="text-terracotta" />
+              <div className="space-y-2">
+                <motion.div variants={rowVariants} className="flex items-start gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-terracotta/10">
+                    <MapPin size={13} className="text-terracotta" />
                   </span>
-                  <span className="pt-1.5 text-sm leading-relaxed text-taupe">{CONTACT.address}</span>
+                  <span className="pt-1 text-xs leading-relaxed text-taupe">{CONTACT.address}</span>
                 </motion.div>
                 <motion.a
                   variants={rowVariants}
                   href={CONTACT.phoneHref}
-                  className="group flex items-center gap-3.5 text-sm text-taupe transition-colors hover:text-terracotta"
+                  className="group flex items-center gap-3 text-xs text-taupe transition-colors hover:text-terracotta"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-terracotta/10 transition-colors group-hover:bg-terracotta/15">
-                    <Phone size={16} className="text-terracotta" />
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-terracotta/10 transition-colors group-hover:bg-terracotta/15">
+                    <Phone size={13} className="text-terracotta" />
                   </span>
                   {CONTACT.phone}
                 </motion.a>
                 <motion.a
                   variants={rowVariants}
                   href={CONTACT.emailHref}
-                  className="group flex items-center gap-3.5 text-sm text-taupe transition-colors hover:text-terracotta"
+                  className="group flex items-center gap-3 text-xs text-taupe transition-colors hover:text-terracotta"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-terracotta/10 transition-colors group-hover:bg-terracotta/15">
-                    <Mail size={16} className="text-terracotta" />
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-terracotta/10 transition-colors group-hover:bg-terracotta/15">
+                    <Mail size={13} className="text-terracotta" />
                   </span>
                   <span className="break-all">{CONTACT.email}</span>
                 </motion.a>
               </div>
-
-              <motion.p variants={rowVariants} className={cn(eyebrowClass, "mb-4 mt-7")}>
-                Follow Us
-              </motion.p>
-
-              <motion.div variants={rowVariants} className="flex gap-2.5">
-                {SOCIALS.map(({ href, label, icon: Icon }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-cream text-charcoal/70 transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-terracotta hover:bg-terracotta hover:text-cream hover:shadow-[0_10px_22px_-8px_rgba(166,103,74,0.45)] active:translate-y-0 active:scale-95"
-                  >
-                    <Icon size={17} />
-                  </a>
-                ))}
-              </motion.div>
             </motion.div>
 
-            {/* Hints there's more to scroll, without needing a visible scrollbar —
-                harmless/invisible when content already fits (blends into the
-                solid ivory below it either way). */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-[77px] h-10 bg-gradient-to-t from-ivory to-transparent" />
-
-            {/* Fixed bottom CTA — lifted off the content above with its own
-                shadow (a "raised sheet" reads as a deliberate surface, not
-                just a flat border cutting the panel in two) and stays put
-                regardless of middle-section scroll. */}
-              <div className="relative shrink-0 border-t border-line bg-ivory px-6 py-4 shadow-[0_-10px_28px_-16px_rgba(46,42,38,0.18)] sm:px-8">
-                <ButtonLink href="/contact" onClick={onClose} variant="primary" className="w-full">
-                  Enquire Now
-                </ButtonLink>
+            {/* Fixed bottom bar — social icons + CTA, lifted off the content
+                above with its own shadow (a "raised sheet" reads as a
+                deliberate surface, not just a flat border cutting the
+                panel in two) and stays put regardless of middle-section
+                scroll. */}
+            <div className="relative shrink-0 border-t border-line bg-ivory px-6 py-3.5 shadow-[0_-10px_28px_-16px_rgba(46,42,38,0.18)] sm:px-8">
+              <div className="mb-3 flex items-center justify-between">
+                <span className={eyebrowClass}>Follow Us</span>
+                <div className="flex gap-2">
+                  {SOCIALS.map(({ href, label, icon: Icon }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-cream text-charcoal/70 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-terracotta hover:bg-terracotta hover:text-cream active:scale-95"
+                    >
+                      <Icon size={14} />
+                    </a>
+                  ))}
+                </div>
               </div>
+              <ButtonLink href="/contact" onClick={onClose} variant="primary" className="w-full">
+                Enquire Now
+              </ButtonLink>
+            </div>
             </div>
           </motion.div>
         </>
