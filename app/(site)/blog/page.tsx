@@ -35,7 +35,15 @@ export default async function BlogPage() {
               <BentoItem key={post.id} span={SPAN(i)}>
                 <ScrollReveal delay={i * 0.1} className="h-full">
                   <TiltCard className="h-full">
-                    <BlogCard post={post} imageHeight={i === 0 ? "h-72 lg:h-96" : "h-48"} />
+                    <BlogCard
+                      post={post}
+                      imageHeight={i === 0 ? "h-72 lg:h-96" : "h-48"}
+                      sizes={
+                        i === 0
+                          ? "(min-width: 1024px) 66vw, (min-width: 640px) 50vw, 100vw"
+                          : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      }
+                    />
                   </TiltCard>
                 </ScrollReveal>
               </BentoItem>

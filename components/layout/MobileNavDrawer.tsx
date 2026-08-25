@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { ArrowUpRight, Mail, MapPin, Phone, X } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { getLenisInstance } from "@/components/providers/lenis-store";
@@ -39,7 +39,24 @@ const rowVariants: Variants = {
 
 const eyebrowClass = "text-[11px] font-semibold uppercase tracking-[0.24em] text-terracotta";
 
-export default function MobileNavDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function MobileNavDrawer({
+  open,
+  onClose,
+  onTransitionEnd,
+}: {
+  open: boolean;
+  onClose: () => void;
+  // Fires once the panel's own enter/exit animation actually finishes —
+  // Navbar uses this to release its rapid-tap lock exactly when it's
+  // visually safe to, rather than guessing a fixed delay. See Navbar.tsx
+  // for why the lock exists at all: repeated taps landing mid-transition
+  // were each individually re-triggering the spring, so a tap arriving
+  // ~100ms after the previous one would reverse it before it had gotten
+  // even halfway — visually indistinguishable from a broken animation.
+  // Confirmed via a frame-by-frame transform trace before writing this
+  // fix, not assumed.
+  onTransitionEnd?: () => void;
+}) {
   const pathname = usePathname();
 
   // Lock scroll (both native and Lenis's own smooth-scroll input handling —
@@ -77,6 +94,7 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
             initial="hidden"
             animate="visible"
             exit="exit"
+            onAnimationComplete={onTransitionEnd}
             role="dialog"
             aria-modal="true"
             aria-label="Site navigation"
@@ -103,15 +121,19 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                   of reading as a plain flat panel. */}
               <div className="pointer-events-none absolute -top-24 right-[-40px] h-72 w-72 rounded-full bg-terracotta/10 blur-[110px]" aria-hidden="true" />
 
-            {/* Header — logo+name and the close button both sit on
-                items-center, so they align regardless of the stacked
-                text's own line-height vs. the button's fixed 44px box.
-                min-w-0 on the Link + truncate-safe sizing below keeps the
-                name from ever fighting the close button for space at the
-                narrowest drawer width (88vw of a 320px viewport ≈ 282px,
-                minus px-6 padding and the button's 44px ≈ 190px left for
-                logo+name — checked at 375px, see screenshot). */}
-            <div className="relative flex shrink-0 items-center justify-between gap-3 border-b border-line px-6 py-4 sm:px-8">
+            {/* Header — logo+name only. No close button here (there used to
+                be one): it sat at almost the exact same screen position as
+                Navbar's own hamburger-turned-X toggle, and since that
+                button's own z-index wasn't raised above this panel, this
+                one was the only one actually reachable by touch/mouse —
+                two controls stacked at one spot, only one of them live.
+                Navbar's toggle is now raised above the panel (z-[100] vs
+                this panel's z-[95]) specifically so it stays the single,
+                unambiguous close affordance in that exact spot, matching
+                its own visible X icon and aria-expanded state. Backdrop
+                tap and swipe-to-dismiss remain as additional ways to
+                close. */}
+            <div className="relative flex shrink-0 items-center border-b border-line px-6 py-4 sm:px-8">
               <Link href="/" onClick={onClose} className="flex min-w-0 items-center gap-2.5">
                 <Image
                   src={LOGO_URL}
@@ -139,13 +161,6 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                   </span>
                 </span>
               </Link>
-              <button
-                aria-label="Close menu"
-                onClick={onClose}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-taupe transition-all duration-200 hover:border-terracotta hover:bg-terracotta hover:text-cream active:scale-95"
-              >
-                <X size={19} />
-              </button>
             </div>
 
             {/* Middle: nav links + contact. Compact enough by design to fit

@@ -20,7 +20,14 @@ function MenuToggle({ open, onClick }: { open: boolean; onClick: () => void }) {
       aria-label={open ? "Close menu" : "Open menu"}
       aria-expanded={open}
       onClick={onClick}
-      className="-mr-2.5 flex h-11 w-11 items-center justify-center text-charcoal lg:hidden"
+      // z-[100] — above the drawer panel's z-[95] (MobileNavDrawer.tsx) —
+      // so this exact button stays the one reachable, always-on-top close
+      // affordance while the drawer is open, instead of being visually
+      // covered by the panel sliding in on top of it (confirmed via
+      // elementFromPoint that it previously was, with only the drawer's
+      // own now-removed close button actually receiving the tap at this
+      // screen position).
+      className="relative z-[100] -mr-2.5 flex h-11 w-11 items-center justify-center text-charcoal lg:hidden"
     >
       <span className="relative flex h-[13px] w-6 flex-col justify-between">
         <motion.span
@@ -48,6 +55,19 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [lastPathname, setLastPathname] = useState(pathname);
+  // Guards against the drawer's open/close spring being re-triggered
+  // mid-flight by a rapid second tap — confirmed via a frame-by-frame
+  // transform trace that without this, a tap landing ~100ms into the
+  // opening animation visibly reverses it before it's even halfway open,
+  // which is what read as "glitching" (worse on iOS: WebKit's
+  // backdrop-filter + transform compositing is already more expensive
+  // per frame, so an interrupted/reversed spring has more visible
+  // stutter to begin with). True for exactly as long as the drawer's own
+  // enter/exit animation is actually running — released by
+  // MobileNavDrawer's onAnimationComplete callback below, not a guessed
+  // timeout, so it can never fall out of sync with the real animation
+  // duration.
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -64,6 +84,15 @@ export default function Navbar() {
   if (pathname !== lastPathname) {
     setLastPathname(pathname);
     setOpen(false);
+  }
+
+  // Every path that changes `open` — the toggle button, backdrop tap,
+  // in-drawer nav link clicks, the CTA button — funnels through here, so
+  // the lock genuinely covers all of them, not just the toggle button.
+  function requestOpen(next: boolean) {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setOpen(next);
   }
 
   return (
@@ -132,10 +161,14 @@ export default function Navbar() {
           </a>
         </div>
 
-        <MenuToggle open={open} onClick={() => setOpen((v) => !v)} />
+        <MenuToggle open={open} onClick={() => requestOpen(!open)} />
       </nav>
 
-      <MobileNavDrawer open={open} onClose={() => setOpen(false)} />
+      <MobileNavDrawer
+        open={open}
+        onClose={() => requestOpen(false)}
+        onTransitionEnd={() => setIsTransitioning(false)}
+      />
     </header>
   );
 }

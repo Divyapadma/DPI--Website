@@ -11,7 +11,22 @@ const STATUS_LABEL: Record<Project["status"], string> = {
   "ready-to-move": "Ready to Move",
 };
 
-export default function ProjectCard({ project, imageHeight = "h-64" }: { project: Project; imageHeight?: string }) {
+export default function ProjectCard({
+  project,
+  imageHeight = "h-64",
+  // Grid-column-aware default — matches ProjectsExplorer's own
+  // md:grid-cols-2 lg:grid-cols-3. Without a `sizes` hint, next/image
+  // assumes this card could render up to the full viewport width and
+  // always requests the largest ImageKit-transformed candidate, even
+  // though it's really one of 2-3 grid columns — wasted bytes on every
+  // card on every listing page. FeaturedProjects passes its own value
+  // instead, since its bento grid's columns are a different width.
+  sizes = "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw",
+}: {
+  project: Project;
+  imageHeight?: string;
+  sizes?: string;
+}) {
   return (
     <Link
       href={`/projects/${project.slug}`}
@@ -22,6 +37,7 @@ export default function ProjectCard({ project, imageHeight = "h-64" }: { project
           src={project.heroImage}
           alt={project.title}
           fill
+          sizes={sizes}
           wrapperClassName={`${imageHeight} w-full`}
           className="object-cover transition-transform duration-700 group-hover:scale-110 group-active:scale-110"
         />

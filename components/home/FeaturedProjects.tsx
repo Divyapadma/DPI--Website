@@ -33,7 +33,20 @@ export default async function FeaturedProjects() {
             <BentoItem key={project.id} span={SPAN(i)}>
               <ScrollReveal delay={i * 0.1} className="h-full">
                 <TiltCard className="h-full">
-                  <ProjectCard project={project} imageHeight={i === 0 ? "h-72 sm:h-80 lg:h-96" : "h-56"} />
+                  {/* This bento grid's columns (components/ui/BentoGrid.tsx)
+                      aren't the same width as ProjectsExplorer's plain
+                      grid, so ProjectCard's own default `sizes` (tuned for
+                      that grid) would undersell how wide the first,
+                      2-column-spanning card actually renders here. */}
+                  <ProjectCard
+                    project={project}
+                    imageHeight={i === 0 ? "h-72 sm:h-80 lg:h-96" : "h-56"}
+                    sizes={
+                      i === 0
+                        ? "(min-width: 1024px) 66vw, (min-width: 640px) 50vw, 100vw"
+                        : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    }
+                  />
                 </TiltCard>
               </ScrollReveal>
             </BentoItem>

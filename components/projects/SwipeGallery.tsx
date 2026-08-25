@@ -53,6 +53,11 @@ export default function SwipeGallery({ images, alt }: { images: string[]; alt: s
               src={img}
               alt={`${alt} gallery ${i + 1}`}
               fill
+              // Matches this slide's own width classes above
+              // (w-[82%]/sm:w-[46%]/lg:w-[32%]) — without it, every
+              // thumbnail in the gallery would fetch a full-viewport-width
+              // image despite never rendering anywhere near that size.
+              sizes="(min-width: 1024px) 32vw, (min-width: 640px) 46vw, 82vw"
               wrapperClassName="h-full w-full"
               className="object-cover"
             />

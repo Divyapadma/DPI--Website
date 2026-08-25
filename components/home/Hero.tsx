@@ -108,11 +108,30 @@ export default function Hero({ videoUrl }: HeroProps) {
           // the beginning automatically - correct for a full-length feature
           // video, not just a short clip. `poster` shows the (real, no
           // dev-placeholder-text) fallback image until enough of the video
-          // has buffered to paint a frame - this is a large (~58MB) file,
-          // so that gap is the whole point of having a poster at all.
+          // has buffered to paint a frame - this is typically an 15-20MB+
+          // file, so that gap is the whole point of having a poster at all.
           // `preload="auto"` hints the browser to start fetching
           // immediately rather than waiting for user interaction, since
           // autoplay already means it's going to need the data right away.
+          //
+          // The <source> below only has a `media` query, no plain
+          // (always-matching) fallback — deliberately: below md (768px,
+          // matching this component's own md: breakpoint elsewhere), NO
+          // source matches, so the browser never requests the video file
+          // at all and just keeps showing `poster` indefinitely, exactly
+          // like a static image. This is a real, measured ~18MB/visit
+          // saved on every phone that loads this page — mobile is most of
+          // this site's traffic and most of it is on metered connections,
+          // so autoplaying a video that heavy there was the single
+          // largest performance cost on the entire site. ImageKit's own
+          // video transformation (which would let mobile get a smaller
+          // *version* of the same video instead of no video) is
+          // unavailable on this account right now — a HEAD request
+          // against a `?tr=` URL returned "ik-error: ELIMIT - Video
+          // transformations limit exceeded" — so a smaller mobile-specific
+          // video isn't currently an option; falling back to the poster
+          // image is the safe, zero-added-risk alternative until that
+          // quota allows it.
           <video
             autoPlay
             muted
@@ -135,7 +154,7 @@ export default function Hero({ videoUrl }: HeroProps) {
             className="absolute inset-0 object-cover"
             style={{ width: "100%", height: "100%" }}
           >
-            <source src={videoUrl} type="video/mp4" />
+            <source media="(min-width: 768px)" src={videoUrl} type="video/mp4" />
           </video>
         ) : (
           <Image
