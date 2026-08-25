@@ -3,8 +3,8 @@
 // already renders. Keeping this in one place means components never see
 // a raw DB row.
 
-import type { BlogPostRow, CareerListingRow, ProjectRow } from "./db-types";
-import type { BlogPost, CareerListing, Project } from "./types";
+import type { BlogPostRow, CareerListingRow, ProjectRow, SiteSettingsRow } from "./db-types";
+import type { BlogPost, CareerListing, Project, SiteSettings, StatItem } from "./types";
 
 export function rowToProject(row: ProjectRow): Project {
   return {
@@ -141,5 +141,30 @@ export function careerListingInputToRow(input: CareerListingInput) {
     employment_type: input.employmentType,
     description: input.description,
     posted_at: input.postedAt,
+  };
+}
+
+// ---------------------------------------------------------------------
+// Site settings (singleton)
+// ---------------------------------------------------------------------
+
+export function rowToSiteSettings(row: SiteSettingsRow): SiteSettings {
+  return {
+    heroVideoUrl: row.hero_video_url ?? undefined,
+    stats: row.stats,
+  };
+}
+
+export interface SiteSettingsInput {
+  heroVideoUrl?: string;
+  stats: StatItem[];
+}
+
+export function siteSettingsInputToRow(input: SiteSettingsInput) {
+  return {
+    id: 1,
+    hero_video_url: input.heroVideoUrl || null,
+    stats: input.stats,
+    updated_at: new Date().toISOString(),
   };
 }

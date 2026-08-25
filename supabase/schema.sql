@@ -107,3 +107,40 @@ create policy "Anyone can submit a lead"
   on public.leads for insert
   to anon, authenticated
   with check (true);
+
+-- ---------------------------------------------------------------------
+-- site_settings  (singleton row — homepage hero video + stats counters,
+-- managed via /admin/settings; written by lib/mutations.ts
+-- updateSiteSettings(), via the service-role key)
+-- ---------------------------------------------------------------------
+create table if not exists public.site_settings (
+  id              smallint primary key default 1,
+  hero_video_url  text,
+  stats           jsonb not null default '[]'::jsonb, -- [{ "value": "6+", "label": "Cities Present" }, ...]
+  updated_at      timestamptz not null default now(),
+  constraint site_settings_singleton check (id = 1)
+);
+
+alter table public.site_settings enable row level security;
+
+create policy "Site settings are publicly readable"
+  on public.site_settings for select
+  using (true);
+-- No insert/update/delete policy for anon/authenticated — same as
+-- projects/blog_posts/career_listings: the admin panel writes via the
+-- service-role key, which bypasses RLS entirely.
+
+-- Seed the singleton row with today's live homepage values so nothing
+-- changes visually until an admin edits them at /admin/settings.
+insert into public.site_settings (id, hero_video_url, stats)
+values (
+  1,
+  null,
+  '[
+    {"value": "6+", "label": "Cities Present"},
+    {"value": "10+", "label": "Projects Partnered"},
+    {"value": "250+", "label": "Happy Families"},
+    {"value": "4+", "label": "Years of Experience"}
+  ]'::jsonb
+)
+on conflict (id) do nothing;

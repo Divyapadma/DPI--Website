@@ -4,6 +4,7 @@ import IntroSection from "@/components/home/IntroSection";
 import FeaturedProjects from "@/components/home/FeaturedProjects";
 import Testimonials from "@/components/home/Testimonials";
 import CTASection from "@/components/home/CTASection";
+import { getSiteSettings } from "@/lib/queries";
 
 // FeaturedProjects reads live, admin-managed Supabase data with no
 // revalidate/cache directive, so without this the route gets prerendered
@@ -15,11 +16,13 @@ import CTASection from "@/components/home/CTASection";
 // defaults to 0s).
 export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home() {
+  const settings = await getSiteSettings();
+
   return (
     <>
-      <Hero />
-      <StatsBar />
+      <Hero videoUrl={settings.heroVideoUrl} />
+      <StatsBar stats={settings.stats} />
       <IntroSection />
       <FeaturedProjects />
       <Testimonials />

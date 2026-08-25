@@ -7,9 +7,11 @@ import {
   blogPostInputToRow,
   careerListingInputToRow,
   projectInputToRow,
+  siteSettingsInputToRow,
   type BlogPostInput,
   type CareerListingInput,
   type ProjectInput,
+  type SiteSettingsInput,
 } from "./mappers";
 
 export interface MutationResult {
@@ -197,4 +199,24 @@ export async function deleteLead(id: string): Promise<MutationResult> {
 
   revalidatePath("/admin/leads");
   return { ok: true, message: "Lead deleted." };
+}
+
+// ---------------------------------------------------------------------
+// Site settings (singleton — hero video URL + homepage stats)
+// ---------------------------------------------------------------------
+
+/** Upserts the single settings row (id always 1) — see supabase/schema.sql. */
+export async function updateSiteSettings(input: SiteSettingsInput): Promise<MutationResult> {
+  const session = await requireAdminSession();
+  if (!session.ok) return session;
+
+  const admin = getSupabaseAdmin();
+  if (!admin) return { ok: false, message: "Supabase isn't configured yet." };
+
+  const { error } = await admin.from("site_settings").upsert(siteSettingsInputToRow(input));
+  if (error) return { ok: false, message: `Couldn't save settings: ${error.message}` };
+
+  revalidatePath("/admin/settings");
+  revalidatePath("/");
+  return { ok: true, message: "Settings saved — changes are live on the homepage." };
 }

@@ -6,12 +6,17 @@ import { ChevronDown } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { gsap, SplitText } from "@/lib/gsap";
 
-// Falls back to the image below if unset. Video files aren't run through
-// the ImageKit image loader (that's images-only), so this is just the raw
-// ImageKit video URL, set in .env.local.
-const HERO_VIDEO_URL = process.env.NEXT_PUBLIC_HERO_VIDEO_URL;
+interface HeroProps {
+  // Admin-editable via /admin/settings (lib/queries.ts getSiteSettings) —
+  // passed down from the server-rendered home page rather than read from
+  // an env var here, so a new video goes live without a code change/
+  // redeploy. Falls back to the placeholder image below if unset. Video
+  // files aren't run through the ImageKit image loader (that's
+  // images-only), so this is just the raw ImageKit video URL.
+  videoUrl?: string;
+}
 
-export default function Hero() {
+export default function Hero({ videoUrl }: HeroProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
 
@@ -97,7 +102,7 @@ export default function Hero() {
     // sizing this section already has for tablet+ is completely untouched.
     <section className="relative flex w-full items-center overflow-hidden py-10 sm:py-14 max-md:min-h-[560px] md:aspect-video md:max-h-[800px] md:min-h-[380px] lg:py-20">
       <div className="absolute inset-0">
-        {HERO_VIDEO_URL ? (
+        {videoUrl ? (
           // autoPlay requires muted in every browser that allows it at all.
           // `loop` plays the full video through once and restarts it from
           // the beginning automatically - correct for a full-length feature
@@ -130,7 +135,7 @@ export default function Hero() {
             className="absolute inset-0 object-cover"
             style={{ width: "100%", height: "100%" }}
           >
-            <source src={HERO_VIDEO_URL} type="video/mp4" />
+            <source src={videoUrl} type="video/mp4" />
           </video>
         ) : (
           <Image

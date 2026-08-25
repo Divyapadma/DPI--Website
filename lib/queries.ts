@@ -12,10 +12,15 @@
 
 import "server-only";
 import { getSupabaseAdmin, isSupabaseConfigured, supabase } from "./supabase";
-import { rowToBlogPost, rowToCareerListing, rowToProject } from "./mappers";
-import type { BlogPostRow, CareerListingRow, ProjectRow } from "./db-types";
-import { blogPosts as mockBlogPosts, careerListings as mockCareerListings, projects as mockProjects } from "./mock-data";
-import type { BlogPost, CareerListing, Lead, Project } from "./types";
+import { rowToBlogPost, rowToCareerListing, rowToProject, rowToSiteSettings } from "./mappers";
+import type { BlogPostRow, CareerListingRow, ProjectRow, SiteSettingsRow } from "./db-types";
+import {
+  blogPosts as mockBlogPosts,
+  careerListings as mockCareerListings,
+  projects as mockProjects,
+  stats as mockStats,
+} from "./mock-data";
+import type { BlogPost, CareerListing, Lead, Project, SiteSettings } from "./types";
 
 // ---------------------------------------------------------------------
 // Projects
@@ -165,4 +170,37 @@ export async function getLeads(): Promise<Lead[]> {
     return [];
   }
   return data as Lead[];
+}
+
+// ---------------------------------------------------------------------
+// Site settings (singleton — hero video URL + homepage stats)
+// ---------------------------------------------------------------------
+
+/**
+ * Falls back to NEXT_PUBLIC_HERO_VIDEO_URL (env) for the video and
+ * lib/mock-data.ts for stats — same "clone and run" / graceful-degrade
+ * property every other read in this file has. Uses the public client, not
+ * the service-role one: this content is shown to every site visitor, so it
+ * needs a public-select RLS policy anyway (see supabase/schema.sql), and
+ * reading it doesn't require admin privileges.
+ */
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const fallback: SiteSettings = {
+    heroVideoUrl: process.env.NEXT_PUBLIC_HERO_VIDEO_URL || undefined,
+    stats: mockStats,
+  };
+
+  if (!isSupabaseConfigured || !supabase) return fallback;
+
+  const { data, error } = await supabase.from("site_settings").select("*").eq("id", 1).maybeSingle();
+  if (error || !data) {
+    if (error) console.error("[getSiteSettings] Supabase query failed, falling back:", error.message);
+    return fallback;
+  }
+
+  const settings = rowToSiteSettings(data as SiteSettingsRow);
+  return {
+    heroVideoUrl: settings.heroVideoUrl || fallback.heroVideoUrl,
+    stats: settings.stats.length > 0 ? settings.stats : fallback.stats,
+  };
 }

@@ -60,10 +60,21 @@ export interface Testimonial {
   rating?: number;
 }
 
+// `value` is the full display text as typed by an admin — e.g. "6+", "250+"
+// — not split into number/suffix. StatsBar's Counter animates only the
+// leading digits and renders whatever follows (e.g. "+") statically, so a
+// non-technical admin never has to think about the two parts separately.
 export interface StatItem {
   label: string;
   value: string;
-  suffix?: string;
+}
+
+// Singleton admin-editable content — the homepage hero video and the four
+// stats counter cards. Mirrors the "site_settings" table (always a single
+// row, id 1) — see supabase/schema.sql and lib/mutations.ts updateSiteSettings().
+export interface SiteSettings {
+  heroVideoUrl?: string;
+  stats: StatItem[];
 }
 
 // Shape written to this project's own Supabase "leads" table.

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Award, Building2, Heart, MapPin, type LucideIcon } from "lucide-react";
-import { stats } from "@/lib/mock-data";
+import type { StatItem } from "@/lib/types";
 
 // Presentation-only mapping, kept out of the data layer (lib/mock-data.ts /
 // StatItem) on purpose — which icon a stat gets is a display decision, not
@@ -16,10 +16,17 @@ const ICONS: Record<string, LucideIcon> = {
   "Years of Experience": Award,
 };
 
+// `value` is a single admin-typed string like "6+" or "250+" (see
+// StatItem in lib/types.ts) — only the leading digits animate; whatever
+// follows (e.g. "+") renders statically as-is. A value with no leading
+// digits at all (e.g. "N/A") just renders unanimated, unchanged.
 function Counter({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const numeric = Number(value.replace(/,/g, ""));
+  const match = value.match(/^[\d,]+/);
+  const numericPart = match?.[0] ?? "";
+  const suffix = match ? value.slice(numericPart.length) : "";
+  const numeric = Number(numericPart.replace(/,/g, ""));
   const [display, setDisplay] = useState(() => (Number.isNaN(numeric) ? value : "0"));
 
   useEffect(() => {
@@ -34,9 +41,14 @@ function Counter({ value }: { value: string }) {
       if (progress < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
-  }, [inView, numeric, value]);
+  }, [inView, numeric]);
 
-  return <span ref={ref}>{display}</span>;
+  return (
+    <span ref={ref}>
+      {display}
+      {suffix}
+    </span>
+  );
 }
 
 /**
@@ -50,7 +62,7 @@ function Counter({ value }: { value: string }) {
  * against a flat bg-ivory the two were close enough in tone that the cards
  * barely separated from the section behind them.
  */
-export default function StatsBar() {
+export default function StatsBar({ stats }: { stats: StatItem[] }) {
   return (
     <section className="stats-gradient border-y border-line">
       <div className="mx-auto max-w-7xl px-5 py-10 sm:px-6 sm:py-12 lg:px-10 lg:py-14">
@@ -59,7 +71,7 @@ export default function StatsBar() {
             const Icon = ICONS[stat.label] ?? MapPin;
             return (
               <motion.div
-                key={stat.label}
+                key={stat.label + i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -74,7 +86,6 @@ export default function StatsBar() {
                 </span>
                 <p className="font-display text-[clamp(1.375rem,3.2vw,1.875rem)] leading-none text-terracotta">
                   <Counter value={stat.value} />
-                  {stat.suffix}
                 </p>
                 <p className="text-[9.5px] font-medium uppercase leading-tight tracking-[0.15em] text-taupe sm:text-[10.5px]">
                   {stat.label}

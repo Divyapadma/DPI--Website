@@ -11,10 +11,10 @@
 import type { BlogPost, CareerListing, Project, StatItem, Testimonial } from "./types";
 
 export const stats: StatItem[] = [
-  { label: "Cities Present", value: "6", suffix: "+" },
-  { label: "Projects Partnered", value: "10", suffix: "+" },
-  { label: "Happy Families", value: "250", suffix: "+" },
-  { label: "Years of Experience", value: "4", suffix: "+" },
+  { value: "6+", label: "Cities Present" },
+  { value: "10+", label: "Projects Partnered" },
+  { value: "250+", label: "Happy Families" },
+  { value: "4+", label: "Years of Experience" },
 ];
 
 export const projects: Project[] = [

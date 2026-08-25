@@ -49,3 +49,11 @@ export interface CareerListingRow {
   posted_at: string;
   created_at: string;
 }
+
+/** The singleton row (id always 1) — see supabase/schema.sql site_settings. */
+export interface SiteSettingsRow {
+  id: number;
+  hero_video_url: string | null;
+  stats: { value: string; label: string }[];
+  updated_at: string;
+}
