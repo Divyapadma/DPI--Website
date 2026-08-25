@@ -78,3 +78,9 @@ export interface LeadPayload {
   project_slug?: string;
   career_slug?: string;
 }
+
+/** A row read back from "leads" — LeadPayload plus what the DB adds itself. */
+export interface Lead extends LeadPayload {
+  id: string;
+  created_at: string;
+}

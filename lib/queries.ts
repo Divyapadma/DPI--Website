@@ -11,11 +11,11 @@
 // is added via /admin.
 
 import "server-only";
-import { isSupabaseConfigured, supabase } from "./supabase";
+import { getSupabaseAdmin, isSupabaseConfigured, supabase } from "./supabase";
 import { rowToBlogPost, rowToCareerListing, rowToProject } from "./mappers";
 import type { BlogPostRow, CareerListingRow, ProjectRow } from "./db-types";
 import { blogPosts as mockBlogPosts, careerListings as mockCareerListings, projects as mockProjects } from "./mock-data";
-import type { BlogPost, CareerListing, Project } from "./types";
+import type { BlogPost, CareerListing, Lead, Project } from "./types";
 
 // ---------------------------------------------------------------------
 // Projects
@@ -136,4 +136,33 @@ export async function getCareerListingById(id: string): Promise<CareerListing | 
     return null;
   }
   return data ? rowToCareerListing(data as CareerListingRow) : null;
+}
+
+// ---------------------------------------------------------------------
+// Leads
+// ---------------------------------------------------------------------
+
+/**
+ * Admin-only, unlike every other read above: the service-role client, not
+ * the public one — leads carry a submitter's name/email/phone, and there's
+ * no RLS policy allowing public SELECT on this table (only submitLead's own
+ * service-role insert writes to it, in lib/actions.ts). No mock-data
+ * fallback either, for the same reason getProjects etc. have one and this
+ * doesn't: an empty/misconfigured state here should read as "no leads yet"
+ * or a visible error, never silently show fabricated sample enquiries.
+ * Safe to call without its own requireAdminSession check because — unlike
+ * a mutation, which is a POST-able endpoint reachable directly — this is
+ * only ever invoked from the admin leads page itself, which the
+ * middleware already keeps unauthenticated visitors out of.
+ */
+export async function getLeads(): Promise<Lead[]> {
+  const admin = getSupabaseAdmin();
+  if (!admin) return [];
+
+  const { data, error } = await admin.from("leads").select("*").order("created_at", { ascending: false });
+  if (error) {
+    console.error("[getLeads] Supabase query failed:", error.message);
+    return [];
+  }
+  return data as Lead[];
 }

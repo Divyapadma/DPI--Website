@@ -21,7 +21,7 @@ export default function IntroSection() {
       <div className="relative">
         <div className="relative h-[280px] shadow-[0_24px_60px_-24px_rgba(46,42,38,0.35)] sm:h-[380px] lg:h-[460px]">
           <RevealImage
-            src="/images/placeholder-project.svg"
+            src="https://ik.imagekit.io/divyapadma07/city-sunset.jpg"
             alt="DPI project partnerships"
             fill
             wrapperClassName="h-full w-full"

@@ -77,8 +77,10 @@ export default function Footer() {
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/20 text-cream/70 transition-all duration-300 hover:border-terracotta-light hover:bg-terracotta-light/10 hover:text-terracotta-light active:border-terracotta-light active:bg-terracotta-light/15 active:text-terracotta-light"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/20 text-cream/70 transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-terracotta-light hover:bg-terracotta-light/10 hover:text-terracotta-light hover:shadow-[0_8px_20px_-8px_rgba(219,160,128,0.5)] active:translate-y-0 active:border-terracotta-light active:bg-terracotta-light/15 active:text-terracotta-light"
                 >
                   <Icon size={16} />
                 </a>
@@ -124,17 +126,26 @@ export default function Footer() {
               Head Office
             </h3>
             <ul className="mt-5 space-y-4 text-sm text-cream/70">
-              <li className="flex gap-3">
+              {/* items-start (not the default stretch) + a small icon nudge
+                  — the address can wrap to two lines, so the pin aligns to
+                  the first line's cap-height rather than the whole block's
+                  center. Phone/email are always one line, so items-center
+                  is the correct alignment there instead — plain `flex
+                  gap-3` on all three (no items-* at all, the bug) left
+                  every icon at the default stretch behavior, which doesn't
+                  center against the link's own py-1-padded box the way it
+                  looks like it should. */}
+              <li className="flex items-start gap-3">
                 <MapPin size={18} className="mt-0.5 shrink-0 text-terracotta-light" />
                 <span>{CONTACT.address}</span>
               </li>
-              <li className="flex gap-3">
+              <li className="flex items-center gap-3">
                 <Phone size={18} className="shrink-0 text-terracotta-light" />
                 <a href={CONTACT.phoneHref} className="inline-block py-1 hover:text-terracotta-light">
                   {CONTACT.phone}
                 </a>
               </li>
-              <li className="flex gap-3">
+              <li className="flex items-center gap-3">
                 <Mail size={18} className="shrink-0 text-terracotta-light" />
                 <a href={CONTACT.emailHref} className="inline-block break-all py-1 hover:text-terracotta-light">
                   {CONTACT.email}

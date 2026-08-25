@@ -91,6 +91,13 @@ export default function Navbar() {
             width={293}
             height={251}
             priority
+            // unoptimized — LOGO_URL is a local path, and the custom
+            // ImageKit loader (lib/imagekit-loader.ts) intentionally
+            // returns it unchanged regardless of width (nothing to
+            // transform for a local file). Without this, Next's dev mode
+            // logs a warning that the loader "doesn't implement width"
+            // since it can't tell that's deliberate.
+            unoptimized
             className="h-[52px] w-auto sm:h-[60px] lg:h-[64px]"
           />
         </Link>

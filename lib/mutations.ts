@@ -179,3 +179,22 @@ export async function deleteCareerListing(id: string): Promise<MutationResult> {
   revalidatePath("/careers");
   return { ok: true, message: "Listing deleted." };
 }
+
+// ---------------------------------------------------------------------
+// Leads
+// ---------------------------------------------------------------------
+
+/** No create/update — leads only ever arrive via submitLead (lib/actions.ts). Delete only, for clearing handled enquiries. */
+export async function deleteLead(id: string): Promise<MutationResult> {
+  const session = await requireAdminSession();
+  if (!session.ok) return session;
+
+  const admin = getSupabaseAdmin();
+  if (!admin) return { ok: false, message: "Supabase isn't configured yet." };
+
+  const { error } = await admin.from("leads").delete().eq("id", id);
+  if (error) return { ok: false, message: `Couldn't delete the lead: ${error.message}` };
+
+  revalidatePath("/admin/leads");
+  return { ok: true, message: "Lead deleted." };
+}

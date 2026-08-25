@@ -46,7 +46,8 @@ export default function Preloader() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Image src={LOGO_URL} alt="DPI — Divya Padma Infosystem LLP" width={293} height={251} priority className="h-24 w-auto sm:h-28" />
+            {/* unoptimized — local path, custom loader returns it unchanged regardless of width (see Navbar.tsx). */}
+            <Image src={LOGO_URL} alt="DPI — Divya Padma Infosystem LLP" width={293} height={251} priority unoptimized className="h-24 w-auto sm:h-28" />
           </motion.div>
           <motion.div
             initial={{ scaleX: 0 }}

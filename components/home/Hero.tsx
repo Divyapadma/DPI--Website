@@ -90,7 +90,12 @@ export default function Hero() {
     // laptop/smaller-desktop widths (up to ~1280px) still land at or
     // near 0% crop since their natural aspect-video height is already
     // under the cap.
-    <section className="relative flex w-full items-center overflow-hidden py-10 sm:py-14 md:aspect-video md:max-h-[800px] md:min-h-[380px] lg:py-20">
+    // max-md: below — mobile only, per explicit instruction not to touch
+    // tablet/desktop. max-md:min-h-[560px] gives the mobile hero real
+    // presence instead of shrinking to whatever height the (smaller,
+    // unstyled-for-mobile) text stack happened to need — the md:aspect-video
+    // sizing this section already has for tablet+ is completely untouched.
+    <section className="relative flex w-full items-center overflow-hidden py-10 sm:py-14 max-md:min-h-[560px] md:aspect-video md:max-h-[800px] md:min-h-[380px] lg:py-20">
       <div className="absolute inset-0">
         {HERO_VIDEO_URL ? (
           // autoPlay requires muted in every browser that allows it at all.
@@ -154,10 +159,29 @@ export default function Hero() {
             accent color measures ~3.3:1 against this scrim, short of the
             4.5:1 small-text AA threshold — this lighter, dark-background
             variant (see globals.css) clears it comfortably. */}
-        <p className="hero-eyebrow mb-4 text-[11px] uppercase tracking-[0.3em] text-terracotta-light sm:mb-5 sm:text-xs sm:tracking-[0.35em]">
+        {/* This file's existing sm: rules already apply from 640px up with
+            no separate md:/lg: override for these particular properties —
+            meaning sm: already covers "tablet and up" here, and stays
+            completely untouched below. Every mobile-only change either
+            edits the true sub-640px base value directly (spacing, this
+            paragraph) or uses max-md: only where nothing at sm: competes
+            for the same property (min-height, the heading's own font-size,
+            the accent glow) — never both on the same property, which is
+            what would actually risk bleeding into the 640-767px range. */}
+        <p className="hero-eyebrow mb-3 text-[11px] uppercase tracking-[0.3em] text-terracotta-light sm:mb-5 sm:text-xs sm:tracking-[0.35em]">
           DPI Real Estate &mdash; Your Trusted Channel Partner
         </p>
-        <h1 className="font-display max-w-full text-[clamp(2.25rem,6vw,5.25rem)] leading-[1.05] text-cream break-words">
+        {/* Mobile's own size, not the desktop clamp shrunk down: at typical
+            phone widths (375-428px) the shared clamp(2.25rem,6vw,5.25rem)
+            floors flat at exactly 36px (6vw stays under the 2.25rem minimum
+            until ~600px wide), so every phone rendered the identical,
+            fairly modest size regardless of its own width — "basic/flat"
+            was accurate. This clamp is scaled and re-centered specifically
+            for the 375-767px range instead, so it's still fluid within
+            mobile rather than another flat floor, and reads meaningfully
+            bigger/bolder than before without inheriting anything from the
+            desktop value. */}
+        <h1 className="font-display max-w-full text-[clamp(2.25rem,6vw,5.25rem)] leading-[1.05] text-cream break-words max-md:text-[clamp(2.5rem,10vw,3.25rem)] max-md:leading-[1.08]">
           {/* Split separately from the accent line below: SplitText wraps
               each character in its own span, which breaks background-clip
               gradient text (the gradient has nothing of its own left to
@@ -168,14 +192,21 @@ export default function Hero() {
           {/* text-gradient-on-dark, not the shared text-terracotta-gradient:
               that gradient's darkest stop (terracotta-deep) measures ~2:1
               against this scrim — this dark-background variant bounds every
-              stop to colors already checked >=3:1 (see globals.css). */}
-          <span className="hero-accent text-gradient-on-dark">Delivering Trust.</span>
+              stop to colors already checked >=3:1 (see globals.css).
+              max-md: adds a soft warm text-shadow glow behind the gradient
+              — at mobile's smaller point size the gradient itself reads
+              quieter than it does large on desktop, so the glow gives it
+              back some presence instead of it just sitting flat next to
+              the line above. */}
+          <span className="hero-accent text-gradient-on-dark max-md:[text-shadow:0_0_24px_rgba(219,160,128,0.45)]">
+            Delivering Trust.
+          </span>
         </h1>
-        <p className="hero-sub mt-5 max-w-xl text-sm leading-relaxed text-cream/85 sm:mt-6 sm:text-base lg:text-lg">
+        <p className="hero-sub mt-4 max-w-xl text-sm leading-relaxed text-cream/85 sm:mt-6 sm:text-base lg:text-lg">
           Landmark residences across Greater Noida, Ghaziabad, Aligarh, and Uttarakhand &mdash; curated for
           you and backed by transparent, trusted guidance.
         </p>
-        <div className="hero-cta mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
+        <div className="hero-cta mt-7 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
           <ButtonLink href="/projects" variant="primary" className="w-full sm:w-auto">
             Explore Projects
           </ButtonLink>

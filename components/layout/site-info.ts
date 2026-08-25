@@ -1,6 +1,6 @@
 // Shared site-wide nav/contact/social constants — single source of truth for
 // Navbar, MobileNavDrawer, and Footer so they can't drift out of sync.
-import { FacebookIcon, InstagramIcon, LinkedinIcon, YoutubeIcon } from "@/components/icons/SocialIcons";
+import { FacebookIcon, InstagramIcon, YoutubeIcon } from "@/components/icons/SocialIcons";
 
 // The real logo — replaces the "DPI." text wordmark everywhere it used to
 // stand in as a placeholder (Navbar, Footer, admin sidebar, Preloader).
@@ -44,9 +44,12 @@ export const CONTACT = {
   longitude: 77.4359085332427,
 };
 
+// Real profiles. No LinkedIn URL was given — a "#" placeholder there would
+// be the one dead link on an otherwise fully-wired row, so it's left out
+// entirely rather than shipped broken; add it back once a real profile
+// exists.
 export const SOCIALS = [
-  { href: "#", label: "Instagram", icon: InstagramIcon },
-  { href: "#", label: "Facebook", icon: FacebookIcon },
-  { href: "#", label: "LinkedIn", icon: LinkedinIcon },
-  { href: "#", label: "YouTube", icon: YoutubeIcon },
+  { href: "https://www.instagram.com/divyapadmainfosystemllp__/", label: "Instagram", icon: InstagramIcon },
+  { href: "https://www.facebook.com/profile.php?id=61584234775153", label: "Facebook", icon: FacebookIcon },
+  { href: "https://www.youtube.com/@divyapadmainfosystemllp_1", label: "YouTube", icon: YoutubeIcon },
 ];

@@ -1,6 +1,7 @@
 "use server";
 
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
+import { notifyTelegramLead } from "@/lib/telegram";
 import type { LeadPayload } from "@/lib/types";
 
 export interface SubmitLeadResult {
@@ -49,6 +50,12 @@ export async function submitLead(payload: LeadPayload): Promise<SubmitLeadResult
     console.error("[submitLead] Supabase insert failed:", error.message);
     return { ok: false, message: "We couldn't submit your request. Please try again shortly." };
   }
+
+  // Only after the lead is safely saved — and awaited so it actually runs
+  // to completion before this serverless invocation ends, but its own
+  // internal try/catch (see lib/telegram.ts) guarantees a Telegram outage
+  // or bad config can never flip this successful result to a failure.
+  await notifyTelegramLead(payload);
 
   return { ok: true, message: "Thank you! Our team will get back to you shortly." };
 }

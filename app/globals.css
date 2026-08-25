@@ -155,6 +155,17 @@ body {
     background: linear-gradient(160deg, var(--color-paper) 0%, var(--color-ivory) 40%, #ede4d5 100%);
   }
 
+  /* StatsBar's own background — deliberately warmer/deeper than
+     .glass-card's near-white gradient (rgba(255,253,250)->rgba(250,246,238))
+     rather than sharing a tone with it. A flat bg-ivory sat close enough to
+     the card gradient's own whites that the cards barely read as distinct
+     panels; this widens the gap so each card visibly sits on top of the
+     section rather than blending into it. Still the same warm cream/beige
+     family as every other gradient here, no accent hue mixed in. */
+  .stats-gradient {
+    background: linear-gradient(135deg, #f3ead9 0%, #ede0c8 55%, #e6d3b6 100%);
+  }
+
   /* Dark editorial gradient — the Footer's counterpart to .surface-gradient.
      Two prior passes were still judged too subtle to register as "rich"
      at a glance rather than "basically flat + a hint of color in one

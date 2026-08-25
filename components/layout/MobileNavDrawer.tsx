@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -8,7 +9,7 @@ import { ArrowUpRight, Mail, MapPin, Phone, X } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { getLenisInstance } from "@/components/providers/lenis-store";
-import { CONTACT, NAV_LINKS, SOCIALS } from "./site-info";
+import { CONTACT, LOGO_URL, NAV_LINKS, SOCIALS } from "./site-info";
 
 const backdropVariants: Variants = {
   hidden: { opacity: 0 },
@@ -79,25 +80,69 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
             role="dialog"
             aria-modal="true"
             aria-label="Site navigation"
-            className="surface-gradient fixed inset-y-0 right-0 z-[95] flex w-[88vw] max-w-[420px] flex-col shadow-[-32px_0_70px_-24px_rgba(46,42,38,0.4)] lg:hidden"
+            // Positioning + the outward shadow live here; overflow-hidden
+            // moved to the inner wrapper below instead of sitting on this
+            // same element, because overflow-hidden clips box-shadow on
+            // whichever element it's set on — putting it here would have
+            // silently clipped this panel's own "-32px to the left" shadow
+            // the moment it also gained overflow-hidden.
+            className="fixed inset-y-0 right-0 z-[95] w-[88vw] max-w-[420px] shadow-[-32px_0_70px_-24px_rgba(46,42,38,0.4)] lg:hidden"
           >
-            <div className="grain-texture pointer-events-none absolute inset-0 opacity-[0.035]" aria-hidden="true" />
-            {/* Soft atmospheric glow, same device used on PageHero/Hero — ties the
-                drawer back into the rest of the site's visual language instead
-                of reading as a plain flat panel. */}
-            <div className="pointer-events-none absolute -top-24 right-[-40px] h-72 w-72 rounded-full bg-terracotta/10 blur-[110px]" aria-hidden="true" />
+            {/* overflow-hidden here (not on the motion.div above) — the glow
+                div just below sits at right-[-40px] (deliberately, so it
+                bleeds off the panel's own edge rather than looking like a
+                bounded shape), which without this was inflating the panel's
+                own scrollWidth 40px past its clientWidth (370px vs 330px
+                measured at 375px viewport) even though it happened not to
+                produce a visible scrollbar. Same fix Footer already uses
+                for its own edge-bleeding watermark. */}
+            <div className="surface-gradient relative flex h-full w-full flex-col overflow-hidden">
+              <div className="grain-texture pointer-events-none absolute inset-0 opacity-[0.035]" aria-hidden="true" />
+              {/* Soft atmospheric glow, same device used on PageHero/Hero — ties the
+                  drawer back into the rest of the site's visual language instead
+                  of reading as a plain flat panel. */}
+              <div className="pointer-events-none absolute -top-24 right-[-40px] h-72 w-72 rounded-full bg-terracotta/10 blur-[110px]" aria-hidden="true" />
 
-            {/* Header — logo and close button share one h-11 box so both center
-                on the exact same line regardless of the two elements' differing
-                font metrics (Playfair Display's line-box vs. the icon's own). */}
-            <div className="relative flex shrink-0 items-center justify-between border-b border-line px-6 py-4 sm:px-8">
-              <Link href="/" onClick={onClose} className="flex h-11 items-center font-display text-2xl text-charcoal">
-                DPI<span className="text-terracotta">.</span>
+            {/* Header — logo+name and the close button both sit on
+                items-center, so they align regardless of the stacked
+                text's own line-height vs. the button's fixed 44px box.
+                min-w-0 on the Link + truncate-safe sizing below keeps the
+                name from ever fighting the close button for space at the
+                narrowest drawer width (88vw of a 320px viewport ≈ 282px,
+                minus px-6 padding and the button's 44px ≈ 190px left for
+                logo+name — checked at 375px, see screenshot). */}
+            <div className="relative flex shrink-0 items-center justify-between gap-3 border-b border-line px-6 py-4 sm:px-8">
+              <Link href="/" onClick={onClose} className="flex min-w-0 items-center gap-2.5">
+                <Image
+                  src={LOGO_URL}
+                  alt="DPI"
+                  width={293}
+                  height={251}
+                  // unoptimized — local path, custom loader returns it
+                  // unchanged regardless of width (see Navbar.tsx).
+                  unoptimized
+                  className="h-9 w-auto shrink-0 sm:h-10"
+                />
+                {/* Two lines echoing the logo's own internal typography
+                    (a serif name line over a smaller tracked-caps line)
+                    instead of cramming the full name onto one line — at
+                    the narrowest drawer width one line of "Divya Padma
+                    Infosystem LLP" at a legible size would either wrap
+                    awkwardly or force a tiny font; two deliberate lines
+                    stay legible and proportionate at every width instead. */}
+                <span className="flex min-w-0 flex-col leading-tight">
+                  <span className="font-display truncate text-[15px] text-charcoal sm:text-base">
+                    Divya Padma
+                  </span>
+                  <span className="truncate text-[9px] font-medium uppercase tracking-[0.16em] text-taupe sm:text-[10px] sm:tracking-[0.2em]">
+                    Infosystem LLP
+                  </span>
+                </span>
               </Link>
               <button
                 aria-label="Close menu"
                 onClick={onClose}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-taupe transition-all duration-200 hover:border-terracotta hover:bg-terracotta hover:text-cream active:scale-95"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-taupe transition-all duration-200 hover:border-terracotta hover:bg-terracotta hover:text-cream active:scale-95"
               >
                 <X size={19} />
               </button>
@@ -196,8 +241,10 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                   <a
                     key={label}
                     href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={label}
-                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-cream text-charcoal/70 transition-all duration-200 hover:scale-105 hover:border-terracotta hover:bg-terracotta hover:text-cream active:scale-95"
+                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-cream text-charcoal/70 transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-terracotta hover:bg-terracotta hover:text-cream hover:shadow-[0_10px_22px_-8px_rgba(166,103,74,0.45)] active:translate-y-0 active:scale-95"
                   >
                     <Icon size={17} />
                   </a>
@@ -214,10 +261,11 @@ export default function MobileNavDrawer({ open, onClose }: { open: boolean; onCl
                 shadow (a "raised sheet" reads as a deliberate surface, not
                 just a flat border cutting the panel in two) and stays put
                 regardless of middle-section scroll. */}
-            <div className="relative shrink-0 border-t border-line bg-ivory px-6 py-4 shadow-[0_-10px_28px_-16px_rgba(46,42,38,0.18)] sm:px-8">
-              <ButtonLink href="/contact" onClick={onClose} variant="primary" className="w-full">
-                Enquire Now
-              </ButtonLink>
+              <div className="relative shrink-0 border-t border-line bg-ivory px-6 py-4 shadow-[0_-10px_28px_-16px_rgba(46,42,38,0.18)] sm:px-8">
+                <ButtonLink href="/contact" onClick={onClose} variant="primary" className="w-full">
+                  Enquire Now
+                </ButtonLink>
+              </div>
             </div>
           </motion.div>
         </>
