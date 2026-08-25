@@ -36,9 +36,14 @@ export default function SiteSettingsForm({ settings }: { settings: SiteSettings 
     setSuccess(false);
     setSubmitting(true);
 
+    // privacyPolicy is sent back unchanged (from this same settings prop,
+    // fetched fresh on page load) — this form only edits hero video/stats,
+    // but updateSiteSettings writes the whole singleton row, so omitting
+    // it would blank out the Privacy Policy page's content.
     const result = await updateSiteSettings({
       heroVideoUrl: heroVideoUrl.trim() || undefined,
       stats: stats.map((s) => ({ value: s.value.trim(), label: s.label.trim() })),
+      privacyPolicy: settings.privacyPolicy,
     });
     setSubmitting(false);
 

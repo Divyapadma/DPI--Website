@@ -75,6 +75,9 @@ export interface StatItem {
 export interface SiteSettings {
   heroVideoUrl?: string;
   stats: StatItem[];
+  // "## Heading" lines + blank-line-separated paragraphs — see
+  // app/(site)/privacy-policy/page.tsx for how this is parsed/rendered.
+  privacyPolicy: string;
 }
 
 // Shape written to this project's own Supabase "leads" table.

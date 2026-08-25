@@ -159,7 +159,16 @@ export default function ProjectForm({ project }: { project?: Project }) {
           </div>
           <div>
             <label className={labelClass}>Map Embed URL (optional)</label>
-            <input name="mapEmbedUrl" defaultValue={project?.location.mapEmbedUrl} className={inputClass} />
+            <p className="mb-1.5 text-xs text-taupe">
+              On Google Maps: Share &rarr; Embed a map &rarr; Copy HTML. Pasting the whole snippet is fine — only
+              the link inside it is used.
+            </p>
+            <input
+              name="mapEmbedUrl"
+              placeholder='<iframe src="https://www.google.com/maps/embed?..."></iframe>'
+              defaultValue={project?.location.mapEmbedUrl}
+              className={inputClass}
+            />
           </div>
         </div>
         <div>

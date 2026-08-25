@@ -152,12 +152,19 @@ export function rowToSiteSettings(row: SiteSettingsRow): SiteSettings {
   return {
     heroVideoUrl: row.hero_video_url ?? undefined,
     stats: row.stats,
+    privacyPolicy: row.privacy_policy ?? "",
   };
 }
 
+// All three fields are required, not just the one a given form edits —
+// two separate admin forms (Site Settings; Privacy Policy) write this same
+// singleton row, and each must send the *other* form's current values
+// back unchanged (read from its own settings prop) rather than omit them,
+// so neither form's save can blank out the other's content.
 export interface SiteSettingsInput {
   heroVideoUrl?: string;
   stats: StatItem[];
+  privacyPolicy: string;
 }
 
 export function siteSettingsInputToRow(input: SiteSettingsInput) {
@@ -165,6 +172,7 @@ export function siteSettingsInputToRow(input: SiteSettingsInput) {
     id: 1,
     hero_video_url: input.heroVideoUrl || null,
     stats: input.stats,
+    privacy_policy: input.privacyPolicy || null,
     updated_at: new Date().toISOString(),
   };
 }

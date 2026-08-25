@@ -55,5 +55,6 @@ export interface SiteSettingsRow {
   id: number;
   hero_video_url: string | null;
   stats: { value: string; label: string }[];
+  privacy_policy: string | null;
   updated_at: string;
 }

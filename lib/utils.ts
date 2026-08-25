@@ -13,6 +13,20 @@ export function formatINR(amountInLakhs: number) {
   return `₹${amountInLakhs.toFixed(0)} L`;
 }
 
+/**
+ * A project's Map Embed URL (admin-entered, ProjectForm.tsx) is meant to be
+ * just the iframe's `src` — but Google Maps' own "Embed a map" panel hands
+ * you the *whole* `<iframe ...>` tag to copy, and a non-technical admin
+ * pasting that verbatim would otherwise end up with the literal HTML
+ * string inside a `src` attribute. Extracts the URL out of that markup if
+ * present; returns the input unchanged (trimmed) otherwise, so a bare URL
+ * still works exactly as before.
+ */
+export function extractMapEmbedSrc(raw: string): string {
+  const match = raw.match(/src=["']([^"']+)["']/);
+  return (match ? match[1] : raw).trim();
+}
+
 /** "DPI Crown Heights" -> "dpi-crown-heights". Used to auto-fill admin form slug fields. */
 export function slugify(input: string) {
   return input

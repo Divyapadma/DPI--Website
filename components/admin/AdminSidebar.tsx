@@ -5,7 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Briefcase, LayoutDashboard, Menu, MessageSquare, Newspaper, Building2, Settings, X } from "lucide-react";
+import {
+  Briefcase,
+  LayoutDashboard,
+  Menu,
+  MessageSquare,
+  Newspaper,
+  Building2,
+  Settings,
+  ShieldCheck,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LOGO_URL } from "@/components/layout/site-info";
 import LogoutButton from "@/components/admin/LogoutButton";
@@ -16,6 +26,7 @@ const NAV = [
   { href: "/admin/blog", label: "Blog Posts", icon: Newspaper },
   { href: "/admin/careers", label: "Careers", icon: Briefcase },
   { href: "/admin/leads", label: "Leads", icon: MessageSquare },
+  { href: "/admin/privacy-policy", label: "Privacy Policy", icon: ShieldCheck },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

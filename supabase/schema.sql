@@ -117,9 +117,15 @@ create table if not exists public.site_settings (
   id              smallint primary key default 1,
   hero_video_url  text,
   stats           jsonb not null default '[]'::jsonb, -- [{ "value": "6+", "label": "Cities Present" }, ...]
+  privacy_policy  text, -- "## Heading" lines + blank-line-separated paragraphs, see app/(site)/privacy-policy/page.tsx
   updated_at      timestamptz not null default now(),
   constraint site_settings_singleton check (id = 1)
 );
+
+-- Catches up a site_settings table created before privacy_policy existed
+-- (this project's own live table included) — a no-op on a fresh install,
+-- since the column is already in the create table above.
+alter table public.site_settings add column if not exists privacy_policy text;
 
 alter table public.site_settings enable row level security;
 
@@ -130,9 +136,11 @@ create policy "Site settings are publicly readable"
 -- projects/blog_posts/career_listings: the admin panel writes via the
 -- service-role key, which bypasses RLS entirely.
 
--- Seed the singleton row with today's live homepage values so nothing
--- changes visually until an admin edits them at /admin/settings.
-insert into public.site_settings (id, hero_video_url, stats)
+-- Seed the singleton row with today's live homepage values (fresh
+-- installs only — on conflict do nothing) so nothing changes visually
+-- until an admin edits them at /admin/settings or /admin/privacy-policy.
+-- $$-quoted so the policy text's own apostrophes don't need escaping.
+insert into public.site_settings (id, hero_video_url, stats, privacy_policy)
 values (
   1,
   null,
@@ -141,6 +149,108 @@ values (
     {"value": "10+", "label": "Projects Partnered"},
     {"value": "250+", "label": "Happy Families"},
     {"value": "4+", "label": "Years of Experience"}
-  ]'::jsonb
+  ]'::jsonb,
+  $$Last updated: 25 August 2026
+
+## Who We Are
+
+DPI (Divya Padma Infosystem LLP) is a real estate channel partner helping families find their next home across Greater Noida West, Noida Extension, the Jewar Airport corridor, Aligarh, Ghaziabad, and Uttarakhand. We connect you with trusted developers — we do not build or sell the projects ourselves. This policy explains what information we collect through this website and how we use it.
+
+## Information We Collect
+
+We collect the information you choose to share with us through our forms — the Contact page, a project enquiry form, or a career application. This typically includes your name, phone number, email address, and any message or requirements you add.
+
+We do not collect payment information, government ID numbers, or any other sensitive personal data through this website.
+
+## How We Use Your Information
+
+We use the details you submit to respond to your enquiry, share project and pricing information you've asked about, follow up on your interest by phone, WhatsApp, or email, and process career applications for open roles. If you enquire about a specific project, we may share your contact details with that project's developer solely to help fulfil your enquiry.
+
+## What We Don't Do
+
+We do not sell, rent, or trade your personal information to third parties for their own marketing purposes. We only share your details with the specific developer relevant to a project you've enquired about, or when required by law.
+
+## Cookies & Analytics
+
+This website does not currently use third-party advertising or analytics tracking cookies. The only cookies set are essential, functional cookies required to keep our admin panel login working — these do not track visitors to the public site.
+
+## Data Retention & Security
+
+We retain your information for as long as reasonably necessary to respond to your enquiry and maintain our business records, and take reasonable technical and organisational measures to keep it secure.
+
+## Your Rights
+
+You can ask us to access, correct, or delete the personal information we hold about you at any time by reaching out using the contact details below.
+
+## Third-Party Links
+
+Our website links to external sites, including our social media pages and the websites of developers we partner with. This policy does not cover how those sites handle your information — please review their own privacy policies.
+
+## Changes to This Policy
+
+We may update this policy from time to time as our services or applicable regulations change. The "Last updated" date above reflects the most recent revision.
+
+## Contact Us
+
+For any questions about this policy or your personal information, reach out to us at:
+
+Divya Padma Infosystem LLP
+Atha Mart, 4th Floor F-417, Techzone 4, Greater Noida West
+Phone: +91 92209 07340
+Email: info@divyapadma.com$$
 )
 on conflict (id) do nothing;
+
+-- Existing installs (row already present from before privacy_policy
+-- existed): fill in the same default text, but only if it's still empty —
+-- never overwrites a policy an admin has already written.
+update public.site_settings
+set privacy_policy = $$Last updated: 25 August 2026
+
+## Who We Are
+
+DPI (Divya Padma Infosystem LLP) is a real estate channel partner helping families find their next home across Greater Noida West, Noida Extension, the Jewar Airport corridor, Aligarh, Ghaziabad, and Uttarakhand. We connect you with trusted developers — we do not build or sell the projects ourselves. This policy explains what information we collect through this website and how we use it.
+
+## Information We Collect
+
+We collect the information you choose to share with us through our forms — the Contact page, a project enquiry form, or a career application. This typically includes your name, phone number, email address, and any message or requirements you add.
+
+We do not collect payment information, government ID numbers, or any other sensitive personal data through this website.
+
+## How We Use Your Information
+
+We use the details you submit to respond to your enquiry, share project and pricing information you've asked about, follow up on your interest by phone, WhatsApp, or email, and process career applications for open roles. If you enquire about a specific project, we may share your contact details with that project's developer solely to help fulfil your enquiry.
+
+## What We Don't Do
+
+We do not sell, rent, or trade your personal information to third parties for their own marketing purposes. We only share your details with the specific developer relevant to a project you've enquired about, or when required by law.
+
+## Cookies & Analytics
+
+This website does not currently use third-party advertising or analytics tracking cookies. The only cookies set are essential, functional cookies required to keep our admin panel login working — these do not track visitors to the public site.
+
+## Data Retention & Security
+
+We retain your information for as long as reasonably necessary to respond to your enquiry and maintain our business records, and take reasonable technical and organisational measures to keep it secure.
+
+## Your Rights
+
+You can ask us to access, correct, or delete the personal information we hold about you at any time by reaching out using the contact details below.
+
+## Third-Party Links
+
+Our website links to external sites, including our social media pages and the websites of developers we partner with. This policy does not cover how those sites handle your information — please review their own privacy policies.
+
+## Changes to This Policy
+
+We may update this policy from time to time as our services or applicable regulations change. The "Last updated" date above reflects the most recent revision.
+
+## Contact Us
+
+For any questions about this policy or your personal information, reach out to us at:
+
+Divya Padma Infosystem LLP
+Atha Mart, 4th Floor F-417, Techzone 4, Greater Noida West
+Phone: +91 92209 07340
+Email: info@divyapadma.com$$
+where id = 1 and privacy_policy is null;

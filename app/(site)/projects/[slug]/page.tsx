@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { getProjectBySlug } from "@/lib/queries";
-import { formatINR } from "@/lib/utils";
+import { extractMapEmbedSrc, formatINR } from "@/lib/utils";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import FadeIn from "@/components/ui/FadeIn";
 import RevealImage from "@/components/ui/RevealImage";
@@ -98,12 +98,27 @@ export default async function ProjectDetailPage({ params }: PageProps<"/projects
 
           <ScrollReveal>
             <h2 className="font-display text-2xl text-charcoal">Location</h2>
-            <div className="glass-card mt-4 flex h-72 items-center justify-center rounded-2xl">
-              {/* TODO: embed real Google Maps iframe via project.location.mapEmbedUrl */}
-              <p className="flex items-center gap-2 text-sm text-taupe">
-                <MapPin size={16} className="text-terracotta" />
-                Map for {project.location.area}, {project.location.city}
-              </p>
+            {/* Same iframe pattern as the Contact page's office map
+                (app/(site)/contact/page.tsx) — glass-card + overflow-hidden
+                so the rounded corners actually clip the iframe, since an
+                iframe's own border-radius doesn't clip its content. Falls
+                back to the old placeholder text when no URL has been set
+                for this project yet. */}
+            <div className="glass-card mt-4 overflow-hidden rounded-2xl">
+              {project.location.mapEmbedUrl ? (
+                <iframe
+                  title={`Map for ${project.location.area}, ${project.location.city}`}
+                  src={extractMapEmbedSrc(project.location.mapEmbedUrl)}
+                  className="h-72 w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              ) : (
+                <p className="flex h-72 items-center justify-center gap-2 text-sm text-taupe">
+                  <MapPin size={16} className="text-terracotta" />
+                  Map for {project.location.area}, {project.location.city}
+                </p>
+              )}
             </div>
           </ScrollReveal>
         </div>

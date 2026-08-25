@@ -17,6 +17,7 @@ import type { BlogPostRow, CareerListingRow, ProjectRow, SiteSettingsRow } from 
 import {
   blogPosts as mockBlogPosts,
   careerListings as mockCareerListings,
+  defaultPrivacyPolicy,
   projects as mockProjects,
   stats as mockStats,
 } from "./mock-data";
@@ -178,16 +179,17 @@ export async function getLeads(): Promise<Lead[]> {
 
 /**
  * Falls back to NEXT_PUBLIC_HERO_VIDEO_URL (env) for the video and
- * lib/mock-data.ts for stats — same "clone and run" / graceful-degrade
- * property every other read in this file has. Uses the public client, not
- * the service-role one: this content is shown to every site visitor, so it
- * needs a public-select RLS policy anyway (see supabase/schema.sql), and
- * reading it doesn't require admin privileges.
+ * lib/mock-data.ts for stats/privacy policy — same "clone and run" /
+ * graceful-degrade property every other read in this file has. Uses the
+ * public client, not the service-role one: this content is shown to every
+ * site visitor, so it needs a public-select RLS policy anyway (see
+ * supabase/schema.sql), and reading it doesn't require admin privileges.
  */
 export async function getSiteSettings(): Promise<SiteSettings> {
   const fallback: SiteSettings = {
     heroVideoUrl: process.env.NEXT_PUBLIC_HERO_VIDEO_URL || undefined,
     stats: mockStats,
+    privacyPolicy: defaultPrivacyPolicy,
   };
 
   if (!isSupabaseConfigured || !supabase) return fallback;
@@ -202,5 +204,6 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   return {
     heroVideoUrl: settings.heroVideoUrl || fallback.heroVideoUrl,
     stats: settings.stats.length > 0 ? settings.stats : fallback.stats,
+    privacyPolicy: settings.privacyPolicy || fallback.privacyPolicy,
   };
 }

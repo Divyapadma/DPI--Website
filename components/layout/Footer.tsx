@@ -8,6 +8,7 @@ const EXPLORE_LINKS = [
   { href: "/blog", label: "Blog" },
   { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
 ];
 
 // Real markets already named elsewhere on the site (Hero, IntroSection) —
