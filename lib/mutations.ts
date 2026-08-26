@@ -218,5 +218,9 @@ export async function updateSiteSettings(input: SiteSettingsInput): Promise<Muta
 
   revalidatePath("/admin/settings");
   revalidatePath("/");
+  // About page also reads this row now (aboutStoryImageUrl) — not
+  // force-dynamic (see app/(site)/about/page.tsx), so it needs its own
+  // explicit revalidation the same way "/" does.
+  revalidatePath("/about");
   return { ok: true, message: "Settings saved — changes are live on the homepage." };
 }

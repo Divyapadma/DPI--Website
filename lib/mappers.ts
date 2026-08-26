@@ -151,28 +151,34 @@ export function careerListingInputToRow(input: CareerListingInput) {
 export function rowToSiteSettings(row: SiteSettingsRow): SiteSettings {
   return {
     heroVideoUrl: row.hero_video_url ?? undefined,
+    heroFallbackImageUrl: row.hero_fallback_image_url ?? undefined,
     stats: row.stats,
     privacyPolicy: row.privacy_policy ?? "",
+    aboutStoryImageUrl: row.about_story_image_url ?? undefined,
   };
 }
 
-// All three fields are required, not just the one a given form edits —
-// two separate admin forms (Site Settings; Privacy Policy) write this same
+// All fields are required, not just the one a given form edits — two
+// separate admin forms (Site Settings; Privacy Policy) write this same
 // singleton row, and each must send the *other* form's current values
 // back unchanged (read from its own settings prop) rather than omit them,
 // so neither form's save can blank out the other's content.
 export interface SiteSettingsInput {
   heroVideoUrl?: string;
+  heroFallbackImageUrl?: string;
   stats: StatItem[];
   privacyPolicy: string;
+  aboutStoryImageUrl?: string;
 }
 
 export function siteSettingsInputToRow(input: SiteSettingsInput) {
   return {
     id: 1,
     hero_video_url: input.heroVideoUrl || null,
+    hero_fallback_image_url: input.heroFallbackImageUrl || null,
     stats: input.stats,
     privacy_policy: input.privacyPolicy || null,
+    about_story_image_url: input.aboutStoryImageUrl || null,
     updated_at: new Date().toISOString(),
   };
 }

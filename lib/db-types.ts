@@ -54,7 +54,9 @@ export interface CareerListingRow {
 export interface SiteSettingsRow {
   id: number;
   hero_video_url: string | null;
+  hero_fallback_image_url: string | null;
   stats: { value: string; label: string }[];
   privacy_policy: string | null;
+  about_story_image_url: string | null;
   updated_at: string;
 }

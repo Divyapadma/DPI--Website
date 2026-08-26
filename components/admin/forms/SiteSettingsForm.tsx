@@ -21,6 +21,8 @@ function withFourSlots(stats: StatItem[]): StatItem[] {
 
 export default function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
   const [heroVideoUrl, setHeroVideoUrl] = useState(settings.heroVideoUrl ?? "");
+  const [heroFallbackImageUrl, setHeroFallbackImageUrl] = useState(settings.heroFallbackImageUrl ?? "");
+  const [aboutStoryImageUrl, setAboutStoryImageUrl] = useState(settings.aboutStoryImageUrl ?? "");
   const [stats, setStats] = useState<StatItem[]>(() => withFourSlots(settings.stats));
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -42,8 +44,10 @@ export default function SiteSettingsForm({ settings }: { settings: SiteSettings 
     // it would blank out the Privacy Policy page's content.
     const result = await updateSiteSettings({
       heroVideoUrl: heroVideoUrl.trim() || undefined,
+      heroFallbackImageUrl: heroFallbackImageUrl.trim() || undefined,
       stats: stats.map((s) => ({ value: s.value.trim(), label: s.label.trim() })),
       privacyPolicy: settings.privacyPolicy,
+      aboutStoryImageUrl: aboutStoryImageUrl.trim() || undefined,
     });
     setSubmitting(false);
 
@@ -71,6 +75,34 @@ export default function SiteSettingsForm({ settings }: { settings: SiteSettings 
           placeholder="https://ik.imagekit.io/.../hero.mp4"
           value={heroVideoUrl}
           onChange={(e) => setHeroVideoUrl(e.target.value)}
+          className={`${inputClass} mt-3`}
+        />
+      </div>
+
+      <div className="border-t border-line pt-6">
+        <h3 className="text-sm font-medium text-charcoal">Hero Fallback / Mobile Image</h3>
+        <p className="mt-1 text-xs text-taupe">
+          Shown on phones (the hero video never loads there — see Performance notes) and briefly on larger screens
+          while the video buffers. Also used as the whole hero background if no video URL is set above. Leave blank
+          to use the default placeholder.
+        </p>
+        <input
+          placeholder="https://ik.imagekit.io/.../hero-fallback.jpg"
+          value={heroFallbackImageUrl}
+          onChange={(e) => setHeroFallbackImageUrl(e.target.value)}
+          className={`${inputClass} mt-3`}
+        />
+      </div>
+
+      <div className="border-t border-line pt-6">
+        <h3 className="text-sm font-medium text-charcoal">About Page — Story Image</h3>
+        <p className="mt-1 text-xs text-taupe">
+          Shown in the &ldquo;Our Story&rdquo; section on the About page. Leave blank to use the default placeholder.
+        </p>
+        <input
+          placeholder="https://ik.imagekit.io/.../about-story.jpg"
+          value={aboutStoryImageUrl}
+          onChange={(e) => setAboutStoryImageUrl(e.target.value)}
           className={`${inputClass} mt-3`}
         />
       </div>

@@ -6,6 +6,7 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import RevealImage from "@/components/ui/RevealImage";
 import CTASection from "@/components/home/CTASection";
 import WhyChooseUsPinned from "@/components/about/WhyChooseUsPinned";
+import { getSiteSettings } from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -39,7 +40,16 @@ const WHY_CHOOSE_US = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  // Admin-editable via /admin/settings ("About Page — Story Image") —
+  // falls back to the local placeholder SVG itself if unset, so no
+  // further fallback is needed here. Not force-dynamic (this is a plain
+  // async Server Component, same as Projects/Blog/Careers/Home after
+  // their own force-dynamic removal) — updateSiteSettings's own
+  // revalidatePath("/about") call (lib/mutations.ts) keeps this fresh
+  // after an edit without paying a live Supabase round-trip on every visit.
+  const { aboutStoryImageUrl } = await getSiteSettings();
+
   return (
     <>
       <PageHero
@@ -51,7 +61,7 @@ export default function AboutPage() {
       <section className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 sm:gap-14 sm:px-6 sm:py-20 lg:grid-cols-2 lg:px-10 lg:py-24">
         <div className="relative h-[260px] overflow-hidden rounded-2xl sm:h-[340px] lg:h-[420px]">
           <RevealImage
-            src="/images/placeholder-project.svg"
+            src={aboutStoryImageUrl ?? "/images/placeholder-project.svg"}
             alt="DPI story"
             fill
             wrapperClassName="h-full w-full"

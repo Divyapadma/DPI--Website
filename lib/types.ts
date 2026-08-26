@@ -74,10 +74,19 @@ export interface StatItem {
 // row, id 1) — see supabase/schema.sql and lib/mutations.ts updateSiteSettings().
 export interface SiteSettings {
   heroVideoUrl?: string;
+  // Shown on the homepage hero: as the <video>'s poster while it buffers
+  // (and permanently on mobile widths, where no video source loads at
+  // all — see components/home/Hero.tsx), and as the hero background
+  // outright when heroVideoUrl itself is unset. Falls back to the local
+  // placeholder SVG when unset.
+  heroFallbackImageUrl?: string;
   stats: StatItem[];
   // "## Heading" lines + blank-line-separated paragraphs — see
   // app/(site)/privacy-policy/page.tsx for how this is parsed/rendered.
   privacyPolicy: string;
+  // Shown in the About page's "Our Story" section. Falls back to the
+  // local placeholder SVG when unset.
+  aboutStoryImageUrl?: string;
 }
 
 // Shape written to this project's own Supabase "leads" table.

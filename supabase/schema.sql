@@ -114,18 +114,22 @@ create policy "Anyone can submit a lead"
 -- updateSiteSettings(), via the service-role key)
 -- ---------------------------------------------------------------------
 create table if not exists public.site_settings (
-  id              smallint primary key default 1,
-  hero_video_url  text,
-  stats           jsonb not null default '[]'::jsonb, -- [{ "value": "6+", "label": "Cities Present" }, ...]
-  privacy_policy  text, -- "## Heading" lines + blank-line-separated paragraphs, see app/(site)/privacy-policy/page.tsx
-  updated_at      timestamptz not null default now(),
+  id                        smallint primary key default 1,
+  hero_video_url            text,
+  hero_fallback_image_url   text, -- shown on mobile (no video there) and while the video buffers elsewhere
+  stats                     jsonb not null default '[]'::jsonb, -- [{ "value": "6+", "label": "Cities Present" }, ...]
+  privacy_policy            text, -- "## Heading" lines + blank-line-separated paragraphs, see app/(site)/privacy-policy/page.tsx
+  about_story_image_url     text, -- About page's "Our Story" section image
+  updated_at                timestamptz not null default now(),
   constraint site_settings_singleton check (id = 1)
 );
 
--- Catches up a site_settings table created before privacy_policy existed
+-- Catches up a site_settings table created before these columns existed
 -- (this project's own live table included) — a no-op on a fresh install,
--- since the column is already in the create table above.
+-- since the columns are already in the create table above.
 alter table public.site_settings add column if not exists privacy_policy text;
+alter table public.site_settings add column if not exists hero_fallback_image_url text;
+alter table public.site_settings add column if not exists about_story_image_url text;
 
 alter table public.site_settings enable row level security;
 

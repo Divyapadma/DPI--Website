@@ -23,14 +23,17 @@ export default function PrivacyPolicyForm({ settings }: { settings: SiteSettings
     setSuccess(false);
     setSubmitting(true);
 
-    // heroVideoUrl/stats are sent back unchanged (from this same settings
-    // prop, fetched fresh on page load) — this form only edits
-    // privacyPolicy, but updateSiteSettings writes the whole singleton
-    // row, so omitting them would blank out the Site Settings page's data.
+    // Everything except privacyPolicy is sent back unchanged (from this
+    // same settings prop, fetched fresh on page load) — this form only
+    // edits privacyPolicy, but updateSiteSettings writes the whole
+    // singleton row, so omitting the rest would blank out the Site
+    // Settings page's data.
     const result = await updateSiteSettings({
       heroVideoUrl: settings.heroVideoUrl,
+      heroFallbackImageUrl: settings.heroFallbackImageUrl,
       stats: settings.stats,
       privacyPolicy: content,
+      aboutStoryImageUrl: settings.aboutStoryImageUrl,
     });
     setSubmitting(false);
 

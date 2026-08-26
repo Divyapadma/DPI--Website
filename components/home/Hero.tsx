@@ -7,16 +7,21 @@ import { ButtonLink } from "@/components/ui/Button";
 import { gsap, SplitText } from "@/lib/gsap";
 
 interface HeroProps {
-  // Admin-editable via /admin/settings (lib/queries.ts getSiteSettings) —
-  // passed down from the server-rendered home page rather than read from
-  // an env var here, so a new video goes live without a code change/
-  // redeploy. Falls back to the placeholder image below if unset. Video
-  // files aren't run through the ImageKit image loader (that's
-  // images-only), so this is just the raw ImageKit video URL.
+  // Both admin-editable via /admin/settings (lib/queries.ts
+  // getSiteSettings) — passed down from the server-rendered home page
+  // rather than read from an env var/hardcoded path here, so either goes
+  // live without a code change/redeploy. Video files aren't run through
+  // the ImageKit image loader (that's images-only), so videoUrl is just
+  // the raw ImageKit video URL.
   videoUrl?: string;
+  // Shown as the <video>'s poster (see below) and as the outright
+  // background when videoUrl is unset. Always has a value by the time it
+  // gets here — getSiteSettings() falls back to the local placeholder SVG
+  // itself — so no further fallback is needed in this component.
+  fallbackImageUrl: string;
 }
 
-export default function Hero({ videoUrl }: HeroProps) {
+export default function Hero({ videoUrl, fallbackImageUrl }: HeroProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
 
@@ -138,7 +143,7 @@ export default function Hero({ videoUrl }: HeroProps) {
             loop
             playsInline
             preload="auto"
-            poster="/images/placeholder-hero.svg"
+            poster={fallbackImageUrl}
             // Tailwind's own base preflight sets `video { height: auto }`
             // to preserve intrinsic aspect ratio by default. Confirmed via
             // computed-style inspection that this rule wins over the
@@ -158,7 +163,7 @@ export default function Hero({ videoUrl }: HeroProps) {
           </video>
         ) : (
           <Image
-            src="/images/placeholder-hero.svg"
+            src={fallbackImageUrl}
             alt="DPI cinematic hero background"
             fill
             priority

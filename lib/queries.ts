@@ -188,8 +188,10 @@ export async function getLeads(): Promise<Lead[]> {
 export async function getSiteSettings(): Promise<SiteSettings> {
   const fallback: SiteSettings = {
     heroVideoUrl: process.env.NEXT_PUBLIC_HERO_VIDEO_URL || undefined,
+    heroFallbackImageUrl: "/images/placeholder-hero.svg",
     stats: mockStats,
     privacyPolicy: defaultPrivacyPolicy,
+    aboutStoryImageUrl: "/images/placeholder-project.svg",
   };
 
   if (!isSupabaseConfigured || !supabase) return fallback;
@@ -203,7 +205,9 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   const settings = rowToSiteSettings(data as SiteSettingsRow);
   return {
     heroVideoUrl: settings.heroVideoUrl || fallback.heroVideoUrl,
+    heroFallbackImageUrl: settings.heroFallbackImageUrl || fallback.heroFallbackImageUrl,
     stats: settings.stats.length > 0 ? settings.stats : fallback.stats,
     privacyPolicy: settings.privacyPolicy || fallback.privacyPolicy,
+    aboutStoryImageUrl: settings.aboutStoryImageUrl || fallback.aboutStoryImageUrl,
   };
 }
