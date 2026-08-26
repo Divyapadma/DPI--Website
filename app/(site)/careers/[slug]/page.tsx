@@ -6,9 +6,9 @@ import LeadForm from "@/components/forms/LeadForm";
 import FadeIn from "@/components/ui/FadeIn";
 import SplitHeading from "@/components/ui/SplitHeading";
 
-// No generateStaticParams — listings are managed live via /admin. See
-// app/(site)/projects/[slug]/page.tsx for why force-dynamic is needed too.
-export const dynamic = "force-dynamic";
+// No generateStaticParams — listings are managed live via /admin.
+// Deliberately not force-dynamic — see
+// app/(site)/projects/[slug]/page.tsx for the full reasoning.
 
 export async function generateMetadata({ params }: PageProps<"/careers/[slug]">): Promise<Metadata> {
   const { slug } = await params;

@@ -11,15 +11,20 @@ import SwipeGallery from "@/components/projects/SwipeGallery";
 import WalkthroughVideo from "@/components/projects/WalkthroughVideo";
 import LeadForm from "@/components/forms/LeadForm";
 
-// No generateStaticParams — projects are managed live via /admin. Without
-// force-dynamic, a param not listed at build time still gets rendered on
-// its first request, but Next then caches *that* result indefinitely
-// (default revalidate: false) the same as a build-time static page, so a
-// later edit wouldn't show up without an explicit revalidatePath() call —
-// and even then, the client router cache can still serve a stale copy for
-// a few minutes. force-dynamic renders fresh every time.
-export const dynamic = "force-dynamic";
-
+// No generateStaticParams — projects are managed live via /admin. A slug
+// not listed at build time still renders fine on its first request; Next
+// then caches *that* result (on-demand ISR) until updateProject/
+// deleteProject's own revalidatePath(`/projects/${slug}`) call
+// (lib/mutations.ts) invalidates it, at which point the next request
+// regenerates it and it's cached again — no separate config needed here.
+// Deliberately *not* force-dynamic (this page used to be): that forced a
+// live Supabase round-trip on every single visit — the actual cause of
+// this page measuring meaningfully slower to open than pages with no
+// data dependency, confirmed via direct navigation timing. The one real
+// trade-off: Next's client-side router cache can still hand a visitor
+// who already prefetched this page a copy up to ~5 minutes stale after
+// an admin edit, before a fresh server round-trip. Fine for project
+// listings; revisit if that ever needs to be tighter.
 export async function generateMetadata({ params }: PageProps<"/projects/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);

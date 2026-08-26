@@ -12,8 +12,10 @@ export const metadata: Metadata = {
   description: "Open positions at DPI — join our real estate sales and marketing team.",
 };
 
-// Renders fresh on every request — see app/(site)/page.tsx for why.
-export const dynamic = "force-dynamic";
+// Deliberately not force-dynamic — see app/(site)/projects/page.tsx for
+// the full reasoning (this page had the identical measured issue).
+// createCareerListing/updateCareerListing/deleteCareerListing
+// (lib/mutations.ts) already call revalidatePath("/careers").
 
 const SPAN = (i: number) => (i === 0 ? "lg:col-span-2 lg:row-span-2" : "lg:col-span-1 lg:row-span-1");
 

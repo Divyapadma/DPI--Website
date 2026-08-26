@@ -8,12 +8,22 @@ export const metadata: Metadata = {
   description: "Browse DPI's residential projects by location, price, and construction status.",
 };
 
-// Renders fresh on every request instead of once at build time — content
-// here is admin-managed and needs to show up immediately, including on
-// client-side <Link> navigation. See app/(site)/page.tsx for the full
-// rationale.
-export const dynamic = "force-dynamic";
-
+// Deliberately *not* force-dynamic (this page used to be, along with
+// blog/careers) — that forced a live Supabase round-trip on every single
+// navigation here, ~200-250ms measured directly against this project's
+// own Supabase instance, which was the actual cause of "Projects/Blog
+// feel slower than other pages" (confirmed via client-side navigation
+// timing: About/Contact, which fetch nothing, land in ~150-300ms;
+// Projects/Blog/Careers, all force-dynamic, measured ~400-500ms — almost
+// exactly that query latency, consistently, across repeated runs).
+// force-dynamic was never actually needed for freshness: every mutation
+// that touches this table (lib/mutations.ts createProject/updateProject/
+// deleteProject) already calls revalidatePath("/projects") itself, which
+// is Next's supported on-demand-ISR pattern — the normal cache serves
+// this page instantly until an admin edit invalidates it, at which point
+// the next request regenerates it and it's cached again. No change in
+// how quickly an edit shows up; a real page-load cost removed for every
+// visit in between.
 export default async function ProjectsPage() {
   const projects = await getProjects();
 

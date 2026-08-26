@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
@@ -58,21 +58,68 @@ export default function MobileNavDrawer({
   onTransitionEnd?: () => void;
 }) {
   const pathname = usePathname();
+  const previousOverflowRef = useRef("");
+  // Mirrors `open` into a ref, read inside handlePanelAnimationComplete
+  // instead of the `open` closed over by that function directly.
+  // AnimatePresence keeps the exiting panel's props/closures frozen from
+  // the last render *before* React removed it from the tree — which is
+  // the render where `open` was still `true` — so `onAnimationComplete`'s
+  // own closure over `open` is permanently stale-true for the entire
+  // exit animation and never reflects the close. A ref sidesteps this
+  // because `.current` always reads the latest write regardless of which
+  // stale closure is holding the ref object itself. Confirmed via a
+  // console.log inside the handler: it fired with `open=true` logged on
+  // *both* the enter-complete and the exit-complete call.
+  const openRef = useRef(open);
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
 
   // Lock scroll (both native and Lenis's own smooth-scroll input handling —
   // stopping Lenis alone leaves native touch-scroll on iOS untouched, and
-  // vice versa) for as long as the drawer is open.
+  // vice versa) for as long as the drawer is open — but *only* the lock
+  // half lives here. The unlock deliberately does not: it used to run as
+  // this same effect's cleanup, which fires the instant `open` flips to
+  // false — synchronously, on the very same render that starts the exit
+  // animation, roughly 350ms before that animation actually finishes
+  // playing. Restoring `overflow` and restarting Lenis mid-flight hands
+  // scroll compositing back to the page while the panel is still visibly
+  // sliding out; iOS Safari in particular re-engages native touch-scroll
+  // compositing the moment `overflow` leaves `hidden`, which was fighting
+  // the still-running transform animation on the exiting panel — that's
+  // the close-only stutter/freeze-then-glitch reported (open never showed
+  // it because opening only ever *adds* the lock, with nothing running
+  // that could contend with an entrance animation the way an unlock
+  // contends with an exit one). The unlock now happens in
+  // handlePanelAnimationComplete below, firing only once the exit
+  // transition has genuinely finished.
   useEffect(() => {
     if (!open) return;
+    previousOverflowRef.current = document.body.style.overflow;
     const lenis = getLenisInstance();
     lenis?.stop();
-    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => {
-      lenis?.start();
-      document.body.style.overflow = previousOverflow;
-    };
   }, [open]);
+
+  // True-unmount safety net only, empty deps so it's not this effect's
+  // per-render cleanup — Navbar (and this) are mounted for the whole
+  // app's lifetime in practice, so this never actually fires today, but
+  // costs nothing to guard against the drawer somehow being torn down
+  // while still `open`, which would otherwise leave the page permanently
+  // unscrollable.
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = previousOverflowRef.current;
+    };
+  }, []);
+
+  function handlePanelAnimationComplete() {
+    if (!openRef.current) {
+      getLenisInstance()?.start();
+      document.body.style.overflow = previousOverflowRef.current;
+    }
+    onTransitionEnd?.();
+  }
 
   return (
     <AnimatePresence>
@@ -94,7 +141,7 @@ export default function MobileNavDrawer({
             initial="hidden"
             animate="visible"
             exit="exit"
-            onAnimationComplete={onTransitionEnd}
+            onAnimationComplete={handlePanelAnimationComplete}
             role="dialog"
             aria-modal="true"
             aria-label="Site navigation"
@@ -104,7 +151,7 @@ export default function MobileNavDrawer({
             // whichever element it's set on — putting it here would have
             // silently clipped this panel's own "-32px to the left" shadow
             // the moment it also gained overflow-hidden.
-            className="fixed inset-y-0 right-0 z-[95] w-[88vw] max-w-[420px] shadow-[-32px_0_70px_-24px_rgba(46,42,38,0.4)] lg:hidden"
+            className="fixed inset-y-0 right-0 z-[95] w-[88vw] max-w-[420px] shadow-[-32px_0_70px_-24px_rgba(46,42,38,0.4)] will-change-transform lg:hidden"
           >
             {/* overflow-hidden here (not on the motion.div above) — the glow
                 div just below sits at right-[-40px] (deliberately, so it
@@ -118,8 +165,20 @@ export default function MobileNavDrawer({
               <div className="grain-texture pointer-events-none absolute inset-0 opacity-[0.035]" aria-hidden="true" />
               {/* Soft atmospheric glow, same device used on PageHero/Hero — ties the
                   drawer back into the rest of the site's visual language instead
-                  of reading as a plain flat panel. */}
-              <div className="pointer-events-none absolute -top-24 right-[-40px] h-72 w-72 rounded-full bg-terracotta/10 blur-[110px]" aria-hidden="true" />
+                  of reading as a plain flat panel.
+                  blur-xl (24px), not the original blur-[110px] — isolated via a
+                  binary-search-style test sweep (110/80/60/48/32/24/16px) that
+                  this element alone accounted for most of the close-animation
+                  delay reported on iOS: WebKit needs real, measurable time to
+                  prepare/recompute a filter this large before it can start
+                  compositing the panel's own transform animation, and that
+                  cost scales with blur radius — 110px measured ~680ms before
+                  the exit transform's first visible frame; every value at or
+                  below 32px measured ~285-300ms (a hard cliff between 48px and
+                  32px, not a smooth gradient). 24px keeps a genuinely soft
+                  glow (this element is 288px square) while sitting well past
+                  that cliff. */}
+              <div className="pointer-events-none absolute -top-24 right-[-40px] h-72 w-72 rounded-full bg-terracotta/10 blur-xl" aria-hidden="true" />
 
             {/* Header — logo+name only. No close button here (there used to
                 be one): it sat at almost the exact same screen position as
