@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import type { Project } from "@/lib/types";
-import { formatINR } from "@/lib/utils";
+import { formatProjectPrice } from "@/lib/utils";
 import RevealImage from "@/components/ui/RevealImage";
 
 const STATUS_LABEL: Record<Project["status"], string> = {
@@ -66,10 +66,7 @@ export default function ProjectCard({
 
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
           <span className="text-taupe">{project.configuration}</span>
-          <span className="font-semibold text-terracotta">
-            {formatINR(project.priceFromLakhs)}
-            {project.priceToLakhs ? ` – ${formatINR(project.priceToLakhs)}` : "+"}
-          </span>
+          <span className="font-semibold text-terracotta">{formatProjectPrice(project)}</span>
         </div>
       </div>
     </Link>

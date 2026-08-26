@@ -17,8 +17,9 @@ export function rowToProject(row: ProjectRow): Project {
       mapEmbedUrl: row.map_embed_url ?? undefined,
     },
     status: row.status,
-    priceFromLakhs: row.price_from_lakhs,
+    priceFromLakhs: row.price_from_lakhs ?? undefined,
     priceToLakhs: row.price_to_lakhs ?? undefined,
+    priceDisplayOverride: row.price_display_override ?? undefined,
     configuration: row.configuration,
     description: row.description,
     heroImage: row.hero_image,
@@ -38,8 +39,9 @@ export interface ProjectInput {
   area: string;
   mapEmbedUrl?: string;
   status: Project["status"];
-  priceFromLakhs: number;
+  priceFromLakhs?: number;
   priceToLakhs?: number;
+  priceDisplayOverride?: string;
   configuration: string;
   description: string;
   heroImage: string;
@@ -58,8 +60,9 @@ export function projectInputToRow(input: ProjectInput) {
     area: input.area,
     map_embed_url: input.mapEmbedUrl || null,
     status: input.status,
-    price_from_lakhs: input.priceFromLakhs,
+    price_from_lakhs: input.priceFromLakhs ?? null,
     price_to_lakhs: input.priceToLakhs ?? null,
+    price_display_override: input.priceDisplayOverride || null,
     configuration: input.configuration,
     description: input.description,
     hero_image: input.heroImage,

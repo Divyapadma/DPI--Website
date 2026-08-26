@@ -16,8 +16,13 @@ create table if not exists public.projects (
   area              text not null,
   map_embed_url     text,
   status            text not null check (status in ('upcoming', 'ongoing', 'completed', 'ready-to-move')),
-  price_from_lakhs  numeric not null,
+  -- Nullable, not required — a project can rely entirely on
+  -- price_display_override ("Price on Request") with no numeric price at
+  -- all. See lib/utils.ts formatProjectPrice() for how these three
+  -- columns combine into what actually renders.
+  price_from_lakhs  numeric,
   price_to_lakhs    numeric,
+  price_display_override text, -- verbatim text shown instead of the numbers above, e.g. "Price on Request"
   configuration     text not null,
   description       text not null,
   hero_image        text not null, -- full ImageKit URL
@@ -28,6 +33,12 @@ create table if not exists public.projects (
   featured          boolean not null default false,
   created_at        timestamptz not null default now()
 );
+
+-- Catches up a projects table created before flexible pricing existed
+-- (this project's own live table included) — a no-op on a fresh install,
+-- since both are already reflected in the create table above.
+alter table public.projects alter column price_from_lakhs drop not null;
+alter table public.projects add column if not exists price_display_override text;
 
 alter table public.projects enable row level security;
 
@@ -199,7 +210,7 @@ We may update this policy from time to time as our services or applicable regula
 For any questions about this policy or your personal information, reach out to us at:
 
 Divya Padma Infosystem LLP
-Atha Mart, 4th Floor F-417, Techzone 4, Greater Noida West
+Artha Mart, 4th Floor F-417, Techzone 4, Greater Noida West
 Phone: +91 92209 07340
 Email: info@divyapadma.com$$
 )
@@ -254,7 +265,7 @@ We may update this policy from time to time as our services or applicable regula
 For any questions about this policy or your personal information, reach out to us at:
 
 Divya Padma Infosystem LLP
-Atha Mart, 4th Floor F-417, Techzone 4, Greater Noida West
+Artha Mart, 4th Floor F-417, Techzone 4, Greater Noida West
 Phone: +91 92209 07340
 Email: info@divyapadma.com$$
 where id = 1 and privacy_policy is null;

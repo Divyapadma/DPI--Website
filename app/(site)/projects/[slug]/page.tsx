@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { getProjectBySlug } from "@/lib/queries";
-import { extractMapEmbedSrc, formatINR } from "@/lib/utils";
+import { extractMapEmbedSrc, formatProjectPrice } from "@/lib/utils";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import FadeIn from "@/components/ui/FadeIn";
 import RevealImage from "@/components/ui/RevealImage";
@@ -137,11 +137,18 @@ export default async function ProjectDetailPage({ params }: PageProps<"/projects
               transform) so it never fights the sticky positioning below. */}
           <FadeIn className="lg:sticky lg:top-28">
             <div id="price-sheet" className="glass-card scroll-mt-24 rounded-2xl p-6 sm:p-7">
-              <p className="text-xs uppercase tracking-[0.25em] text-taupe">Starting From</p>
-              <p className="mt-1 text-3xl font-bold text-terracotta">
-                {formatINR(project.priceFromLakhs)}
-                {project.priceToLakhs ? ` – ${formatINR(project.priceToLakhs)}` : "+"}
+              {/* Label matches what's actually shown below it — "Starting
+                  From" only claims what a single open-ended price means;
+                  a range or a custom/no-price label reads oddly under
+                  that same claim. */}
+              <p className="text-xs uppercase tracking-[0.25em] text-taupe">
+                {project.priceDisplayOverride || project.priceFromLakhs == null
+                  ? "Price"
+                  : project.priceToLakhs != null
+                    ? "Price Range"
+                    : "Starting From"}
               </p>
+              <p className="mt-1 text-3xl font-bold text-terracotta">{formatProjectPrice(project)}</p>
               <div className="divider-terracotta my-5 opacity-30" />
               <dl className="space-y-3 text-sm">
                 <div className="flex justify-between gap-3">

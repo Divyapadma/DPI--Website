@@ -37,15 +37,23 @@ export default function ProjectsExplorer({ projects }: { projects: Project[] }) 
 
   // Budget slider bounds are derived from the real data (rounded to tidy
   // 5L steps) rather than an arbitrary hardcoded ceiling, so the slider
-  // always spans exactly what's actually on offer.
+  // always spans exactly what's actually on offer. priceFromLakhs is
+  // optional now (a "Price on Request" project can have no numeric price
+  // at all) — filtered out of this calculation entirely, since such a
+  // project has no number to contribute to a min/max range.
+  const pricedProjects = useMemo(
+    () => projects.filter((p): p is Project & { priceFromLakhs: number } => p.priceFromLakhs != null),
+    [projects]
+  );
+
   const budgetBounds = useMemo(() => {
-    if (projects.length === 0) return { min: 0, max: 500 };
-    const values = projects.map((p) => p.priceFromLakhs);
+    if (pricedProjects.length === 0) return { min: 0, max: 500 };
+    const values = pricedProjects.map((p) => p.priceFromLakhs);
     return {
       min: Math.floor(Math.min(...values) / 5) * 5,
       max: Math.ceil(Math.max(...values) / 5) * 5,
     };
-  }, [projects]);
+  }, [pricedProjects]);
 
   const [maxBudget, setMaxBudget] = useState(budgetBounds.max);
 
@@ -55,7 +63,10 @@ export default function ProjectsExplorer({ projects }: { projects: Project[] }) 
     return projects.filter((p) => {
       if (city !== "all" && p.location.city !== city) return false;
       if (status !== "all" && p.status !== status) return false;
-      if (p.priceFromLakhs > maxBudget) return false;
+      // A project with no numeric price (relying entirely on a custom
+      // label) can't be judged against a budget — never excluded by this
+      // filter rather than treated as "always over budget".
+      if (p.priceFromLakhs != null && p.priceFromLakhs > maxBudget) return false;
       return true;
     });
   }, [projects, city, status, maxBudget]);

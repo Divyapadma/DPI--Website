@@ -70,7 +70,7 @@ We may update this policy from time to time as our services or applicable regula
 For any questions about this policy or your personal information, reach out to us at:
 
 Divya Padma Infosystem LLP
-Atha Mart, 4th Floor F-417, Techzone 4, Greater Noida West
+Artha Mart, 4th Floor F-417, Techzone 4, Greater Noida West
 Phone: +91 92209 07340
 Email: info@divyapadma.com`;
 

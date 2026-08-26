@@ -12,8 +12,9 @@ export interface ProjectRow {
   area: string;
   map_embed_url: string | null;
   status: ProjectStatus;
-  price_from_lakhs: number;
+  price_from_lakhs: number | null;
   price_to_lakhs: number | null;
+  price_display_override: string | null;
   configuration: string;
   description: string;
   hero_image: string;

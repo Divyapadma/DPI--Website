@@ -1,7 +1,7 @@
 import AdminListPage from "@/components/admin/AdminListPage";
 import { getProjects } from "@/lib/queries";
 import { deleteProject } from "@/lib/mutations";
-import { formatINR } from "@/lib/utils";
+import { formatProjectPrice } from "@/lib/utils";
 
 export default async function AdminProjectsPage() {
   const projects = await getProjects();
@@ -19,7 +19,7 @@ export default async function AdminProjectsPage() {
         { header: "Title", render: (p) => p.title },
         { header: "Location", render: (p) => `${p.location.area}, ${p.location.city}` },
         { header: "Status", render: (p) => <span className="capitalize">{p.status.replace(/-/g, " ")}</span> },
-        { header: "Price From", render: (p) => formatINR(p.priceFromLakhs) },
+        { header: "Price", render: (p) => formatProjectPrice(p) },
       ]}
     />
   );

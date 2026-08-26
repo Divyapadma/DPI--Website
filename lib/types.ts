@@ -16,8 +16,18 @@ export interface Project {
   title: string;
   location: ProjectLocation;
   status: ProjectStatus;
-  priceFromLakhs: number;
+  // Optional now, not required — a project can rely entirely on
+  // priceDisplayOverride (e.g. "Price on Request") with no numeric price
+  // at all. See lib/utils.ts formatProjectPrice() for how these three
+  // fields combine into what actually renders.
+  priceFromLakhs?: number;
   priceToLakhs?: number;
+  // Verbatim text shown instead of the numbers above wherever price
+  // renders — the admin's escape valve for anything the numeric fields
+  // can't express. A project can carry both this *and* priceFromLakhs at
+  // once (numeric price kept private but still usable for budget
+  // filtering, while the public display shows custom text instead).
+  priceDisplayOverride?: string;
   configuration: string; // e.g. "2, 3 & 4 BHK"
   description: string;
   heroImage: string;

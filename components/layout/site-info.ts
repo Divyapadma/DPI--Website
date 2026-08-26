@@ -30,7 +30,7 @@ export const NAV_LINKS = [
 ];
 
 export const CONTACT = {
-  address: "Atha Mart, 4th Floor F-417, Techzone 4, Greater Noida West",
+  address: "Artha Mart, 4th Floor F-417, Techzone 4, Greater Noida West",
   phone: "+91 92209 07340",
   phoneHref: "tel:+919220907340",
   email: "info@divyapadma.com",

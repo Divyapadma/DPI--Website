@@ -6,13 +6,44 @@ import { Loader2, Save } from "lucide-react";
 import { createProject, updateProject } from "@/lib/mutations";
 import type { ProjectInput } from "@/lib/mappers";
 import type { Project } from "@/lib/types";
-import { slugify } from "@/lib/utils";
+import { formatProjectPrice, slugify } from "@/lib/utils";
 
 const STATUS_OPTIONS: Project["status"][] = ["upcoming", "ongoing", "completed", "ready-to-move"];
 
 const inputClass =
   "focus-glow w-full min-h-[44px] rounded-xl border border-line bg-ivory px-4 py-2.5 text-base text-charcoal outline-none transition-colors placeholder:text-taupe/60";
 const labelClass = "mb-1.5 block text-xs uppercase tracking-[0.1em] text-taupe";
+
+type PriceUnit = "L" | "Cr";
+
+// Every price in this app is stored as a single "lakhs" number regardless
+// of which unit the admin actually thinks in — these two functions are
+// the only place that boundary is crossed, converting a stored lakhs
+// value into an {amount, unit} pair a human can read/edit and back.
+// Editing always redisplays in whichever unit formatINR (lib/utils.ts)
+// would itself choose to *display* that value in (>=100L -> Cr) — not
+// necessarily the unit originally typed in, since that's never stored
+// (350 saved as "3.5 Cr" and 350 saved as "350 L" are the same number and
+// intentionally indistinguishable later; picking the display-matching
+// unit on reopen is the least surprising convention available).
+function lakhsToAmountUnit(lakhs: number | undefined): { amount: string; unit: PriceUnit } {
+  if (lakhs == null) return { amount: "", unit: "L" };
+  if (lakhs >= 100) return { amount: trimFloat(lakhs / 100), unit: "Cr" };
+  return { amount: trimFloat(lakhs), unit: "L" };
+}
+
+function amountUnitToLakhs(amount: string, unit: PriceUnit): number | undefined {
+  const trimmed = amount.trim();
+  if (!trimmed) return undefined;
+  const n = Number(trimmed);
+  if (Number.isNaN(n)) return undefined;
+  return unit === "Cr" ? n * 100 : n;
+}
+
+/** "3.4999999999999996" -> "3.5" — division introduces float noise a human editing the field shouldn't see. */
+function trimFloat(n: number): string {
+  return Number(n.toFixed(4)).toString();
+}
 
 export default function ProjectForm({ project }: { project?: Project }) {
   const router = useRouter();
@@ -24,16 +55,39 @@ export default function ProjectForm({ project }: { project?: Project }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  const initialFrom = lakhsToAmountUnit(project?.priceFromLakhs);
+  const initialTo = lakhsToAmountUnit(project?.priceToLakhs);
+  const [priceFromAmount, setPriceFromAmount] = useState(initialFrom.amount);
+  const [priceFromUnit, setPriceFromUnit] = useState<PriceUnit>(initialFrom.unit);
+  const [priceToAmount, setPriceToAmount] = useState(initialTo.amount);
+  const [priceToUnit, setPriceToUnit] = useState<PriceUnit>(initialTo.unit);
+  const [priceDisplayOverride, setPriceDisplayOverride] = useState(project?.priceDisplayOverride ?? "");
+
+  const priceFromLakhs = amountUnitToLakhs(priceFromAmount, priceFromUnit);
+  const priceToLakhs = amountUnitToLakhs(priceToAmount, priceToUnit);
+  const trimmedOverride = priceDisplayOverride.trim();
+  const pricePreview = formatProjectPrice({
+    priceFromLakhs,
+    priceToLakhs,
+    priceDisplayOverride: trimmedOverride || undefined,
+  });
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
+
+    // Every other field on this form is required by its own `required`
+    // attribute, checked natively before this handler even runs — this
+    // one's a cross-field rule (at least one of two independent controls)
+    // native HTML validation can't express, so it's checked here instead.
+    if (priceFromLakhs == null && !trimmedOverride) {
+      setError('Set a starting price, or a custom price label like "Price on Request" — at least one is required.');
+      return;
+    }
+
     setSubmitting(true);
 
     const form = new FormData(e.currentTarget);
-    const num = (key: string) => {
-      const v = form.get(key);
-      return v ? Number(v) : undefined;
-    };
     const lines = (key: string) =>
       String(form.get(key) ?? "")
         .split("\n")
@@ -47,8 +101,9 @@ export default function ProjectForm({ project }: { project?: Project }) {
       area: String(form.get("area") ?? ""),
       mapEmbedUrl: String(form.get("mapEmbedUrl") ?? "") || undefined,
       status,
-      priceFromLakhs: num("priceFromLakhs") ?? 0,
-      priceToLakhs: num("priceToLakhs"),
+      priceFromLakhs,
+      priceToLakhs,
+      priceDisplayOverride: trimmedOverride || undefined,
       configuration: String(form.get("configuration") ?? ""),
       description: String(form.get("description") ?? ""),
       heroImage: String(form.get("heroImage") ?? ""),
@@ -130,28 +185,70 @@ export default function ProjectForm({ project }: { project?: Project }) {
               className={inputClass}
             />
           </div>
-          <div>
-            <label className={labelClass}>Price From (Lakhs)</label>
-            <input
-              name="priceFromLakhs"
-              type="number"
-              required
-              min={0}
-              step="0.01"
-              defaultValue={project?.priceFromLakhs}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label className={labelClass}>Price To (Lakhs, optional)</label>
-            <input
-              name="priceToLakhs"
-              type="number"
-              min={0}
-              step="0.01"
-              defaultValue={project?.priceToLakhs}
-              className={inputClass}
-            />
+          <div className="space-y-4 rounded-xl border border-line p-4 sm:col-span-2">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className={labelClass}>Starting Price</label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    placeholder="75"
+                    value={priceFromAmount}
+                    onChange={(e) => setPriceFromAmount(e.target.value)}
+                    className={`${inputClass} flex-1`}
+                  />
+                  <select
+                    value={priceFromUnit}
+                    onChange={(e) => setPriceFromUnit(e.target.value as PriceUnit)}
+                    className={`${inputClass} w-28 shrink-0`}
+                  >
+                    <option value="L">Lakh</option>
+                    <option value="Cr">Crore</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className={labelClass}>Max Price (optional — for a range)</label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    placeholder="1.2"
+                    value={priceToAmount}
+                    onChange={(e) => setPriceToAmount(e.target.value)}
+                    className={`${inputClass} flex-1`}
+                  />
+                  <select
+                    value={priceToUnit}
+                    onChange={(e) => setPriceToUnit(e.target.value as PriceUnit)}
+                    className={`${inputClass} w-28 shrink-0`}
+                  >
+                    <option value="L">Lakh</option>
+                    <option value="Cr">Crore</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className={labelClass}>Custom Price Label (optional)</label>
+              <p className="mb-1.5 text-xs text-taupe">
+                Replaces the price shown everywhere with this exact text — e.g. &ldquo;Price on Request&rdquo;. A
+                starting price above still works for the Projects page&apos;s budget filter either way, even with a
+                label set.
+              </p>
+              <input
+                placeholder="Price on Request"
+                value={priceDisplayOverride}
+                onChange={(e) => setPriceDisplayOverride(e.target.value)}
+                className={inputClass}
+              />
+            </div>
+            <p className="text-sm text-taupe">
+              Preview: <span className="font-semibold text-terracotta">{pricePreview}</span>
+            </p>
           </div>
           <div>
             <label className={labelClass}>RERA No. (optional)</label>
