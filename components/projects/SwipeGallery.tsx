@@ -16,19 +16,52 @@ export default function SwipeGallery({ images, alt }: { images: string[]; alt: s
 
   function scrollToIndex(i: number) {
     const track = trackRef.current;
-    if (!track) return;
-    const slide = track.children[i] as HTMLElement | undefined;
-    slide?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    const slide = track?.children[i] as HTMLElement | undefined;
+    if (!track || !slide) return;
+    // Not slide.scrollIntoView() — inside a scroll-snap-mandatory track,
+    // Chromium's scrollIntoView(inline: "center") reliably lands one full
+    // slide short of the requested target (verified: targeting slide i
+    // consistently produced slide i-1's resting scrollLeft, on every
+    // slide, every time — this is what made the desktop Next/Previous
+    // arrows look like they'd stopped doing anything, since each click
+    // was silently scrolling to the slide already on screen). Computing
+    // the centering offset ourselves and calling scrollTo() directly on
+    // the track sidesteps that interaction with snap entirely.
+    const target = slide.offsetLeft + slide.offsetWidth / 2 - track.clientWidth / 2;
+    track.scrollTo({ left: target, behavior: "smooth" });
+    // Set `active` directly here rather than waiting for onScroll to infer
+    // it — this is what actually made Next look dead after the first
+    // click. With ~3 slides visible at once at lg, centering slide 1 from
+    // slide 0 takes under a pixel of scroll; the browser doesn't fire a
+    // `scroll` event for a change that small, so onScroll's setActive
+    // never ran, `active` stayed frozen at its initial 0 forever, and
+    // every later click kept recomputing the same already-reached target.
+    // onScroll still runs for real user-driven swipes/wheel scroll below,
+    // so manual scrolling keeps the dots in sync too.
+    setActive(i);
   }
 
   function onScroll() {
     const track = trackRef.current;
     if (!track) return;
-    const { scrollLeft, children } = track;
+    // Compares each slide's own center to the *viewport's* center — not
+    // scrollLeft to each slide's left edge (what this used to do). That
+    // mismatch was the actual bug behind Next/Previous looking dead on
+    // desktop: at lg, ~3 slides are visible at once, so centering slide 1
+    // only takes ~1px of scroll — nowhere near enough to become "closest"
+    // to scrollLeft by a left-edge measure, which kept reporting slide 0
+    // as active forever. Every subsequent Next click re-targeted slide 1
+    // again, and `active` could never advance past 0. Measuring by center
+    // (matching both the CSS snap-center on each slide and scrollToIndex's
+    // own centering math above) keeps `active` in sync with what's
+    // actually centered, so each click advances from wherever the
+    // previous one actually landed.
+    const viewportCenter = track.scrollLeft + track.clientWidth / 2;
     let closest = 0;
     let closestDist = Infinity;
-    Array.from(children).forEach((child, i) => {
-      const dist = Math.abs((child as HTMLElement).offsetLeft - scrollLeft);
+    Array.from(track.children).forEach((child, i) => {
+      const el = child as HTMLElement;
+      const dist = Math.abs(el.offsetLeft + el.offsetWidth / 2 - viewportCenter);
       if (dist < closestDist) {
         closestDist = dist;
         closest = i;
