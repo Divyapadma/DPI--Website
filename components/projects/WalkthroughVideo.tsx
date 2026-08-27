@@ -23,7 +23,18 @@ export default function WalkthroughVideo({ videoUrl, posterImage, alt }: { video
       aria-label="Play walkthrough video"
       className="group relative mt-4 block aspect-video w-full overflow-hidden rounded-2xl"
     >
-      <RevealImage src={posterImage} alt={alt} fill wrapperClassName="h-full w-full" className="object-cover" />
+      <RevealImage
+        src={posterImage}
+        alt={alt}
+        fill
+        // This poster lives in the project detail page's lg:col-span-2
+        // content column (2 of 3 columns, ~66vw at lg), full width below
+        // that — without it, next/image always fetches the largest
+        // ImageKit-transformed candidate regardless of the real render size.
+        sizes="(min-width: 1024px) 66vw, 100vw"
+        wrapperClassName="h-full w-full"
+        className="object-cover"
+      />
       <div className="absolute inset-0 bg-charcoal/30 transition-colors group-hover:bg-charcoal/40" />
       <PlayCircle
         size={64}

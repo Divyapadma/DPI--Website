@@ -64,6 +64,11 @@ export default async function AboutPage() {
             src={aboutStoryImageUrl ?? "/images/placeholder-project.svg"}
             alt="DPI story"
             fill
+            // Same lg:grid-cols-2 split as this section's own container —
+            // full width below lg, 50vw at lg+. Without this, next/image
+            // always fetches the largest ImageKit-transformed candidate
+            // regardless of how narrow this column actually renders.
+            sizes="(min-width: 1024px) 50vw, 100vw"
             wrapperClassName="h-full w-full"
             className="object-cover"
           />

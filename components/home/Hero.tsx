@@ -167,6 +167,7 @@ export default function Hero({ videoUrl, fallbackImageUrl }: HeroProps) {
             alt="DPI cinematic hero background"
             fill
             priority
+            sizes="100vw"
             className="object-cover"
           />
         )}

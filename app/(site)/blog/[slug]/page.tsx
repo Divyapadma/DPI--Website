@@ -34,6 +34,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
           alt={post.title}
           fill
           priority
+          sizes="100vw"
           wrapperClassName="h-full w-full"
           className="object-cover"
         />

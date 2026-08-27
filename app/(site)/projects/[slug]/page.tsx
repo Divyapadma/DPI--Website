@@ -48,6 +48,7 @@ export default async function ProjectDetailPage({ params }: PageProps<"/projects
           alt={project.title}
           fill
           priority
+          sizes="100vw"
           wrapperClassName="h-full w-full"
           className="object-cover"
         />

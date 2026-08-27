@@ -24,6 +24,13 @@ export default function IntroSection() {
             src="https://ik.imagekit.io/divyapadma07/city-sunset.jpg"
             alt="DPI project partnerships"
             fill
+            // This section is single-column (full container width) below
+            // lg, and one of two lg:grid-cols-2 columns above it — without
+            // this, next/image assumes the image could need the full
+            // viewport at any width and always fetches the largest
+            // ImageKit-transformed candidate, even at the 50vw it actually
+            // renders at on desktop.
+            sizes="(min-width: 1024px) 50vw, 100vw"
             wrapperClassName="h-full w-full"
             className="object-cover"
           />
